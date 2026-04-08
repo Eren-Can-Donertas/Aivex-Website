@@ -1,0 +1,62 @@
+---
+title: Signal Engine
+description: How the Brain module composes atomic signals into governed research outputs.
+order: 4
+section: Modules
+---
+
+## Overview
+
+**Package:** `brain/`
+**Default interval:** 30 seconds
+
+The Signal Engine (Brain module) is the composition layer. It reads atomic signal outputs from the database, merges them, and produces composite signals for the Governor to evaluate.
+
+## Composition Pipeline
+
+### 1. Signal Aggregation
+
+On each cycle, the Signal Engine queries the database for recent atomic signals — within a configurable lookback window (default: 10 minutes). Stale signals outside this window are ignored.
+
+### 2. Confidence Normalization
+
+Raw confidence scores from different modules are normalized using per-module calibration curves. This ensures that a 0.7 from the News module and a 0.7 from the Chart module represent comparable evidence quality.
+
+### 3. Conflict Detection
+
+For each symbol, the engine checks whether the aggregated signals agree on direction. The conflict penalty formula:
+
+```
+conflict_penalty = 2 × |proportion_bullish - 0.5|
+composite_confidence = weighted_avg(confidences) × (1 - conflict_penalty)
+```
+
+A symbol with 100% agreement has no penalty. A 50/50 split produces the maximum penalty, driving composite confidence near zero.
+
+### 4. Cooldown Enforcement
+
+After emitting a composite signal, the Engine enforces a per-symbol cooldown. During cooldown, new signals are suppressed unless the new composite confidence exceeds the old by the `BRAIN_COOLDOWN_MARGIN` threshold.
+
+### 5. Output
+
+Composite signals are written to the `signals` table and passed to the Governor via an internal event queue.
+
+## Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `BRAIN_INTERVAL` | `30` | Composition cycle in seconds |
+| `BRAIN_LOOKBACK_MINUTES` | `10` | How far back to consider atomic signals |
+| `BRAIN_MIN_CONFIDENCE` | `0.35` | Minimum composite confidence to emit |
+| `BRAIN_COOLDOWN_SECONDS` | `300` | Default per-symbol cooldown |
+| `BRAIN_COOLDOWN_MARGIN` | `0.15` | Confidence margin to override cooldown |
+
+## API
+
+The Brain module also exposes a FastAPI server (port 8001 by default) with:
+
+- `GET /signals` — Recent composite signals
+- `GET /signals/{symbol}` — Symbol-specific composite history
+- `GET /health` — Health check with last cycle timestamp
+
+All routes require bearer token authentication if `API_TOKEN` is set.

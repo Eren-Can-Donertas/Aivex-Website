@@ -1,0 +1,74 @@
+---
+title: Governor
+description: Risk gating, kill switch, and human override policies for signal emission control.
+order: 5
+section: Modules
+---
+
+## Overview
+
+The Governor is the final checkpoint before any composite signal reaches the Eye API. It applies a configurable set of checks and blocks signals that do not pass.
+
+The Governor never crashes silently — every allow and deny decision is logged to `errors/governor.log` with full context.
+
+## Checks (in order)
+
+### 1. Kill Switch
+
+If `GOVERNOR_KILL_SWITCH=1` is set in the environment, all signals are blocked immediately. No other checks are evaluated.
+
+The kill switch can be toggled without restarting the system by updating the environment and sending SIGHUP to the process.
+
+### 2. Minimum Confidence
+
+Signals below `GOVERNOR_MIN_CONFIDENCE` (default: `0.40`) are blocked.
+
+### 3. Symbol Block List
+
+Symbols in `GOVERNOR_BLOCKED_SYMBOLS` (comma-separated) are always blocked, regardless of confidence.
+
+### 4. Sector Concentration
+
+If more than `GOVERNOR_MAX_SECTOR_CONCENTRATION` (default: `0.40`) of the last N signals point to the same sector, new signals from that sector are throttled.
+
+### 5. Cooldown
+
+If a signal was recently emitted for the same symbol, the new signal must exceed `GOVERNOR_COOLDOWN_MARGIN` above the previous confidence to pass.
+
+## Human Override
+
+### Block Override
+
+```bash
+# Block a symbol for 24 hours
+python -m brain.governor block AAPL --hours 24 --reason "under review"
+```
+
+### Allow Override
+
+```bash
+# Temporarily allow a normally-blocked symbol
+python -m brain.governor allow TSLA --hours 1 --reason "approved for research cycle"
+```
+
+All overrides are logged with the requester's machine hostname and PID.
+
+## Audit Log Format
+
+Each Governor decision appends a line to `errors/governor.log`:
+
+```
+[2024-02-20T14:30:00.123456] [ALLOW] [abc12345] AAPL → bullish (conf=0.72) | no_block
+[2024-02-20T14:30:01.456789] [DENY]  [abc12346] NVDA → bullish (conf=0.38) | below_min_confidence
+```
+
+## Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `GOVERNOR_KILL_SWITCH` | `` | Set to `1` to block all emissions |
+| `GOVERNOR_MIN_CONFIDENCE` | `0.40` | Minimum confidence to allow |
+| `GOVERNOR_BLOCKED_SYMBOLS` | `` | Comma-separated block list |
+| `GOVERNOR_MAX_SECTOR_CONCENTRATION` | `0.40` | Max proportion of signals per sector |
+| `GOVERNOR_COOLDOWN_SECONDS` | `600` | Cooldown after emitting a symbol |
+| `GOVERNOR_COOLDOWN_MARGIN` | `0.10` | Confidence delta to override cooldown |

@@ -1,0 +1,69 @@
+---
+title: "The Governor Module: Risk Controls for AI Research Systems"
+date: "2026-02-20"
+excerpt: "How AIVEX's Governor module implements hard limits, kill switches, and human-override policies to ensure responsible signal emission."
+author: "AIVEX Team"
+tags: ["engineering", "governor", "risk", "governance"]
+---
+
+## Why a Separate Governance Layer?
+
+Signal composition produces research outputs. But producing an output and emitting it are different decisions.
+
+Between composition and the API, AIVEX inserts the Governor module — a dedicated governance layer that can block, modify, or delay any signal regardless of its confidence score. The Governor is the system's conscience.
+
+## What the Governor Checks
+
+### Minimum Confidence Threshold
+
+The first check is simple: does the composite signal meet the minimum confidence threshold? The default is 0.40. Signals below this threshold are logged and discarded, not emitted.
+
+This threshold is configurable per deployment. Research teams that want lower-confidence exploratory signals can lower it; teams that want high-conviction outputs only can raise it.
+
+### Symbol-Level Block List
+
+The Governor maintains a block list of symbols that should never appear in outputs, regardless of signal confidence. This list can be updated at runtime via environment variable or database, without restarting the system.
+
+Common uses: regulatory exclusions, pending litigation, actively managed positions that the research system should not comment on.
+
+### Kill Switch
+
+A global kill switch disables all signal emission instantly. The kill switch can be toggled via environment variable (`GOVERNOR_KILL_SWITCH=1`) or via the admin API endpoint.
+
+When the kill switch is active, the system continues running, logging, and analyzing data — it simply does not emit signals. This allows the team to investigate anomalies without shutting down data ingestion.
+
+### Exposure Concentration Limits
+
+The Governor tracks sector concentration across recent signal emissions. If more than a configurable proportion of recent signals (default: 40%) point to the same sector, it throttles new sector-concentrated signals.
+
+This prevents the system from over-indexing on a single sector narrative driven by correlated news events.
+
+### Audit Logging
+
+Every Governor decision — allow or deny — generates a log entry with:
+- Symbol and timestamp
+- Composite signal details
+- Which check caused the block (if denied)
+- The Governor configuration at decision time
+
+This audit trail is critical for post-hoc analysis and regulatory review.
+
+## Human Override
+
+The Governor supports explicit human override in two directions:
+
+**Override allow**: A symbol that would normally be blocked can be explicitly allowed for a configurable time window. Requires manual intervention (not API-accessible from the standard surface).
+
+**Override block**: A symbol that passes all checks can be manually blocked. This is the "human-in-the-loop" mechanism for situations where the system cannot know what a human knows.
+
+Both override types are logged with a required reason string.
+
+## What the Governor Is Not
+
+The Governor is not a trading system. It does not make position-sizing decisions, calculate expected returns, or issue buy/sell orders.
+
+It is a research output governance layer. Its only job is to decide whether a research signal should be emitted — and to log that decision so researchers can evaluate its quality over time.
+
+---
+
+*For research and informational purposes only. Not financial advice.*

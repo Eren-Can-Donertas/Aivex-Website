@@ -1,0 +1,84 @@
+---
+title: Architecture Overview
+description: How AIVEX modules interact — data flow, process isolation, and supervision.
+order: 2
+---
+
+## Design Principles
+
+AIVEX is built on three architectural principles:
+
+1. **Module isolation** — Each signal module runs as an independent subprocess. A crash in the News module does not affect Chart or Metrics processing.
+2. **Fault tolerance** — The Watchdog supervisor detects crashes, applies exponential-backoff restart policies, and prevents crash loops.
+3. **Auditability** — Every significant event (signal emission, Governor decision, exception) generates a structured log record.
+
+## Data Flow
+
+```
+External Sources
+      │
+      ├── News APIs ──────► News Module
+      │                          │
+      ├── Market Data ───► Chart Module ──► Signal Engine ──► Governor ──► Eye API
+      │                          │
+      └── Fundamentals ──► Metrics Module
+```
+
+Each atomic module runs independently and writes its outputs to the shared MySQL database. The Signal Engine reads from this database, performs composition, and passes composite signals to the Governor.
+
+## Process Architecture
+
+When you run `python Main.py`, the Watchdog runtime starts in orchestrator mode:
+
+1. It reads the module registry to determine which modules to start
+2. It spawns each module as a separate subprocess via `module_runner.py`
+3. Each subprocess runs its module's main loop with the configured interval
+4. The Watchdog monitors heartbeats and restarts failed processes
+
+This process isolation ensures that a Python-level crash (including memory errors and import failures) in one module does not cascade to others.
+
+## Module Runner
+
+Each module subprocess is started via `watchdog/runners/module_runner.py`. This script:
+
+- Imports the module dynamically by name
+- Validates required environment variables at startup
+- Runs the module's main function in a loop
+- Records any exceptions via `utils.error_handling.record_exception()`
+- Exits with a non-zero code on fatal errors (so the Watchdog knows to restart)
+
+## Error Handling
+
+AIVEX uses a structured exception hierarchy:
+
+| Exception | Behavior |
+|-----------|----------|
+| `RecoverableError` | Watchdog restarts the module after backoff |
+| `FatalError` | Module exits; Watchdog may or may not restart depending on policy |
+| `ConfigError(FatalError)` | Module exits immediately with code 2; indicates misconfiguration |
+| `ExternalServiceError` | Transient; Watchdog restarts with short backoff |
+| `DataValidationError` | Transient; logged and retried next cycle |
+
+All exceptions generate:
+- A JSON crash record in `errors/crashes/`
+- A text line in `errors/<module>.log`
+
+## Database Schema
+
+AIVEX uses MySQL with the following core tables:
+
+- `ohlcv` — OHLCV market data, indexed by `(symbol, ts)`
+- `news_articles` — Ingested news articles with NLP outputs
+- `signals` — Composite signal records from the Brain module
+- `governor_log` — Governor decisions (allow/deny) with context
+
+## Eye API
+
+The Eye module exposes a FastAPI REST API with:
+
+- `GET /health` — Health check
+- `GET /signals` — Latest signals (requires API token if configured)
+- `GET /signals/{symbol}` — Symbol-specific signals
+- `POST /signals/feedback` — Research feedback endpoint (for backtesting calibration)
+
+All endpoints return structured JSON with full signal context.

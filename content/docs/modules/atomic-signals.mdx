@@ -1,0 +1,96 @@
+---
+title: Atomic Signal Modules
+description: News, Chart, and Metrics signal generators — what they do and how to configure them.
+order: 3
+section: Modules
+---
+
+## Overview
+
+Atomic signal modules are the data ingestion and analysis layer of AIVEX. Each module:
+
+1. Pulls data from external sources on a configurable schedule
+2. Applies domain-specific analysis to produce a directional signal
+3. Scores the signal with a confidence value
+4. Writes the output to the shared database for the Signal Engine to consume
+
+## News Signal Module
+
+**Package:** `news/`
+**Default interval:** 60 seconds
+
+The News module scrapes financial news from configured RSS feeds and APIs, then runs each article through an NLP pipeline to extract:
+
+- **Sentiment**: Positive / negative / neutral at the article level
+- **Named entities**: Company names, tickers, sectors
+- **Event type**: Earnings, M&A, regulatory, macro, etc.
+- **Urgency**: A 0–1 score indicating time-sensitivity
+
+### Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `NEWS_INTERVAL` | `60` | Cycle interval in seconds |
+| `NEWS_MIN_CONFIDENCE` | `0.3` | Minimum confidence to write to DB |
+| `NEWS_LOOKBACK_HOURS` | `24` | How far back to consider articles as recent |
+
+## Chart Signal Module
+
+**Package:** `chart/`
+**Default interval:** 300 seconds
+
+The Chart module downloads OHLCV data and computes technical indicators. It analyzes:
+
+- Trend (moving averages, ADX)
+- Momentum (RSI, MACD, Stochastic)
+- Volume (OBV, VWAP divergence)
+- Volatility (Bollinger Bands, ATR)
+- Pattern recognition (support/resistance, breakouts)
+
+### Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CHART_INTERVAL` | `300` | Cycle interval in seconds |
+| `CHART_LOOKBACK_DAYS` | `90` | Historical bars for indicator calculation |
+| `CHART_TIMEFRAMES` | `1d,4h` | Comma-separated timeframes to analyze |
+
+## Metrics Signal Module
+
+**Package:** `metrics/`
+**Default interval:** 3600 seconds
+
+The Metrics module processes fundamental data:
+
+- Valuation ratios (P/E, P/B, EV/EBITDA)
+- Earnings data (EPS, revenue, guidance)
+- Analyst estimates and revisions
+- Sector-relative rankings
+
+Because fundamental data changes slowly, this module runs on a longer cycle than News or Chart.
+
+### Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `METRICS_INTERVAL` | `3600` | Cycle interval in seconds |
+| `METRICS_MIN_CONFIDENCE` | `0.4` | Higher bar for fundamental signals |
+
+## Signal Output Schema
+
+All atomic modules write to the database with the following schema:
+
+```json
+{
+  "symbol": "AAPL",
+  "module": "news",
+  "direction": "bullish",
+  "confidence": 0.72,
+  "ts": "2024-02-01T14:30:00Z",
+  "context": {
+    "event_type": "earnings",
+    "sentiment_score": 0.65,
+    "article_count": 12
+  }
+}
+```

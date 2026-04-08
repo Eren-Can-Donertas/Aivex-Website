@@ -1,0 +1,84 @@
+---
+title: "AIVEX in Production: System Status Q1 2026"
+date: "2026-03-30"
+excerpt: "What is running today, what we shipped in the past quarter, and what the system architecture looks like in its current form."
+author: "AIVEX Team"
+tags: ["engineering", "status", "architecture"]
+---
+
+## What Is Running Right Now
+
+All eight modules are live under the canonical `aivex_runtime.py` supervisor:
+
+- **news** — financial news ingestion and NLP sentiment pipeline (30 min cycle)
+- **new_media** — social media signal pipeline (30 min cycle)
+- **chart** — OHLCV ingest and technical indicator computation (60 min cycle)
+- **companies** — fundamental data and balance sheet updates (24 h cycle)
+- **metrics** — macro indicators (VIX, Fear & Greed, etc.) (60 min cycle)
+- **signal_engine** — atomic signal composition and final signal persistence (30 min cycle)
+- **governor** — policy evaluation and gating control (60 min cycle)
+- **brain** — pattern discovery and candidate generation (60 min cycle)
+
+Each module runs as a separate OS subprocess. If one crashes, it does not affect the others. The watchdog checks every 60 seconds, restarts crashed modules with exponential backoff, and detects stuck processes via log growth and heartbeat files.
+
+## What We Shipped This Quarter
+
+**End-to-end signal traceability.** Every pipeline run now generates a `trace_id` (`tr_<16hex>`) that is propagated through all atomic signals, composed signals, and the final `final_signals` database row. This makes it possible to query exactly which pipeline run produced any given signal.
+
+**Deep health diagnostics in Eye.** The `/eye/health` endpoint now returns `data_age_seconds`, `freshness_status` (fresh / stale / very_stale), `latency_ms`, and a `trust_verdict` per module. This gives operators a clear, auditable view of system health at any point in time.
+
+**Watchdog alerting.** The runtime now emits structured alerts through `AlertManager` on crash, stuck detection, permanent failure, kill-switch activation, and module gating. Alerts route to a rotating log at `errors/alerts.log` and optionally to a webhook.
+
+**Governor gating integrity.** The `gating.json` write path is atomic (write-to-tmp → fsync → replace), making partial writes impossible. Fail-closed semantics: a corrupt file retains the last known gating state rather than clearing restrictions.
+
+## Current API Surface
+
+The Eye REST API (`/eye/*`) exposes:
+
+| Endpoint | Description |
+|---|---|
+| `GET /eye/health` | Per-module health with freshness and trust verdicts |
+| `GET /eye/signals` | Paginated final signals with filtering |
+| `GET /eye/signals/{id}` | Single signal by ID or `signal_id` |
+| `GET /eye/prices` | Latest prices per tracked symbol |
+| `GET /eye/company/{symbol}` | Company fundamentals |
+| `GET /eye/snapshots` | Pipeline run snapshots |
+| `POST /eye/replay` | Replay a past snapshot for comparison |
+
+Authentication is role-based: `EYE_VIEWER_TOKEN` (read-only), `EYE_OPERATOR_TOKEN` (read + replay/resolve), `EYE_ADMIN_TOKEN` (full). If no tokens are configured, the API is permissive (development mode).
+
+## Signal Schema
+
+Every signal persisted by the system carries these fields:
+
+```json
+{
+  "signal_id":    "sig_<12 hex chars>",
+  "symbol":       "AAPL",
+  "direction":    "BUY | SELL | HOLD",
+  "confidence":   0.74,
+  "strength":     "weak | moderate | strong | very_strong",
+  "sources":      ["news", "chart"],
+  "reasons":      ["..."],
+  "atomic_count": 2,
+  "has_conflict": false,
+  "trace_id":     "tr_<16 hex chars>",
+  "created_at":   "ISO8601"
+}
+```
+
+This schema is stable. The `trace_id` field was added this quarter via a non-destructive migration (nullable, default NULL for historical rows).
+
+## What Is Not Yet Done
+
+We deliberately document gaps here.
+
+- **`new_media` excluded from composition** — the `NewMediaAtomicSource` runs and persists data, but its output is not yet consumed at the composition step because it has no symbol-level mapping. This is a known gap.
+- **`outcomes_db` not connected** — Governor's drawdown-based kill-switch logic exists but has no live PnL data to operate on. Governor evaluates signal pattern statistics only.
+- **Brain → Signal Engine link is planned, not built** — Brain pattern candidates (human-approved) do not yet influence Signal Engine outputs.
+
+We are documenting these openly because the architecture is already built to support them — the contracts, schemas, and module boundaries are in place.
+
+---
+
+*For research and informational purposes only. Not financial advice.*

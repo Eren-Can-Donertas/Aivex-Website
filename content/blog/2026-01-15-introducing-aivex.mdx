@@ -1,0 +1,51 @@
+---
+title: "Introducing AIVEX: AI Signal Research for Serious Researchers"
+date: "2026-01-15"
+excerpt: "Why we built a modular, auditable AI signal research platform — and what makes it different from everything else out there."
+author: "AIVEX Team"
+tags: ["announcement", "platform", "research"]
+---
+
+## Why We Built This
+
+The quant research community has a tooling problem. On one side, there are enterprise platforms that are expensive, opaque, and impossible to extend. On the other side, there are scripts — ad-hoc Python notebooks that work until they don't, with no logging, no governance, and no reproducibility guarantees.
+
+AIVEX sits in the gap: a production-grade AI research infrastructure you can inspect, extend, and trust.
+
+## What AIVEX Is
+
+AIVEX is a **modular, parallel AI signal generation system**. It ingests data from multiple independent sources — financial news, OHLCV market data, fundamental metrics — and runs each through a dedicated analysis module. The outputs are then composed, conflict-resolved, and governed before reaching the API surface.
+
+Every step is logged. Every exception generates a structured JSON crash record. Every signal carries a confidence score.
+
+## The Five Core Modules
+
+**News Signal** scrapes and analyzes financial news from 8 sources. An NLP pipeline extracts sentiment, named entities, event types, and urgency signals in real time.
+
+**Chart Signal** computes 8 technical indicators across multiple timeframes. It detects patterns, trends, and divergences using configurable lookback windows.
+
+**Metrics Signal** processes fundamental data — earnings, valuation ratios, analyst estimates, and macro indicators — from verified, timestamped sources.
+
+**Signal Engine (Brain)** is the composition layer. It merges atomic signal outputs using confidence weighting and applies cooldown logic to prevent signal churn. Conflicting signals are resolved via configurable priority rules.
+
+**Governor** is the risk gate. Before any signal reaches the API, it passes through the Governor, which applies thresholds, kill switches, and human-override policies. No signal is emitted without explicit approval from this layer.
+
+## What Makes It Different
+
+Most AI research tools are prediction machines. AIVEX is an **evaluation machine**: it produces auditable research artifacts, not trading recommendations.
+
+This distinction matters. Every output from AIVEX includes:
+- A confidence value in [0, 1]
+- A traceable computation path
+- A timestamp and source attribution
+- A research disclaimer
+
+The Watchdog module ensures the entire system runs 24/7 with automatic restart on failure, crash-loop detection, and heartbeat monitoring.
+
+## What's Next
+
+AIVEX is available to qualified research teams by invitation. The full pipeline — ingestion, composition, governance, and the Eye REST API — is running in production. If you are building systematic research workflows and want to evaluate the system, get in touch via the contact form.
+
+---
+
+*For research and informational purposes only. Not financial advice.*

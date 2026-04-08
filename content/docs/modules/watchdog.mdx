@@ -1,0 +1,98 @@
+---
+title: Watchdog
+description: 24/7 process supervision, automatic restart, crash-loop detection, and heartbeat monitoring.
+order: 6
+section: Modules
+---
+
+## Overview
+
+**Package:** `watchdog/`
+
+The Watchdog is AIVEX's supervision layer. It starts all configured modules as independent subprocesses and monitors them continuously, restarting crashed processes with configurable policies.
+
+## Key Features
+
+- **Process isolation**: Each module runs in its own subprocess; a crash in one module does not affect others
+- **Exponential backoff**: Restart delays increase with consecutive failures, up to a 300-second cap
+- **Crash-loop detection**: If a module crashes 5 times within 300 seconds, it is considered in a crash loop and restarts are suspended pending human intervention
+- **Heartbeat monitoring**: Each subprocess writes a heartbeat file periodically; the Watchdog detects stale heartbeats and restarts unresponsive processes
+- **Structured status line**: A live status display shows all module states, restart counts, and last activity times
+
+## Runtime Modes
+
+### `continuous` (default)
+
+Runs all modules indefinitely. Restarts on crash. Used for production deployments.
+
+```bash
+python Main.py
+```
+
+### `once`
+
+Runs each module for exactly one cycle, then exits. Used for testing and scheduled runs.
+
+```bash
+python Main.py --mode once
+```
+
+### `dev`
+
+Runs in continuous mode but with verbose logging and no startup delay.
+
+```bash
+python Main.py --mode dev
+```
+
+## Restart Policy
+
+| Condition | Behavior |
+|-----------|----------|
+| Module exits with code 0 | No restart (clean exit) |
+| Module exits with code 1 | Restart after backoff |
+| Module exits with code 2 (`ConfigError`) | No restart (configuration problem — manual fix required) |
+| 5 crashes in 300 seconds | Crash-loop detected; restarts suspended |
+| `restart_count >= max_restarts` | No further restarts |
+
+## Backoff Formula
+
+```python
+delay = min(base_backoff × (2 ** consecutive_failures), 300)
+```
+
+With `base_backoff=5.0` (default):
+- 1st failure: 10s
+- 2nd failure: 20s
+- 3rd failure: 40s
+- 4th failure: 80s
+- 5th+ failure: 160s → capped at 300s
+
+## Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `WATCHDOG_MAX_RESTARTS` | `10` | Max restarts per module per session |
+| `WATCHDOG_BACKOFF` | `5.0` | Base backoff multiplier in seconds |
+| `WATCHDOG_HEARTBEAT_TTL` | `120` | Seconds before stale heartbeat triggers restart |
+
+## Status Line
+
+The Watchdog prints a live status line to stdout every 30 seconds:
+
+```
+[AIVEX] news=RUNNING(0) chart=RUNNING(0) metrics=RUNNING(0) brain=RUNNING(0) eye=RUNNING(0)
+```
+
+Format: `module=STATE(restart_count)`
+
+States: `RUNNING`, `CRASHED`, `RESTARTING`, `STOPPED`, `LOOP_DETECTED`
+
+## Startup Validation
+
+Before starting any subprocesses, the Watchdog runs `_validate_startup()`:
+
+1. Verifies the module runner script exists and is non-empty
+2. Checks that each configured module has a package directory on disk
+3. Checks that each module appears in the MODULE_REGISTRY
+4. Logs warnings for any mismatches (never raises — validation failures are non-fatal)

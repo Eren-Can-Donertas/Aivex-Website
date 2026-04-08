@@ -1,0 +1,74 @@
+---
+title: "Signal Composition Deep Dive: How AIVEX Merges Atomic Signals"
+date: "2026-02-01"
+excerpt: "A technical look at how the Signal Engine combines outputs from independent modules using confidence weighting, conflict resolution, and adaptive cooldowns."
+author: "AIVEX Team"
+tags: ["engineering", "signal-engine", "methodology"]
+---
+
+## The Composition Problem
+
+Running three independent signal modules in parallel is the easy part. The hard part is combining their outputs meaningfully.
+
+Three modules analyzing the same symbol at the same time can easily disagree. News sentiment might be negative. Chart technicals might show a breakout. Fundamental metrics might be neutral. What does the system do?
+
+AIVEX solves this with a structured composition pipeline inside the Signal Engine (Brain module).
+
+## Step 1: Confidence Normalization
+
+Each atomic module produces a signal with a raw confidence score. Before composition, all scores are normalized to [0, 1] using per-module calibration curves derived from historical accuracy data.
+
+A News Signal with 0.8 raw confidence is not the same as a Chart Signal with 0.8 raw confidence — they have different base rates and noise characteristics. Normalization makes them comparable.
+
+## Step 2: Conflict Detection
+
+Once normalized, the Engine checks for directional conflicts: cases where two or more signals disagree on the direction of the output (bullish vs. bearish).
+
+Conflicting signals are not simply averaged. Instead, the Engine applies a **conflict penalty** that reduces the composite confidence. Two signals with equal confidence but opposite direction produce a composite confidence near 0 — correctly representing uncertainty.
+
+The formula is:
+
+```
+composite_confidence = weighted_avg(confidences) × (1 - conflict_penalty)
+conflict_penalty = 2 × |proportion_bullish - 0.5|
+```
+
+## Step 3: Priority Resolution
+
+When a conflict cannot be resolved by confidence weighting alone (e.g., two signals with identical confidence and opposite direction), the Engine applies a configurable priority order:
+
+1. News Signal (fastest to react to events)
+2. Chart Signal (reflects market participant behavior)
+3. Metrics Signal (slowest-moving, highest signal-to-noise)
+
+This priority order is not hardcoded — it is configurable per deployment.
+
+## Step 4: Cooldown Enforcement
+
+After a composite signal is emitted for a symbol, the Engine enforces a cooldown period. During cooldown, new signals for the same symbol are suppressed unless:
+
+- The new composite confidence exceeds the previous by more than a configurable margin (default: 0.15)
+- A significant new event is detected (News Signal urgency score > 0.8)
+
+Cooldown periods are adaptive: they shorten during high-volatility periods and lengthen during quiet markets.
+
+## Step 5: Output Packaging
+
+The final composed signal is packaged with:
+- Symbol and timestamp
+- Composite confidence score
+- Contributing modules and their individual confidences
+- Direction (bullish / bearish / neutral)
+- Cooldown expiry time
+
+This package passes to the Governor for final gating before API emission.
+
+## Why This Matters
+
+Signal composition is where most research platforms fail. They either blindly average signals (losing the information content of confidence) or use hardcoded rules that cannot adapt.
+
+AIVEX's composition pipeline is transparent, configurable, and auditable. Every composition decision is logged, including which signals were considered, which were suppressed by cooldown, and what the final confidence calculation produced.
+
+---
+
+*For research and informational purposes only. Not financial advice.*
