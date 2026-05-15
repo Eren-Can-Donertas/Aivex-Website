@@ -67,7 +67,7 @@ export default function AboutPage() {
               name: 'Enes Kerem Göksu',
               title: 'CTO',
               bio: 'Third-year Computer Science student at TOBB University, focused on AI and system architecture.',
-              linkedin: null,
+              linkedin: 'https://www.linkedin.com/in/enes-kerem-göksu-198428407/',
             },
           ].map((person) =>
             person.linkedin ? (
