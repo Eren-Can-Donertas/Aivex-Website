@@ -47,6 +47,9 @@ export default function ChatWidget() {
 
   // Holds the active TextConversation instance; replaced on each new session.
   const sessionRef = useRef<TextConversation | null>(null);
+  // Monotonically-increasing counter; captured in each startConversation closure so
+  // a stale onDisconnect from an old session doesn't clobber a newer sessionRef.
+  const sessionIdRef = useRef(0);
   const hasConnectedRef = useRef(false);
   const mountedRef = useRef(true);
   // Counts consecutive unexpected disconnects; reset to 0 once we connect.
@@ -70,13 +73,14 @@ export default function ChatWidget() {
     // Show "Reconnecting…" once we've already burned an attempt, else "Connecting…".
     setStatus(reconnectAttemptsRef.current > 0 ? 'reconnecting' : 'connecting');
     try {
+      const thisSessionId = ++sessionIdRef.current;
       const session = await Conversation.startSession({
         agentId: AGENT_ID,
         connectionType: 'websocket',
         textOnly: true,
         clientTools: { save_contact_info: saveContactInfo },
         onDisconnect: (details) => {
-          sessionRef.current = null;
+          if (sessionIdRef.current === thisSessionId) sessionRef.current = null;
           if (!mountedRef.current) return;
           setAwaitingReply(false);
 
@@ -137,6 +141,7 @@ export default function ChatWidget() {
       // Hard failure before a session was established (e.g. the server refused
       // the socket). Don't auto-retry — it's usually a config/auth problem that
       // won't fix itself — show the reason and let the user reset to retry.
+      hasConnectedRef.current = false;
       setErrorText(err instanceof Error ? err.message : 'Failed to connect.');
       setStatus('disconnected');
     }
@@ -184,14 +189,16 @@ export default function ChatWidget() {
   const handleNewConversation = useCallback(() => {
     if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current);
     reconnectAttemptsRef.current = 0;
-    void sessionRef.current?.endSession(); // fires onDisconnect with reason:'user' → no auto-reconnect
+    // Capture and null first so the old session's onDisconnect (which checks
+    // sessionIdRef) never clobbers the ref that the new session will own.
+    const oldSession = sessionRef.current;
     sessionRef.current = null;
+    void oldSession?.endSession(); // fires onDisconnect with reason:'user' → no auto-reconnect
     setMessages([]);
     setInput('');
     setAwaitingReply(false);
     setErrorText('');
-    // Small delay lets the old session's onDisconnect settle before starting fresh.
-    setTimeout(() => void startConversation(), 300);
+    void startConversation();
   }, [startConversation]);
 
   const statusDot =

@@ -20,4 +20,4 @@ pnpm-debug.log*
 .parcel-cache/
 .vite/
 *.local
-.env
+tsconfig.tsbuildinfo
