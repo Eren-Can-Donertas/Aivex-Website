@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { ChatWidgetMount } from '@/components/chat/ChatWidgetMount';
 import './globals.css';
 
 const fontSans = Inter({
@@ -70,6 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
+          <ChatWidgetMount />
         </ThemeProvider>
       </body>
     </html>

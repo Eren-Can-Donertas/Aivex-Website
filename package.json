@@ -17,6 +17,7 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
+    "@elevenlabs/react": "^1.6.2",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "gray-matter": "^4.0.3",
