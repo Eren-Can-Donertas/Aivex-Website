@@ -28,6 +28,8 @@ export interface ContactSubmission {
   name: string;
   email: string;
   organization?: string;
+  role?: string;
+  interest_type?: string;
   message: string;
   submittedAt: string;
   /** Origin of the submission, e.g. 'chat-agent' for leads captured by the assistant. */
@@ -45,7 +47,14 @@ export interface ModuleCard {
   name: string;
   description: string;
   icon: string;
-  status: 'prototype' | 'beta' | 'planned';
+  status:
+    | 'internal-runtime'
+    | 'data-connected'
+    | 'in-validation'
+    | 'api-ready'
+    | 'beta'
+    | 'risk-gate-active'
+    | 'experimental';
 }
 
 export interface DocNavItem {

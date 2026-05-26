@@ -1,113 +1,251 @@
 import type { Metadata } from 'next';
-import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { TeamMemberCard } from '@/components/ui/TeamMemberCard';
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'About AIVEX — our mission, team, and approach to AI-driven signal research.',
+  description:
+    'About AIVEX Analytics — mission, team, research principles, and roadmap for AI-driven signal research infrastructure.',
 };
+
+const ROADMAP = [
+  {
+    phase: 'Now',
+    items: [
+      'Modular signal architecture in active runtime',
+      'Eye API observability layer',
+      'Signal Engine composition and governance',
+      'Governor risk gating with audit logging',
+      'Research output trace ID and attribution',
+    ],
+  },
+  {
+    phase: 'Next',
+    items: [
+      'Stronger live data integration',
+      'Validation and backtesting harness',
+      'Runtime status dashboard',
+      'Investor and demo access polish',
+    ],
+  },
+  {
+    phase: 'Later',
+    items: [
+      'Broader asset class coverage',
+      'Advanced allocation governance',
+      'Partner pilot programs',
+      'Custom signal module SDK',
+    ],
+  },
+];
+
+const TEAM = [
+  {
+    name: 'Eren Can Dönertaş',
+    title: 'Co-founder',
+    initials: 'ED',
+    bio: 'Architect of the AIVEX signal governance layer, product strategy, and research methodology. Computer Engineering, TOBB ETÜ. Focused on AI-driven financial research systems, signal infrastructure, and institutional product execution.',
+    linkedin: 'https://www.linkedin.com/in/eren-can-donertas/',
+  },
+  {
+    name: 'Enes Kerem Göksu',
+    title: 'Co-founder',
+    initials: 'EG',
+    bio: 'Leads system architecture, backend reliability, runtime supervision, and Eye API design. Computer Engineering, TOBB ETÜ. Focused on distributed AI systems, infrastructure, and operational reliability.',
+    linkedin: 'https://www.linkedin.com/in/enes-kerem-göksu-198428407/',
+  },
+  {
+    name: 'Koray Şenyüzlü',
+    title: 'Co-founder',
+    initials: 'KŞ',
+    bio: 'Leads business development, strategic partnerships, and institutional go-to-market. Focused on the commercial infrastructure connecting AIVEX research capabilities to systematic research workflows.',
+    linkedin: undefined,
+  },
+];
 
 export default function AboutPage() {
   return (
     <div className="py-16">
       <div className="container mx-auto max-w-4xl px-4">
-        <div className="mb-12 text-center">
-          <Badge className="mb-4">About Us</Badge>
-          <h1 className="mb-4 text-4xl font-bold">Our Mission</h1>
-          <p className="text-lg text-muted-foreground">
-            Making institutional-grade AI research infrastructure accessible to serious researchers.
+        {/* Header */}
+        <div className="mb-16">
+          <p className="mb-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            About AIVEX
+          </p>
+          <h1 className="mb-4 text-4xl font-bold leading-tight">
+            Building the Infrastructure Layer for AI-Driven Market Research
+          </h1>
+          <p className="max-w-2xl text-lg text-muted-foreground">
+            AIVEX is not a product that predicts markets. It is infrastructure that makes
+            AI-assisted market research traceable, governed, and auditable.
           </p>
         </div>
 
-        <div className="prose">
-          <h2>Why We Built AIVEX</h2>
-          <p>
-            Systematic research requires systematic tooling. Most AI-powered market research tools
-            are opaque, unauditable, and built for retail audiences. Institutional researchers need
-            something different: a platform where every computation is traceable, every signal is
-            scored, and every governance decision is logged.
+        {/* Mission */}
+        <section className="mb-12">
+          <h2 className="mb-4 text-2xl font-semibold">Mission</h2>
+          <p className="text-muted-foreground">
+            Systematic market research requires systematic infrastructure. Most AI-powered tools in
+            this space are opaque, unauditable, and designed for retail audiences. AIVEX exists to
+            provide a different foundation: every computation traceable, every signal scored, every
+            governance decision logged.
           </p>
-          <p>
-            AIVEX is that platform. We built it because we needed it ourselves — and because we
-            believe the future of quantitative research is modular, auditable, and AI-native.
-          </p>
+        </section>
 
-          <h2>What Makes Us Different</h2>
-          <p>
-            We are not building a black-box &quot;AI alpha&quot; product. We are building infrastructure:
-          </p>
-          <ul>
-            <li>Modular pipelines you can inspect, extend, and replace</li>
-            <li>Structured logging and crash records for every exception</li>
-            <li>A governance layer that you control — not us</li>
-            <li>Outputs that carry confidence scores, not just predictions</li>
-          </ul>
+        {/* Why */}
+        <section className="mb-12">
+          <h2 className="mb-4 text-2xl font-semibold">Why AIVEX Exists</h2>
+          <div className="space-y-3 text-muted-foreground">
+            <p>
+              The signal-to-noise problem in financial data is not solved by more data. It is solved
+              by better evaluation infrastructure: pipelines that score quality, detect conflict,
+              apply governance, and emit auditable outputs — not black-box predictions.
+            </p>
+            <p>
+              We built AIVEX because the infrastructure for rigorous AI-assisted research did not
+              exist in accessible form. Institutional-quality tooling was locked behind proprietary
+              systems. We are building the open research layer.
+            </p>
+          </div>
+        </section>
 
-          <h2>Research Ethics</h2>
-          <p>
-            We believe AI-driven market research carries responsibility. AIVEX is designed to make
-            that responsibility explicit: every output includes a research disclaimer, every signal
-            is auditable, and the Governor module exists specifically to prevent outputs from being
-            used as financial advice.
-          </p>
-
-          <h2>Team</h2>
-        </div>
-
-        <div className="my-8 grid gap-6 sm:grid-cols-2">
-          {[
-            {
-              name: 'Eren Can Dönertaş',
-              title: 'Founder & CEO',
-              bio: 'Third-year Computer Science student at TOBB University, focused on AI, finance, and business.',
-              linkedin: 'https://www.linkedin.com/in/eren-can-donertas/',
-            },
-            {
-              name: 'Enes Kerem Göksu',
-              title: 'CTO',
-              bio: 'Third-year Computer Science student at TOBB University, focused on AI and system architecture.',
-              linkedin: 'https://www.linkedin.com/in/enes-kerem-göksu-198428407/',
-            },
-          ].map((person) =>
-            person.linkedin ? (
-              <a
-                key={person.name}
-                href={person.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg border border-border p-6 transition-shadow hover:shadow-md block"
-              >
-                <p className="font-semibold">{person.name}</p>
-                <p className="mb-2 text-sm text-muted-foreground">{person.title}</p>
-                <p className="text-sm">{person.bio}</p>
-              </a>
-            ) : (
-              <div key={person.name} className="rounded-lg border border-border p-6">
-                <p className="font-semibold">{person.name}</p>
-                <p className="mb-2 text-sm text-muted-foreground">{person.title}</p>
-                <p className="text-sm">{person.bio}</p>
+        {/* What we're building */}
+        <section className="mb-12">
+          <h2 className="mb-4 text-2xl font-semibold">What We Are Building</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[
+              {
+                title: 'Modular Signal Pipelines',
+                body: 'Independent modules for news, chart, and fundamental data — each producing scored, attributed atomic signals.',
+              },
+              {
+                title: 'Composition & Governance',
+                body: 'Signal Engine merges atomic signals with conflict resolution. Governor applies risk gates and human override policies.',
+              },
+              {
+                title: 'Auditability by Design',
+                body: 'Every output carries a trace_id. Every gating decision is logged. Evaluation is deterministic and reproducible.',
+              },
+              {
+                title: 'Operational Reliability',
+                body: 'Watchdog process supervision with heartbeat monitoring, crash-loop detection, and exponential-backoff restart.',
+              },
+            ].map((item) => (
+              <div key={item.title} className="rounded-xl border border-border p-5">
+                <h3 className="mb-2 font-semibold">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.body}</p>
               </div>
-            )
-          )}
-        </div>
+            ))}
+          </div>
+        </section>
 
-        <div className="prose">
-          <h2>Get In Touch</h2>
-          <p>
-            We work with researchers, quant teams, and academic institutions. If you are building
-            systematic research workflows and want to evaluate AIVEX, we would like to hear from you.
+        {/* Current Progress */}
+        <section className="mb-12">
+          <h2 className="mb-4 text-2xl font-semibold">Current Progress</h2>
+          <div className="rounded-xl border border-border bg-muted/20 p-6">
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              {[
+                'Modular signal architecture implemented and in internal runtime',
+                'Eye API observability layer in active development',
+                'Signal Engine, Governor, and runtime dashboard under active validation',
+                'Research outputs are informational artifacts — not financial advice',
+                'Infrastructure focused on traceability, auditability, and governed emission',
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* Research Principles */}
+        <section className="mb-12">
+          <h2 className="mb-4 text-2xl font-semibold">Research Principles</h2>
+          <div className="prose">
+            <p>AIVEX operates on three non-negotiable research principles:</p>
+            <ul>
+              <li>
+                <strong>Falsifiability:</strong> A signal that cannot be evaluated against ground
+                truth is speculation. Every module produces verifiable outputs.
+              </li>
+              <li>
+                <strong>Traceability:</strong> Every output carries a trace ID linking it to its
+                exact pipeline run, source signals, and governance decision.
+              </li>
+              <li>
+                <strong>Responsibility:</strong> AI-driven research carries responsibility. The
+                Governor exists to prevent outputs from being misused as financial advice.
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        {/* Team */}
+        <section className="mb-12">
+          <h2 className="mb-2 text-2xl font-semibold">Team</h2>
+          <p className="mb-6 text-sm text-muted-foreground">
+            Three co-founders with complementary backgrounds in engineering and business development.
           </p>
-        </div>
+          <div className="grid gap-6 sm:grid-cols-3">
+            {TEAM.map((member) => (
+              <TeamMemberCard key={member.name} {...member} />
+            ))}
+          </div>
+        </section>
 
-        <div className="mt-8 flex gap-4">
-          <Link href="/contact">
-            <Button>Contact Us</Button>
-          </Link>
-          <Link href="/docs/getting-started">
-            <Button variant="outline">Read the Docs</Button>
-          </Link>
-        </div>
+        {/* Roadmap */}
+        <section className="mb-12">
+          <h2 className="mb-6 text-2xl font-semibold">Roadmap</h2>
+          <div className="overflow-x-auto rounded-xl border border-border">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-muted/30">
+                  {ROADMAP.map((r) => (
+                    <th key={r.phase} className="px-5 py-3 text-left font-semibold">
+                      {r.phase}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({
+                  length: Math.max(...ROADMAP.map((r) => r.items.length)),
+                }).map((_, i) => (
+                  <tr key={i} className="border-b border-border last:border-0">
+                    {ROADMAP.map((r) => (
+                      <td key={r.phase} className="px-5 py-3 text-muted-foreground">
+                        {r.items[i] ?? ''}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="rounded-xl border border-border bg-muted/20 p-8 text-center">
+          <h2 className="mb-2 text-xl font-semibold">Investor &amp; Partner Inquiry</h2>
+          <p className="mb-6 text-muted-foreground">
+            We work with researchers, quant teams, and academic institutions. If you are evaluating
+            AIVEX for systematic research workflows or strategic partnerships, we would like to hear
+            from you.
+          </p>
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Link href="/contact">
+              <Button size="lg">Investor &amp; Partner Inquiry</Button>
+            </Link>
+            <Link href="/methodology">
+              <Button variant="outline" size="lg">
+                View Research Principles
+              </Button>
+            </Link>
+          </div>
+        </section>
       </div>
     </div>
   );

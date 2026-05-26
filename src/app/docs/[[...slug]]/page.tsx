@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import { getAllDocSlugs, getAllDocPages, getDocPageBySlug } from '@/lib/mdx';
+import { getAllDocSlugs, getDocPageBySlug } from '@/lib/mdx';
 import { mdxComponents } from '@/components/mdx/MDXComponents';
 import { cn } from '@/lib/utils';
 import type { DocNavItem } from '@/types';

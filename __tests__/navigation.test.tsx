@@ -53,9 +53,9 @@ describe('Header', () => {
     ).toBe('/docs/getting-started');
   });
 
-  it('renders the Request Demo CTA', () => {
+  it('renders the Request Access CTA', () => {
     render(<Header />);
-    const cta = screen.getByRole('link', { name: 'Request Demo' });
+    const cta = screen.getByRole('link', { name: 'Request Access' });
     expect(cta).toBeDefined();
     expect(cta.getAttribute('href')).toBe('/contact');
   });
@@ -98,7 +98,7 @@ describe('Footer', () => {
 
   it('renders the disclaimer text', () => {
     render(<Footer />);
-    expect(screen.getByText(/not financial advice/i)).toBeDefined();
+    expect(screen.getByText(/not financial.*advice/i)).toBeDefined();
   });
 
   it('renders the copyright notice', () => {

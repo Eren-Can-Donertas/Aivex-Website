@@ -32,32 +32,32 @@ function mockApiResponse(body: object, status: number) {
 // ---------------------------------------------------------------------------
 
 describe('Hero CTAs', () => {
-  it('renders the primary Request Demo button', () => {
+  it('renders the primary Request Research Access button', () => {
     render(<Hero />);
-    expect(screen.getByRole('link', { name: /Request Demo/i })).toBeDefined();
+    expect(screen.getByRole('link', { name: /Request Research Access/i })).toBeDefined();
   });
 
-  it('Request Demo routes to /contact', () => {
+  it('Request Research Access routes to /contact', () => {
     render(<Hero />);
-    const link = screen.getByRole('link', { name: /Request Demo/i });
+    const link = screen.getByRole('link', { name: /Request Research Access/i });
     expect(link.getAttribute('href')).toBe('/contact');
   });
 
-  it('renders the secondary View Docs button', () => {
+  it('renders the secondary View Methodology button', () => {
     render(<Hero />);
-    expect(screen.getByRole('link', { name: /View Docs/i })).toBeDefined();
+    expect(screen.getByRole('link', { name: /View Methodology/i })).toBeDefined();
   });
 
-  it('View Docs routes to /docs/getting-started', () => {
+  it('View Methodology routes to /methodology', () => {
     render(<Hero />);
-    const link = screen.getByRole('link', { name: /View Docs/i });
-    expect(link.getAttribute('href')).toBe('/docs/getting-started');
+    const link = screen.getByRole('link', { name: /View Methodology/i });
+    expect(link.getAttribute('href')).toBe('/methodology');
   });
 
   it('renders both CTAs in the same section', () => {
     render(<Hero />);
-    expect(screen.getByRole('link', { name: /Request Demo/i })).toBeDefined();
-    expect(screen.getByRole('link', { name: /View Docs/i })).toBeDefined();
+    expect(screen.getByRole('link', { name: /Request Research Access/i })).toBeDefined();
+    expect(screen.getByRole('link', { name: /View Methodology/i })).toBeDefined();
   });
 });
 

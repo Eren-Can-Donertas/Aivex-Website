@@ -1,19 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 import type { ContactSubmission } from '@/types';
 
-// Submissions are appended as newline-delimited JSON so the file survives
-// large volumes without reading everything into memory on each write.
-const SUBMISSIONS_FILE = path.join(process.cwd(), 'data', 'contact_submissions.jsonl');
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_EMAIL_LENGTH = 254; // RFC 5321
 const MAX_FIELD_LENGTH = 2000;
 
-function appendSubmission(entry: ContactSubmission): void {
-  const dir = path.dirname(SUBMISSIONS_FILE);
+const VALID_INTEREST_TYPES = new Set([
+  'research_access',
+  'investor_inquiry',
+  'partnership',
+  'technical_eval',
+  'other',
+]);
+
+async function persistSubmission(entry: ContactSubmission & Record<string, unknown>): Promise<void> {
+  const webhookUrl = process.env.CONTACT_WEBHOOK_URL;
+
+  if (webhookUrl) {
+    const res = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry),
+    });
+    if (!res.ok) throw new Error(`Webhook responded with ${res.status}`);
+    return;
+  }
+
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('No durable persistence configured for production.');
+  }
+
+  // Development-only: write to local filesystem
+  const { default: fs } = await import('fs');
+  const { default: path } = await import('path');
+  const file = path.join(process.cwd(), 'data', 'contact_submissions.jsonl');
+  const dir = path.dirname(file);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.appendFileSync(SUBMISSIONS_FILE, JSON.stringify(entry) + '\n', 'utf-8');
+  fs.appendFileSync(file, JSON.stringify(entry) + '\n', 'utf-8');
 }
 
 export async function POST(request: NextRequest) {
@@ -36,22 +59,17 @@ export async function POST(request: NextRequest) {
 
   const raw = body as Record<string, unknown>;
 
-  // ── Required field validation ────────────────────────────────────────────
-  const name = typeof raw.name === 'string' ? raw.name.trim() : '';
-  const email = typeof raw.email === 'string' ? raw.email.trim().toLowerCase() : '';
-  const message = typeof raw.message === 'string' ? raw.message.trim() : '';
-  const organization =
-    typeof raw.organization === 'string' ? raw.organization.trim() : undefined;
+  const name         = typeof raw.name         === 'string' ? raw.name.trim()         : '';
+  const email        = typeof raw.email        === 'string' ? raw.email.trim().toLowerCase() : '';
+  const message      = typeof raw.message      === 'string' ? raw.message.trim()      : '';
+  const organization = typeof raw.organization === 'string' ? raw.organization.trim() : undefined;
+  const role         = typeof raw.role         === 'string' ? raw.role.trim()         : undefined;
+  const interestType = typeof raw.interest_type === 'string' &&
+    VALID_INTEREST_TYPES.has(raw.interest_type) ? raw.interest_type : undefined;
 
-  if (!name) {
+  if (!name || name.length > MAX_FIELD_LENGTH) {
     return NextResponse.json(
-      { success: false, message: 'Name is required.' },
-      { status: 400 }
-    );
-  }
-  if (name.length > MAX_FIELD_LENGTH) {
-    return NextResponse.json(
-      { success: false, message: 'Name is too long.' },
+      { success: false, message: name ? 'Name is too long.' : 'Name is required.' },
       { status: 400 }
     );
   }
@@ -63,40 +81,42 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (!message) {
+  if (!message || message.length > MAX_FIELD_LENGTH) {
     return NextResponse.json(
-      { success: false, message: 'Message is required.' },
-      { status: 400 }
-    );
-  }
-  if (message.length > MAX_FIELD_LENGTH) {
-    return NextResponse.json(
-      { success: false, message: 'Message is too long (max 2000 characters).' },
+      { success: false, message: message ? 'Message is too long (max 2000 characters).' : 'Message is required.' },
       { status: 400 }
     );
   }
 
-  // ── Persist ───────────────────────────────────────────────────────────────
-  const entry: ContactSubmission = {
+  const entry: ContactSubmission & Record<string, unknown> = {
     name,
     email,
     message,
     submittedAt: new Date().toISOString(),
     ...(organization ? { organization } : {}),
+    ...(role         ? { role }         : {}),
+    ...(interestType ? { interest_type: interestType } : {}),
   };
 
   try {
-    appendSubmission(entry);
+    await persistSubmission(entry);
   } catch (err) {
     console.error('[contact] Failed to persist submission:', err);
+    const isProdMisconfig =
+      process.env.NODE_ENV === 'production' && !process.env.CONTACT_WEBHOOK_URL;
     return NextResponse.json(
-      { success: false, message: 'Server error — submission could not be saved. Please try again.' },
-      { status: 500 }
+      {
+        success: false,
+        message: isProdMisconfig
+          ? 'Submission service is not configured. Please contact us directly at the address in the footer.'
+          : 'Server error — submission could not be saved. Please try again.',
+      },
+      { status: isProdMisconfig ? 503 : 500 }
     );
   }
 
   return NextResponse.json(
-    { success: true, message: "Message received. We'll be in touch within 2 business days." },
+    { success: true, message: "Request received. We'll be in touch within 2 business days." },
     { status: 201 }
   );
 }

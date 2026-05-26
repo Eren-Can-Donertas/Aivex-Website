@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const FOOTER_LINKS = {
   Product: [
@@ -26,14 +27,27 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="text-xl font-bold">
-              <span className="gradient-text">AIVEX</span>
+            <Link href="/" className="inline-flex items-center gap-2">
+              <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-white">
+                <Image
+                  src="/logo.jpeg"
+                  alt=""
+                  width={24}
+                  height={24}
+                  className="h-6 w-6 object-contain"
+                />
+              </span>
+              <span className="text-xl font-bold">
+                <span className="gradient-text">AIVEX</span>
+              </span>
             </Link>
             <p className="mt-2 text-sm text-muted-foreground">
-              AI-driven multi-module signal generation and evaluation for systematic research.
+              Modular AI research infrastructure for systematic signal generation, governance, and
+              auditable output.
             </p>
             <p className="mt-4 text-xs text-muted-foreground">
-              For research and analysis purposes only. Not financial advice.
+              AIVEX produces research artifacts for informational and analytical purposes only.
+              Outputs are not financial, investment, or trading advice.
             </p>
           </div>
 

@@ -26,35 +26,39 @@ describe('Hero', () => {
     expect(container.firstChild).not.toBeNull();
   });
 
-  it('contains the main headline text', () => {
+  it('contains a level-1 heading', () => {
     render(<Hero />);
     expect(screen.getByRole('heading', { level: 1 })).toBeDefined();
-    expect(screen.getByText(/AI signal research/i)).toBeDefined();
   });
 
-  it('renders the research preview badge', () => {
+  it('headline contains "Research Pipeline"', () => {
     render(<Hero />);
-    expect(screen.getByText(/Research Preview/i)).toBeDefined();
+    expect(screen.getByText(/Research Pipeline/i)).toBeDefined();
   });
 
-  it('renders the Request Demo CTA', () => {
+  it('renders the primary Request Research Access CTA', () => {
     render(<Hero />);
-    const demoLink = screen.getByRole('link', { name: /Request Demo/i });
-    expect(demoLink).toBeDefined();
-    expect(demoLink.getAttribute('href')).toBe('/contact');
+    const link = screen.getByRole('link', { name: /Request Research Access/i });
+    expect(link).toBeDefined();
+    expect(link.getAttribute('href')).toBe('/contact');
   });
 
-  it('renders the View Docs CTA', () => {
+  it('renders the secondary View Methodology CTA', () => {
     render(<Hero />);
-    const docsLink = screen.getByRole('link', { name: /View Docs/i });
-    expect(docsLink).toBeDefined();
-    expect(docsLink.getAttribute('href')).toBe('/docs/getting-started');
+    const link = screen.getByRole('link', { name: /View Methodology/i });
+    expect(link).toBeDefined();
+    expect(link.getAttribute('href')).toBe('/methodology');
   });
 
-  it('renders the stats strip', () => {
+  it('renders the stats strip with Signal Modules and Runtime Supervision', () => {
     render(<Hero />);
     expect(screen.getByText('Signal Modules')).toBeDefined();
-    expect(screen.getByText('Uptime Target')).toBeDefined();
+    expect(screen.getByText('Runtime Supervision')).toBeDefined();
+  });
+
+  it('does not render a defensive badge before the headline', () => {
+    render(<Hero />);
+    expect(screen.queryByText(/Research Preview/i)).toBeNull();
   });
 });
 
@@ -80,13 +84,21 @@ describe('ProductOverview', () => {
     expect(screen.getByText('Metrics Signal')).toBeDefined();
     expect(screen.getByText('Signal Engine')).toBeDefined();
     expect(screen.getByText('Governor')).toBeDefined();
-    expect(screen.getByText('Eye (API)')).toBeDefined();
+    expect(screen.getByText('Eye API')).toBeDefined();
   });
 
-  it('renders at least one prototype badge', () => {
+  it('renders professional status labels (no "prototype" badges)', () => {
     render(<ProductOverview />);
-    const prototypeBadges = screen.getAllByText('prototype');
-    expect(prototypeBadges.length).toBeGreaterThan(0);
+    expect(screen.queryByText('prototype')).toBeNull();
+    const internalRuntimeBadges = screen.getAllByText('Internal Runtime');
+    expect(internalRuntimeBadges.length).toBeGreaterThan(0);
+    expect(screen.getByText('Risk Gate Active')).toBeDefined();
+  });
+
+  it('renders output descriptions for each module', () => {
+    render(<ProductOverview />);
+    const outputLabels = screen.getAllByText(/Output:/i);
+    expect(outputLabels.length).toBeGreaterThan(0);
   });
 });
 

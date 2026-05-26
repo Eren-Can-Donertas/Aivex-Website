@@ -2,10 +2,14 @@
 
 import dynamic from 'next/dynamic';
 
-// The ElevenLabs SDK (and its livekit-client transitive dependency) touch
-// browser-only globals at import time, so the widget is loaded client-side only.
 const ChatWidget = dynamic(() => import('./ChatWidget'), { ssr: false });
 
 export function ChatWidgetMount() {
+  if (
+    process.env.NEXT_PUBLIC_ENABLE_AIVEX_CHAT !== '1' ||
+    !process.env.NEXT_PUBLIC_AGENT_ID_AIVEX
+  ) {
+    return null;
+  }
   return <ChatWidget />;
 }

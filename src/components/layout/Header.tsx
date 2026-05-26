@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { MobileMenu } from './MobileMenu';
 import type { NavItem } from '@/types';
@@ -16,7 +17,17 @@ export function Header() {
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2.5">
+          <span className="inline-flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-sm bg-white">
+            <Image
+              src="/logo.jpeg"
+              alt=""
+              width={28}
+              height={28}
+              className="h-7 w-7 object-contain"
+              priority
+            />
+          </span>
           <span className="text-xl font-bold tracking-tight">
             <span className="gradient-text">AIVEX</span>
           </span>
@@ -45,7 +56,7 @@ export function Header() {
             href="/contact"
             className="hidden rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 md:inline-flex"
           >
-            Request Demo
+            Request Access
           </Link>
           <MobileMenu items={NAV_ITEMS} />
         </div>

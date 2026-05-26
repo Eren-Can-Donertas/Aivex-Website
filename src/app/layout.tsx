@@ -21,35 +21,51 @@ const fontMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aivex.ai'),
   title: {
-    default: 'AIVEX — Institutional-grade AI Signal Research',
+    default: 'AIVEX — AI Research Infrastructure for Systematic Signal Intelligence',
     template: '%s | AIVEX',
   },
   description:
-    'AIVEX is a modular AI system that ingests news, market data, and alternative signals — composing and governing them into auditable research outputs.',
-  keywords: ['AI', 'signal research', 'quantitative analysis', 'machine learning', 'financial research'],
+    'AIVEX Analytics is an AI-first research infrastructure platform for generating, evaluating, and governing systematic market signals with traceability and auditability.',
+  keywords: [
+    'AI signal governance',
+    'auditable market research',
+    'systematic signal research',
+    'financial research infrastructure',
+    'AI research pipeline',
+    'market intelligence platform',
+    'traceable research signals',
+    'signal composition',
+    'quantitative research infrastructure',
+  ],
   authors: [{ name: 'AIVEX Analytics' }],
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aivex.ai',
-    siteName: 'AIVEX',
-    title: 'AIVEX — Institutional-grade AI Signal Research',
+    siteName: 'AIVEX Analytics',
+    title: 'AIVEX — AI Research Infrastructure for Systematic Signal Intelligence',
     description:
-      'Modular AI signal generation, composition, and governance for systematic research.',
+      'Modular AI signal generation, composition, and governance for systematic research. Traceable, auditable, and governed outputs.',
     images: [
       {
         url: '/og-default.png',
         width: 1200,
         height: 630,
-        alt: 'AIVEX Analytics',
+        alt: 'AIVEX Analytics — AI Research Infrastructure',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AIVEX — AI Signal Research',
-    description: 'Modular AI signal generation, composition, and governance.',
+    title: 'AIVEX — AI Research Infrastructure',
+    description:
+      'Traceable, governed, auditable AI signal research infrastructure for systematic workflows.',
     images: ['/og-default.png'],
+  },
+  icons: {
+    icon: '/logo.jpeg',
+    shortcut: '/logo.jpeg',
+    apple: '/logo.jpeg',
   },
   robots: {
     index: true,

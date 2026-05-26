@@ -247,7 +247,7 @@ export default function ChatWidget() {
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4" aria-live="polite">
             {!AGENT_ID && (
               <p className="text-sm text-muted-foreground">
-                The assistant isn't configured yet.
+                The assistant isn&apos;t configured yet.
               </p>
             )}
             {AGENT_ID && messages.length === 0 && status === 'connected' && (
