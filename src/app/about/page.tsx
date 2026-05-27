@@ -1,7 +1,25 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+
+interface TeamMember {
+  name: string;
+  title: string;
+  bio: string;
+  linkedin?: string;
+  photo?: string;
+}
+
+function initials(name: string): string {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((n) => n[0]?.toUpperCase() ?? '')
+    .join('');
+}
 
 export const metadata: Metadata = {
   title: 'About',
@@ -56,40 +74,62 @@ export default function AboutPage() {
         </div>
 
         <div className="my-8 grid gap-6 sm:grid-cols-2">
-          {[
-            {
-              name: 'Eren Can Dönertaş',
-              title: 'Founder & CEO',
-              bio: 'Third-year Computer Science student at TOBB University, focused on AI, finance, and business.',
-              linkedin: 'https://www.linkedin.com/in/eren-can-donertas/',
-            },
-            {
-              name: 'Enes Kerem Göksu',
-              title: 'CTO',
-              bio: 'Third-year Computer Science student at TOBB University, focused on AI and system architecture.',
-              linkedin: 'https://www.linkedin.com/in/enes-kerem-göksu-198428407/',
-            },
-          ].map((person) =>
-            person.linkedin ? (
-              <a
+          {(
+            [
+              {
+                name: 'Eren Can Dönertaş',
+                title: 'Founder & CEO',
+                bio: 'Third-year Computer Science student at TOBB University, focused on AI, finance, and business.',
+                linkedin: 'https://www.linkedin.com/in/eren-can-donertas/',
+                photo: '/team/eren.jpg',
+              },
+              {
+                name: 'Enes Kerem Göksu',
+                title: 'CTO',
+                bio: 'Third-year Computer Science student at TOBB University, focused on AI and system architecture.',
+                linkedin: 'https://www.linkedin.com/in/enes-kerem-göksu-198428407/',
+                photo: '/team/enes.jpg',
+              },
+            ] satisfies TeamMember[]
+          ).map((person) => {
+            const Wrapper = person.linkedin ? 'a' : 'div';
+            const wrapperProps = person.linkedin
+              ? {
+                  href: person.linkedin,
+                  target: '_blank',
+                  rel: 'noopener noreferrer',
+                }
+              : {};
+            return (
+              <Wrapper
                 key={person.name}
-                href={person.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg border border-border p-6 transition-shadow hover:shadow-md block"
+                {...wrapperProps}
+                className="flex items-start gap-4 rounded-lg border border-border p-6 transition-shadow hover:shadow-md"
               >
-                <p className="font-semibold">{person.name}</p>
-                <p className="mb-2 text-sm text-muted-foreground">{person.title}</p>
-                <p className="text-sm">{person.bio}</p>
-              </a>
-            ) : (
-              <div key={person.name} className="rounded-lg border border-border p-6">
-                <p className="font-semibold">{person.name}</p>
-                <p className="mb-2 text-sm text-muted-foreground">{person.title}</p>
-                <p className="text-sm">{person.bio}</p>
-              </div>
-            )
-          )}
+                {person.photo ? (
+                  <Image
+                    src={person.photo}
+                    alt={`${person.name} headshot`}
+                    width={64}
+                    height={64}
+                    className="h-16 w-16 shrink-0 rounded-full object-cover"
+                  />
+                ) : (
+                  <div
+                    aria-hidden
+                    className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-muted text-base font-semibold text-muted-foreground"
+                  >
+                    {initials(person.name)}
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <p className="font-semibold">{person.name}</p>
+                  <p className="mb-2 text-sm text-muted-foreground">{person.title}</p>
+                  <p className="text-sm">{person.bio}</p>
+                </div>
+              </Wrapper>
+            );
+          })}
         </div>
 
         <div className="prose">
