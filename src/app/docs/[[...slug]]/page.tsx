@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import { getAllDocSlugs, getAllDocPages, getDocPageBySlug } from '@/lib/mdx';
+import { getAllDocSlugs, getDocPageBySlug } from '@/lib/mdx';
 import { mdxComponents } from '@/components/mdx/MDXComponents';
 import { cn } from '@/lib/utils';
 import type { DocNavItem } from '@/types';
@@ -53,7 +53,8 @@ function NavItem({ item, currentPath }: { item: DocNavItem; currentPath: string 
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const slugParts = params.slug ?? ['getting-started'];
+  const slugParts = params.slug ?? [];
+  if (slugParts.length === 0) return {};
   const page = getDocPageBySlug(slugParts);
   if (!page) return {};
   return {
@@ -63,11 +64,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  return getAllDocSlugs().map((slug) => ({ slug }));
+  return [{ slug: [] as string[] }, ...getAllDocSlugs().map((slug) => ({ slug }))];
 }
 
 export default function DocsPage({ params }: Props) {
-  const slugParts = params.slug ?? ['getting-started'];
+  const slugParts = params.slug ?? [];
+  if (slugParts.length === 0) {
+    return (
+      <>
+        <meta httpEquiv="refresh" content="0; url=./getting-started/" />
+        <link rel="canonical" href="./getting-started/" />
+      </>
+    );
+  }
   const page = getDocPageBySlug(slugParts);
   if (!page) notFound();
 

@@ -92,19 +92,7 @@ test.describe('Investor journey: landing → demo request form', () => {
     await expect(page).toHaveURL('/contact');
   });
 
-  test('full contact form fills and submits a real network request', async ({ page }) => {
-    let intercepted = false;
-    await page.route('/api/contact', async (route) => {
-      intercepted = true;
-      const req = route.request();
-      expect(req.method()).toBe('POST');
-      await route.fulfill({
-        status: 201,
-        contentType: 'application/json',
-        body: JSON.stringify({ success: true, message: 'Submission received' }),
-      });
-    });
-
+  test('full contact form fills and submits successfully', async ({ page }) => {
     await page.goto('/contact');
     await page.getByLabel(/name/i).fill('Investor Test');
     await page.getByLabel(/email/i).fill('investor@example.com');
@@ -115,10 +103,9 @@ test.describe('Investor journey: landing → demo request form', () => {
 
     await page.getByRole('button', { name: /send|submit|request/i }).click();
 
-    // Either network was intercepted or a success UI element appeared
-    const successEl = page.getByText(/success|received|thank|sent/i);
-    const hasSuccess = intercepted || (await successEl.count()) > 0;
-    expect(hasSuccess).toBe(true);
+    await expect(page.getByText(/success|received|thank|sent/i).first()).toBeVisible({
+      timeout: 5000,
+    });
   });
 });
 

@@ -37,4 +37,4 @@ test-e2e:
 ci: install typecheck lint build test
 
 clean:
-	rm -rf .next node_modules
+	rm -rf out .next node_modules

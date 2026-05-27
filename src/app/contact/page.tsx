@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Loader2, AlertCircle } from 'lucide-react';
+import { addContactSubmission } from '@/lib/mock-store';
 
 type State = 'idle' | 'loading' | 'success' | 'error';
 
@@ -18,28 +19,17 @@ export default function ContactPage() {
     setState('loading');
     setErrorMessage('');
 
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          message: form.message,
-          ...(form.organization ? { organization: form.organization } : {}),
-        }),
-      });
+    const result = addContactSubmission({
+      name: form.name,
+      email: form.email,
+      message: form.message,
+      ...(form.organization ? { organization: form.organization } : {}),
+    });
 
-      const data = (await res.json()) as { success: boolean; message: string };
-
-      if (res.ok && data.success) {
-        setState('success');
-      } else {
-        setErrorMessage(data.message || 'Something went wrong. Please try again.');
-        setState('error');
-      }
-    } catch {
-      setErrorMessage('Network error — please check your connection and try again.');
+    if (result.ok) {
+      setState('success');
+    } else {
+      setErrorMessage(result.reason);
       setState('error');
     }
   }

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 vi.mock('next/link', () => ({
@@ -12,20 +12,14 @@ vi.mock('@/lib/analytics', () => ({
   trackWaitlistSignup: vi.fn(),
 }));
 
-const mockFetch = vi.fn();
-vi.stubGlobal('fetch', mockFetch);
+vi.mock('@/lib/mock-store', () => ({
+  addWaitlistEntry: vi.fn(),
+  addContactSubmission: vi.fn(),
+}));
 
 import { Hero } from '@/components/sections/Hero';
 import { WaitlistForm } from '@/components/sections/WaitlistForm';
-
-function mockApiResponse(body: object, status: number) {
-  return Promise.resolve(
-    new Response(JSON.stringify(body), {
-      status,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  );
-}
+import { addWaitlistEntry } from '@/lib/mock-store';
 
 // ---------------------------------------------------------------------------
 // Hero CTAs
@@ -104,7 +98,7 @@ describe('WaitlistForm rendering', () => {
 
 describe('WaitlistForm validation', () => {
   beforeEach(() => {
-    mockFetch.mockReset();
+    vi.mocked(addWaitlistEntry).mockReset();
   });
 
   it('shows a validation error for empty email on submit', async () => {
@@ -114,17 +108,17 @@ describe('WaitlistForm validation', () => {
   });
 
   it('shows a validation error for malformed email', async () => {
-    render(<WaitlistForm />);
+    const { container } = render(<WaitlistForm />);
     await userEvent.type(screen.getByRole('textbox', { name: /email/i }), 'notanemail');
-    await userEvent.click(screen.getByRole('button', { name: /Join Waitlist/i }));
-    expect(screen.getByText(/valid email/i)).toBeDefined();
+    fireEvent.submit(container.querySelector('form')!);
+    await waitFor(() => expect(screen.getByText(/valid email/i)).toBeDefined());
   });
 
-  it('does not call fetch when email is invalid', async () => {
+  it('does not call addWaitlistEntry when email is invalid', async () => {
     render(<WaitlistForm />);
     await userEvent.type(screen.getByRole('textbox', { name: /email/i }), 'bad@');
     await userEvent.click(screen.getByRole('button', { name: /Join Waitlist/i }));
-    expect(mockFetch).not.toHaveBeenCalled();
+    expect(addWaitlistEntry).not.toHaveBeenCalled();
   });
 
   it('does not show success state when email is invalid', async () => {
@@ -141,29 +135,22 @@ describe('WaitlistForm validation', () => {
 
 describe('WaitlistForm submission', () => {
   beforeEach(() => {
-    mockFetch.mockReset();
+    vi.mocked(addWaitlistEntry).mockReset();
   });
 
-  it('calls fetch with correct endpoint on valid submit', async () => {
-    mockFetch.mockReturnValueOnce(
-      mockApiResponse({ success: true, message: "You're on the list!" }, 201)
-    );
+  it('calls addWaitlistEntry with correct email on valid submit', async () => {
+    vi.mocked(addWaitlistEntry).mockReturnValueOnce({ ok: true, alreadyExists: false });
     render(<WaitlistForm />);
     await userEvent.type(
       screen.getByRole('textbox', { name: /email/i }),
       'investor@vc.com'
     );
     await userEvent.click(screen.getByRole('button', { name: /Join Waitlist/i }));
-    expect(mockFetch).toHaveBeenCalledWith(
-      '/api/waitlist',
-      expect.objectContaining({ method: 'POST' })
-    );
+    expect(addWaitlistEntry).toHaveBeenCalledWith('investor@vc.com');
   });
 
-  it('shows success state after 201 response', async () => {
-    mockFetch.mockReturnValueOnce(
-      mockApiResponse({ success: true, message: "You're on the list!" }, 201)
-    );
+  it('shows success state after successful submission', async () => {
+    vi.mocked(addWaitlistEntry).mockReturnValueOnce({ ok: true, alreadyExists: false });
     render(<WaitlistForm />);
     await userEvent.type(
       screen.getByRole('textbox', { name: /email/i }),
@@ -173,10 +160,8 @@ describe('WaitlistForm submission', () => {
     await waitFor(() => expect(screen.getByText(/on the list/i)).toBeDefined());
   });
 
-  it('shows already-on-list message for 409 response', async () => {
-    mockFetch.mockReturnValueOnce(
-      mockApiResponse({ success: true, message: 'Already on list' }, 409)
-    );
+  it('shows already-on-list message when alreadyExists is true', async () => {
+    vi.mocked(addWaitlistEntry).mockReturnValueOnce({ ok: true, alreadyExists: true });
     render(<WaitlistForm />);
     await userEvent.type(
       screen.getByRole('textbox', { name: /email/i }),
@@ -186,26 +171,23 @@ describe('WaitlistForm submission', () => {
     await waitFor(() => expect(screen.getByText(/already on the list/i)).toBeDefined());
   });
 
-  it('shows error state on network failure', async () => {
-    mockFetch.mockRejectedValueOnce(new Error('Network error'));
+  it('shows error state when addWaitlistEntry returns ok: false', async () => {
+    vi.mocked(addWaitlistEntry).mockReturnValueOnce({ ok: false, reason: 'Please provide a valid email address.' });
     render(<WaitlistForm />);
     await userEvent.type(
       screen.getByRole('textbox', { name: /email/i }),
       'test@example.com'
     );
     await userEvent.click(screen.getByRole('button', { name: /Join Waitlist/i }));
-    await waitFor(() => expect(screen.getByText(/network error/i)).toBeDefined());
+    await waitFor(() => expect(screen.getByText(/valid email/i)).toBeDefined());
   });
 
-  it('clears the email input after successful submission', async () => {
-    mockFetch.mockReturnValueOnce(
-      mockApiResponse({ success: true, message: "You're on the list!" }, 201)
-    );
+  it('email input is no longer visible after successful submission', async () => {
+    vi.mocked(addWaitlistEntry).mockReturnValueOnce({ ok: true, alreadyExists: false });
     render(<WaitlistForm />);
-    const input = screen.getByRole('textbox', { name: /email/i }) as HTMLInputElement;
-    await userEvent.type(input, 'test@example.com');
+    await userEvent.type(screen.getByRole('textbox', { name: /email/i }), 'test@example.com');
     await userEvent.click(screen.getByRole('button', { name: /Join Waitlist/i }));
     await waitFor(() => expect(screen.getByText(/on the list/i)).toBeDefined());
-    expect(input.value).toBe('');
+    expect(screen.queryByRole('textbox', { name: /email/i })).toBeNull();
   });
 });

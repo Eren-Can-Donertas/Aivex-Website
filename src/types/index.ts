@@ -21,7 +21,6 @@ export interface DocPage {
 export interface WaitlistEntry {
   email: string;
   createdAt: string;
-  source?: string;
 }
 
 export interface ContactSubmission {
@@ -30,8 +29,6 @@ export interface ContactSubmission {
   organization?: string;
   message: string;
   submittedAt: string;
-  /** Origin of the submission, e.g. 'chat-agent' for leads captured by the assistant. */
-  source?: string;
 }
 
 export interface NavItem {

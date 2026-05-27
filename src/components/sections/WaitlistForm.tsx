@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { trackWaitlistSignup } from '@/lib/analytics';
 import { CheckCircle, Loader2 } from 'lucide-react';
+import { addWaitlistEntry } from '@/lib/mock-store';
 
 type State = 'idle' | 'loading' | 'success' | 'error';
 
@@ -25,30 +26,19 @@ export function WaitlistForm() {
 
     setState('loading');
 
-    try {
-      const res = await fetch('/api/waitlist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
+    const result = addWaitlistEntry(email);
 
-      const data = (await res.json()) as { success: boolean; message: string };
-
-      if (res.ok && data.success) {
-        setState('success');
-        setMessage(data.message);
-        trackWaitlistSignup(email);
-        setEmail('');
-      } else if (res.status === 409) {
-        setState('success');
-        setMessage("You're already on the list — we'll be in touch.");
-      } else {
-        setState('error');
-        setMessage(data.message ?? 'Something went wrong. Please try again.');
-      }
-    } catch {
+    if (result.ok && !result.alreadyExists) {
+      setState('success');
+      setMessage("You're on the list! We'll be in touch soon.");
+      trackWaitlistSignup(email);
+      setEmail('');
+    } else if (result.ok && result.alreadyExists) {
+      setState('success');
+      setMessage("You're already on the list — we'll be in touch.");
+    } else if (!result.ok) {
       setState('error');
-      setMessage('Network error. Please try again.');
+      setMessage(result.reason);
     }
   }
 
