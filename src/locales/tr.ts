@@ -161,7 +161,7 @@ export const tr = {
     disclaimer: 'AIVEX, yalnızca bilgilendirme ve analitik amaçlar için analiz eserleri üretir. Çıktılar finansal, yatırım veya ticaret tavsiyesi değildir.',
     copyright: 'AIVEX Analytics. Tüm hakları saklıdır.',
     links: {
-      Product: { label: 'Ürün', items: [{ label: 'Genel Bakış', href: '/product' }, { label: 'Metodoloji', href: '/methodology' }, { label: 'Belgeler', href: '/docs/getting-started' }] },
+      Product: { label: 'Ürün', items: [{ label: 'Genel Bakış', href: '/product' }, { label: 'Metodoloji', href: '/methodology' }, { label: 'Belgeler', href: '/docs/tr/getting-started' }] },
       Company: { label: 'Şirket', items: [{ label: 'Hakkımızda', href: '/about' }, { label: 'Blog', href: '/blog' }, { label: 'İletişim', href: '/contact' }] },
       Legal: { label: 'Hukuki', items: [{ label: 'Gizlilik Politikası', href: '/legal/privacy' }, { label: 'Hizmet Koşulları', href: '/legal/terms' }] },
     },

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders as render, screen } from './test-utils';
 
 vi.mock('next/link', () => ({
   default: ({ children, href }: { children: React.ReactNode; href: string }) => (
@@ -7,9 +7,6 @@ vi.mock('next/link', () => ({
   ),
 }));
 
-vi.mock('@/lib/analytics', () => ({
-  trackWaitlistSignup: vi.fn(),
-}));
 
 import { Hero } from '@/components/sections/Hero';
 import { ProductOverview } from '@/components/sections/ProductOverview';
@@ -31,14 +28,14 @@ describe('Hero', () => {
     expect(screen.getByRole('heading', { level: 1 })).toBeDefined();
   });
 
-  it('headline contains "Research Pipeline"', () => {
+  it('headline contains "Financial Analysis Pipeline"', () => {
     render(<Hero />);
-    expect(screen.getByText(/Research Pipeline/i)).toBeDefined();
+    expect(screen.getByText(/Financial Analysis Pipeline/i)).toBeDefined();
   });
 
-  it('renders the primary Request Research Access CTA', () => {
+  it('renders the primary Request Product Demo CTA', () => {
     render(<Hero />);
-    const link = screen.getByRole('link', { name: /Request Research Access/i });
+    const link = screen.getByRole('link', { name: /Request Product Demo/i });
     expect(link).toBeDefined();
     expect(link.getAttribute('href')).toBe('/contact');
   });

@@ -14,8 +14,8 @@ const ROUTES: { url: string; expectedH1: RegExp }[] = [
   { url: '/about',                        expectedH1: /Mission/i },
   { url: '/contact',                      expectedH1: /Demo/i },
   { url: '/blog',                         expectedH1: /Updates/i },
-  { url: '/docs/getting-started',         expectedH1: /Getting Started/i },
-  { url: '/docs/architecture-overview',   expectedH1: /Architecture/i },
+  { url: '/docs/tr/getting-started',         expectedH1: /Getting Started/i },
+  { url: '/docs/tr/architecture-overview',   expectedH1: /Architecture/i },
 ];
 
 for (const { url, expectedH1 } of ROUTES) {
@@ -109,12 +109,12 @@ test.describe('Investor page content sanity', () => {
   });
 
   test('docs architecture page renders data flow section', async ({ page }) => {
-    await page.goto('/docs/architecture-overview');
+    await page.goto('/docs/tr/architecture-overview');
     await expect(page.getByText(/Data Flow/i)).toBeVisible();
   });
 
   test('docs getting-started page renders installation instructions', async ({ page }) => {
-    await page.goto('/docs/getting-started');
+    await page.goto('/docs/tr/getting-started');
     await expect(page.getByText(/Prerequisites/i)).toBeVisible();
   });
 });

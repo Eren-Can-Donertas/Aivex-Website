@@ -8,7 +8,12 @@ const nextConfig = {
     return [
       {
         source: '/docs',
-        destination: '/docs/getting-started',
+        destination: '/docs/tr/getting-started',
+        permanent: false,
+      },
+      {
+        source: '/docs/:lang(en|tr)',
+        destination: '/docs/:lang/getting-started',
         permanent: false,
       },
     ];

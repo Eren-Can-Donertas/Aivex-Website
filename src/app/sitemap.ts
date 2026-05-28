@@ -22,12 +22,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  const docRoutes: MetadataRoute.Sitemap = getAllDocSlugs().map((slugParts) => ({
-    url: `${BASE_URL}/docs/${slugParts.join('/')}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.6,
-  }));
+  const docSlugs = getAllDocSlugs();
+  const docRoutes: MetadataRoute.Sitemap = (['en', 'tr'] as const).flatMap((lang) =>
+    docSlugs.map((slugParts) => ({
+      url: `${BASE_URL}/docs/${lang}/${slugParts.join('/')}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.6,
+    })),
+  );
 
   return [...staticRoutes, ...blogRoutes, ...docRoutes];
 }

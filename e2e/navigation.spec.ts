@@ -77,7 +77,7 @@ test.describe('In-page hero CTAs', () => {
   test('View Docs in hero navigates to /docs/getting-started', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('link', { name: /View Docs/i }).click();
-    await expect(page).toHaveURL(/\/docs\/getting-started/);
+    await expect(page).toHaveURL(/\/docs\/tr\/getting-started/);
     await expect(page.locator('h1')).toBeVisible();
   });
 
@@ -97,7 +97,7 @@ test.describe('Header navigation — Docs link', () => {
   test('clicking Docs navigates to /docs/getting-started', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('link', { name: 'Docs' }).click();
-    await expect(page).toHaveURL(/\/docs\/getting-started/);
+    await expect(page).toHaveURL(/\/docs\/tr\/getting-started/);
     await expect(page.locator('h1')).toContainText(/Getting Started/i);
   });
 });
@@ -120,7 +120,7 @@ test.describe('About page — CTA navigation', () => {
 
   test('Read the Docs button navigates to /docs/getting-started', async ({ page }) => {
     await page.getByRole('link', { name: /Read the Docs/i }).click();
-    await expect(page).toHaveURL(/\/docs\/getting-started/);
+    await expect(page).toHaveURL(/\/docs\/tr\/getting-started/);
     await expect(page.locator('h1')).toBeVisible();
   });
 });
@@ -133,6 +133,6 @@ test.describe('Footer navigation — Docs link', () => {
   test('footer Docs link navigates to /docs/getting-started', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('link', { name: 'Docs' }).last().click();
-    await expect(page).toHaveURL(/\/docs\/getting-started/);
+    await expect(page).toHaveURL(/\/docs\/tr\/getting-started/);
   });
 });

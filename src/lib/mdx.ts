@@ -78,7 +78,9 @@ function walkDocsDir(dir: string, baseSlug: string[] = []): DocPage[] {
   for (const entry of entries) {
     if (entry.isDirectory()) {
       pages.push(...walkDocsDir(path.join(dir, entry.name), [...baseSlug, entry.name]));
-    } else if (entry.name.endsWith('.mdx')) {
+    } else if (entry.name.endsWith('.mdx') && !entry.name.endsWith('.tr.mdx')) {
+      // `.tr.mdx` files are translation overlays for their `.mdx` siblings,
+      // not separate pages — getDocPageBySlugAndLang reads them when lang='tr'.
       const slug = [...baseSlug, entry.name.replace(/\.mdx$/, '')];
       const filePath = path.join(dir, entry.name);
       const raw = fs.readFileSync(filePath, 'utf-8');

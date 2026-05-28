@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Loader2, AlertCircle, Mail, Phone } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { locales } from '@/locales';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 type State = 'idle' | 'loading' | 'success' | 'error';
 
@@ -30,28 +31,29 @@ export default function ContactPage() {
     setState('loading');
     setErrorMessage('');
 
+    if (!isSupabaseConfigured) {
+      setErrorMessage(t.error.generic);
+      setState('error');
+      return;
+    }
+
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          message: form.message,
-          ...(form.organization ? { organization: form.organization } : {}),
-          ...(form.role ? { role: form.role } : {}),
-          ...(form.interestType ? { interest_type: form.interestType } : {}),
-        }),
+      const { error } = await supabase.from('contact_submissions').insert({
+        name: form.name.trim(),
+        email: form.email.trim().toLowerCase(),
+        message: form.message.trim(),
+        organization: form.organization.trim() || null,
+        role: form.role.trim() || null,
+        interest_type: form.interestType || null,
       });
 
-      const data = (await res.json()) as { success: boolean; message: string };
-
-      if (res.ok && data.success) {
-        setState('success');
-      } else {
-        setErrorMessage(data.message || t.error.generic);
+      if (error) {
+        setErrorMessage(error.message || t.error.generic);
         setState('error');
+        return;
       }
+
+      setState('success');
     } catch {
       setErrorMessage(t.error.network);
       setState('error');

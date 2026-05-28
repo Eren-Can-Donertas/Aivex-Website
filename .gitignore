@@ -8,6 +8,11 @@ test-results/
 .env
 .env.*
 !.env.example
+
+# Local-only dev artifacts from the old file-backed /api/contact and
+# /api/waitlist routes. Those routes are gone (Supabase now handles persistence)
+# and any file in data/ is local debug state — never commit submission data.
+data/
 .vscode/
 .idea/
 .DS_Store

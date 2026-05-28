@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
@@ -9,39 +8,48 @@ import { mdxComponents } from '@/components/mdx/MDXComponents';
 import { cn } from '@/lib/utils';
 import type { DocNavItem } from '@/types';
 
+type DocLang = 'en' | 'tr';
+
 interface Props {
-  params: { slug?: string[] };
+  params: { lang: string; slug?: string[] };
 }
 
-const DOC_NAV_EN: DocNavItem[] = [
-  { title: 'Getting Started', href: '/docs/getting-started' },
-  { title: 'Architecture Overview', href: '/docs/architecture-overview' },
-  {
-    title: 'Modules',
-    href: '/docs/modules',
-    children: [
-      { title: 'Atomic Signals', href: '/docs/modules/atomic-signals' },
-      { title: 'Signal Engine', href: '/docs/modules/signal-engine' },
-      { title: 'Governor', href: '/docs/modules/governor' },
-      { title: 'Watchdog', href: '/docs/modules/watchdog' },
-    ],
-  },
-];
-
-const DOC_NAV_TR: DocNavItem[] = [
-  { title: 'Başlarken', href: '/docs/getting-started' },
-  { title: 'Mimari Genel Bakış', href: '/docs/architecture-overview' },
-  {
-    title: 'Modüller',
-    href: '/docs/modules',
-    children: [
-      { title: 'Atomik Sinyaller', href: '/docs/modules/atomic-signals' },
-      { title: 'Sinyal Motoru', href: '/docs/modules/signal-engine' },
-      { title: 'Vali', href: '/docs/modules/governor' },
-      { title: 'İzleyici', href: '/docs/modules/watchdog' },
-    ],
-  },
-];
+function buildNav(lang: DocLang): DocNavItem[] {
+  const labels = lang === 'tr'
+    ? {
+        gettingStarted: 'Başlarken',
+        architecture:   'Mimari Genel Bakış',
+        modules:        'Modüller',
+        atomicSignals:  'Atomik Sinyaller',
+        signalEngine:   'Sinyal Motoru',
+        governor:       'Vali',
+        watchdog:       'İzleyici',
+      }
+    : {
+        gettingStarted: 'Getting Started',
+        architecture:   'Architecture Overview',
+        modules:        'Modules',
+        atomicSignals:  'Atomic Signals',
+        signalEngine:   'Signal Engine',
+        governor:       'Governor',
+        watchdog:       'Watchdog',
+      };
+  const base = `/docs/${lang}`;
+  return [
+    { title: labels.gettingStarted, href: `${base}/getting-started` },
+    { title: labels.architecture,   href: `${base}/architecture-overview` },
+    {
+      title: labels.modules,
+      href: `${base}/modules`,
+      children: [
+        { title: labels.atomicSignals, href: `${base}/modules/atomic-signals` },
+        { title: labels.signalEngine,  href: `${base}/modules/signal-engine` },
+        { title: labels.governor,      href: `${base}/modules/governor` },
+        { title: labels.watchdog,      href: `${base}/modules/watchdog` },
+      ],
+    },
+  ];
+}
 
 function NavItem({ item, currentPath }: { item: DocNavItem; currentPath: string }) {
   const isActive = currentPath === item.href;
@@ -73,8 +81,9 @@ function NavItem({ item, currentPath }: { item: DocNavItem; currentPath: string 
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  if (params.lang !== 'en' && params.lang !== 'tr') return {};
   const slugParts = params.slug ?? ['getting-started'];
-  const page = getDocPageBySlugAndLang(slugParts, 'en');
+  const page = getDocPageBySlugAndLang(slugParts, params.lang);
   if (!page) return {};
   return {
     title: page.title,
@@ -82,21 +91,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export async function generateStaticParams() {
-  return getAllDocSlugs().map((slug) => ({ slug }));
+export function generateStaticParams() {
+  const langs: DocLang[] = ['en', 'tr'];
+  const slugs = getAllDocSlugs();
+  // Emit (lang, slug) for each combination, plus the lang-only root that
+  // defaults to getting-started (the optional catch-all matches slug=undefined).
+  const params: Array<{ lang: DocLang; slug?: string[] }> = [];
+  for (const lang of langs) {
+    params.push({ lang });
+    for (const slug of slugs) params.push({ lang, slug });
+  }
+  return params;
 }
 
 export default function DocsPage({ params }: Props) {
+  if (params.lang !== 'en' && params.lang !== 'tr') notFound();
+  const lang = params.lang as DocLang;
+
   const slugParts = params.slug ?? ['getting-started'];
-
-  const cookieStore = cookies();
-  const lang = cookieStore.get('aivex-lang')?.value === 'en' ? 'en' : 'tr';
-
   const page = getDocPageBySlugAndLang(slugParts, lang);
   if (!page) notFound();
 
-  const currentPath = '/docs/' + slugParts.join('/');
-  const DOC_NAV = lang === 'tr' ? DOC_NAV_TR : DOC_NAV_EN;
+  const currentPath = `/docs/${lang}/${slugParts.join('/')}`;
+  const DOC_NAV = buildNav(lang);
 
   return (
     <div className="container mx-auto max-w-6xl px-4 py-10">

@@ -161,7 +161,7 @@ export const en = {
     disclaimer: 'AIVEX produces analysis artifacts for informational and analytical purposes only. Outputs are not financial, investment, or trading advice.',
     copyright: 'AIVEX Analytics. All rights reserved.',
     links: {
-      Product: { label: 'Product', items: [{ label: 'Overview', href: '/product' }, { label: 'Methodology', href: '/methodology' }, { label: 'Docs', href: '/docs/getting-started' }] },
+      Product: { label: 'Product', items: [{ label: 'Overview', href: '/product' }, { label: 'Methodology', href: '/methodology' }, { label: 'Docs', href: '/docs/en/getting-started' }] },
       Company: { label: 'Company', items: [{ label: 'About', href: '/about' }, { label: 'Blog', href: '/blog' }, { label: 'Contact', href: '/contact' }] },
       Legal: { label: 'Legal', items: [{ label: 'Privacy Policy', href: '/legal/privacy' }, { label: 'Terms of Service', href: '/legal/terms' }] },
     },
@@ -270,7 +270,7 @@ export const en = {
   },
 
   methodology: {
-    badge: 'Market Analysis Framework',
+    badge: 'Market Framework',
     title: 'Methodology',
     subtitle: 'How CORE approaches signal generation, evaluation, and governance — from raw data to auditable research output.',
     sections: {

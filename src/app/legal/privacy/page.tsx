@@ -19,15 +19,17 @@ export default function PrivacyPage() {
         <div className="prose">
           <h2>Information We Collect</h2>
           <p>
-            We collect information you provide directly, including email addresses submitted via
-            our waitlist form and contact form. We do not collect payment information.
+            We collect information you provide directly via our contact form, including your
+            name, email address, organization, role, and message. We do not collect payment
+            information.
           </p>
 
           <h2>How We Use Your Information</h2>
           <p>
-            Email addresses are used solely to communicate about AIVEX product updates, early
-            access invitations, and research publications. We do not sell or share your personal
-            information with third parties for marketing purposes.
+            Submitted information is used solely to respond to your inquiry and to communicate
+            about AIVEX product updates, early access invitations, and research publications. We
+            do not sell or share your personal information with third parties for marketing
+            purposes.
           </p>
 
           <h2>Analytics</h2>
@@ -39,8 +41,8 @@ export default function PrivacyPage() {
 
           <h2>Data Retention</h2>
           <p>
-            Waitlist entries are retained until you request removal or until the waitlist program
-            ends. You may request deletion of your data at any time by contacting us.
+            Contact submissions are retained until you request removal. You may request deletion
+            of your data at any time by contacting us.
           </p>
 
           <h2>Contact</h2>
