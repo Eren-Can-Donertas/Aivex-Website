@@ -100,17 +100,7 @@
     @apply text-primary underline underline-offset-4 hover:opacity-80;
   }
 
-  .prose table {
-    @apply w-full border-collapse mb-4;
-  }
-
-  .prose th {
-    @apply border border-border px-4 py-2 bg-muted font-semibold text-left;
-  }
-
-  .prose td {
-    @apply border border-border px-4 py-2;
-  }
+  /* Tables are fully handled by MDXComponents */
 }
 
 @layer utilities {

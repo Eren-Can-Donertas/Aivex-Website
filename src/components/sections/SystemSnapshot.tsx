@@ -1,47 +1,50 @@
+import { cookies } from 'next/headers';
 import { getPublicSystemStatus } from '@/lib/system-status';
 import type { PublicSystemStatus } from '@/types/system-status';
+import { locales } from '@/locales';
 
-function relativeTime(isoString: string): string {
+function relativeTime(isoString: string, t: { sec: string; min: string; hr: string }): string {
   const diff = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000);
-  if (diff < 60) return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  return `${Math.floor(diff / 3600)}h ago`;
+  if (diff < 60) return `${diff}${t.sec}`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}${t.min}`;
+  return `${Math.floor(diff / 3600)}${t.hr}`;
 }
 
-function cycleLabel(minutes: number | null): string {
-  if (minutes === null) return '—';
-  if (minutes < 60) return `${minutes}m ago`;
+function cycleLabel(minutes: number | null, t: { min: string; hr: string; none: string }): string {
+  if (minutes === null) return t.none;
+  if (minutes < 60) return `${minutes}${t.min}`;
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
-  return m > 0 ? `${h}h ${m}m ago` : `${h}h ago`;
+  return m > 0 ? `${h}${t.hr} ${m}${t.min}` : `${h}${t.hr}`;
 }
-
-const HEALTH_CONFIG = {
-  fresh:      { dot: 'bg-green-500',              label: 'Fresh'     },
-  stale:      { dot: 'bg-yellow-500',             label: 'Delayed'   },
-  very_stale: { dot: 'bg-orange-500',             label: 'Very Stale' },
-  offline:    { dot: 'bg-red-500',                label: 'Offline'   },
-  unknown:    { dot: 'bg-muted-foreground/40',    label: 'Unknown'   },
-};
-
-const OVERALL_CONFIG: Record<
-  PublicSystemStatus['overall'],
-  { label: string; color: string; dot: string }
-> = {
-  operational: { label: 'Operational',  color: 'text-green-500',        dot: 'bg-green-500'        },
-  degraded:    { label: 'Degraded',     color: 'text-yellow-500',       dot: 'bg-yellow-500'       },
-  offline:     { label: 'Offline',      color: 'text-red-500',          dot: 'bg-red-500'          },
-  unavailable: { label: 'Unavailable',  color: 'text-muted-foreground', dot: 'bg-muted-foreground/40' },
-};
 
 function HealthDot({ health }: { health: string }) {
-  const cfg = HEALTH_CONFIG[health as keyof typeof HEALTH_CONFIG] ?? HEALTH_CONFIG.unknown;
-  return <span className={`inline-block h-2 w-2 rounded-full shrink-0 ${cfg.dot}`} />;
+  const dots: Record<string, string> = {
+    fresh:      'bg-green-500',
+    stale:      'bg-yellow-500',
+    very_stale: 'bg-orange-500',
+    offline:    'bg-red-500',
+    unknown:    'bg-muted-foreground/40',
+  };
+  const dot = dots[health] ?? dots.unknown;
+  return <span className={`inline-block h-2 w-2 rounded-full shrink-0 ${dot}`} />;
 }
 
+const OVERALL_COLORS: Record<PublicSystemStatus['overall'], { color: string; dot: string }> = {
+  operational: { color: 'text-green-500',        dot: 'bg-green-500'        },
+  degraded:    { color: 'text-yellow-500',       dot: 'bg-yellow-500'       },
+  offline:     { color: 'text-red-500',          dot: 'bg-red-500'          },
+  unavailable: { color: 'text-muted-foreground', dot: 'bg-muted-foreground/40' },
+};
+
 export async function SystemSnapshot() {
+  const cookieStore = cookies();
+  const lang = cookieStore.get('aivex-lang')?.value === 'en' ? 'en' : 'tr';
+  const t = locales[lang].home.systemSnapshot;
+
   const status = await getPublicSystemStatus();
-  const overall = OVERALL_CONFIG[status.overall];
+  const overallCfg = OVERALL_COLORS[status.overall];
+  const overallLabel = t.overall[status.overall];
 
   return (
     <section className="border-y border-border bg-muted/10 py-14">
@@ -49,19 +52,19 @@ export async function SystemSnapshot() {
         {/* Header row */}
         <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold">Research Runtime Snapshot</h2>
+            <h2 className="text-xl font-semibold">{t.title}</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Last updated: {relativeTime(status.updated_at)}
+              {t.lastUpdated}: {relativeTime(status.updated_at, t.time)}
               {status.mode === 'fallback' && (
                 <span className="ml-2 rounded-full border border-border px-2 py-0.5 text-xs">
-                  demo mode
+                  {t.demoMode}
                 </span>
               )}
             </p>
           </div>
-          <div className={`flex items-center gap-2 text-sm font-medium ${overall.color}`}>
-            <span className={`h-2.5 w-2.5 rounded-full ${overall.dot}`} />
-            {overall.label}
+          <div className={`flex items-center gap-2 text-sm font-medium ${overallCfg.color}`}>
+            <span className={`h-2.5 w-2.5 rounded-full ${overallCfg.dot}`} />
+            {overallLabel}
           </div>
         </div>
 
@@ -71,32 +74,30 @@ export async function SystemSnapshot() {
             <thead>
               <tr className="border-b border-border bg-muted/20">
                 <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Module
+                  {t.moduleHeader}
                 </th>
                 <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Health
+                  {t.healthHeader}
                 </th>
                 <th className="px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Last Cycle
+                  {t.lastCycleHeader}
                 </th>
               </tr>
             </thead>
             <tbody>
               {Object.entries(status.modules).map(([key, mod]) => {
-                const hcfg =
-                  HEALTH_CONFIG[mod.health as keyof typeof HEALTH_CONFIG] ??
-                  HEALTH_CONFIG.unknown;
+                const healthLabel = t.health[mod.health as keyof typeof t.health] ?? t.health.unknown;
                 return (
                   <tr key={key} className="border-b border-border last:border-0 hover:bg-muted/10">
                     <td className="px-4 py-2.5 text-foreground/80">{mod.label}</td>
                     <td className="px-4 py-2.5">
                       <span className="flex items-center gap-2">
                         <HealthDot health={mod.health} />
-                        <span className="text-foreground/70">{hcfg.label}</span>
+                        <span className="text-foreground/70">{healthLabel}</span>
                       </span>
                     </td>
                     <td className="px-4 py-2.5 text-muted-foreground">
-                      {cycleLabel(mod.last_cycle_ago_minutes)}
+                      {cycleLabel(mod.last_cycle_ago_minutes, t.cycle)}
                     </td>
                   </tr>
                 );
@@ -108,28 +109,26 @@ export async function SystemSnapshot() {
         {/* Aggregate stats */}
         <div className="mt-4 flex flex-wrap gap-6 font-mono text-sm">
           <div>
-            <span className="text-muted-foreground">signals_24h: </span>
+            <span className="text-muted-foreground">{t.stats.signals24h}: </span>
             <span className="text-foreground/80">{status.signal_count_24h ?? '—'}</span>
           </div>
           <div>
-            <span className="text-muted-foreground">active_symbols: </span>
+            <span className="text-muted-foreground">{t.stats.activeSymbols}: </span>
             <span className="text-foreground/80">{status.active_symbols ?? '—'}</span>
           </div>
           <div>
-            <span className="text-muted-foreground">governor: </span>
+            <span className="text-muted-foreground">{t.stats.governor}: </span>
             <span className="text-foreground/80 uppercase">{status.governor_status}</span>
           </div>
           <div>
-            <span className="text-muted-foreground">eye_api: </span>
+            <span className="text-muted-foreground">{t.stats.eyeApi}: </span>
             <span className="text-foreground/80">{status.api_status}</span>
           </div>
         </div>
 
         <p className="mt-4 text-xs text-muted-foreground">
-          Research runtime status only. Outputs are informational research artifacts, not financial
-          advice.{' '}
-          {status.mode === 'fallback' &&
-            'Live status data is not currently connected; showing demo values.'}
+          {t.disclaimer}{' '}
+          {status.mode === 'fallback' && t.fallbackNote}
         </p>
       </div>
     </section>

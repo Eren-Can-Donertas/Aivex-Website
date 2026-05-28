@@ -119,6 +119,25 @@ export function getDocPageBySlug(slugParts: string[]): DocPage | null {
   };
 }
 
+export function getDocPageBySlugAndLang(slugParts: string[], lang: string): DocPage | null {
+  if (lang === 'tr') {
+    const trPath = path.join(DOCS_DIR, ...slugParts) + '.tr.mdx';
+    if (fs.existsSync(trPath)) {
+      const raw = fs.readFileSync(trPath, 'utf-8');
+      const { data, content } = matter(raw);
+      return {
+        slug: slugParts,
+        title: data.title ?? slugParts.join('/'),
+        description: data.description,
+        content,
+        order: data.order,
+        section: data.section,
+      };
+    }
+  }
+  return getDocPageBySlug(slugParts);
+}
+
 export function getAllDocSlugs(): string[][] {
   return walkDocsDir(DOCS_DIR).map((p) => p.slug);
 }

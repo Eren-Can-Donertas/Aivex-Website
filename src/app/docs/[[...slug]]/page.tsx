@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { MDXRemote } from 'next-mdx-remote/rsc';
-import { getAllDocSlugs, getDocPageBySlug } from '@/lib/mdx';
+import remarkGfm from 'remark-gfm';
+import { getAllDocSlugs, getDocPageBySlugAndLang } from '@/lib/mdx';
 import { mdxComponents } from '@/components/mdx/MDXComponents';
 import { cn } from '@/lib/utils';
 import type { DocNavItem } from '@/types';
@@ -11,7 +13,7 @@ interface Props {
   params: { slug?: string[] };
 }
 
-const DOC_NAV: DocNavItem[] = [
+const DOC_NAV_EN: DocNavItem[] = [
   { title: 'Getting Started', href: '/docs/getting-started' },
   { title: 'Architecture Overview', href: '/docs/architecture-overview' },
   {
@@ -26,8 +28,24 @@ const DOC_NAV: DocNavItem[] = [
   },
 ];
 
+const DOC_NAV_TR: DocNavItem[] = [
+  { title: 'Başlarken', href: '/docs/getting-started' },
+  { title: 'Mimari Genel Bakış', href: '/docs/architecture-overview' },
+  {
+    title: 'Modüller',
+    href: '/docs/modules',
+    children: [
+      { title: 'Atomik Sinyaller', href: '/docs/modules/atomic-signals' },
+      { title: 'Sinyal Motoru', href: '/docs/modules/signal-engine' },
+      { title: 'Vali', href: '/docs/modules/governor' },
+      { title: 'İzleyici', href: '/docs/modules/watchdog' },
+    ],
+  },
+];
+
 function NavItem({ item, currentPath }: { item: DocNavItem; currentPath: string }) {
   const isActive = currentPath === item.href;
+  const isParentOfActive = item.children?.some((c) => currentPath === c.href);
   return (
     <li>
       <Link
@@ -36,7 +54,9 @@ function NavItem({ item, currentPath }: { item: DocNavItem; currentPath: string 
           'block rounded-md px-3 py-1.5 text-sm transition-colors',
           isActive
             ? 'bg-primary/10 font-medium text-primary'
-            : 'text-muted-foreground hover:text-foreground'
+            : isParentOfActive
+            ? 'font-medium text-foreground'
+            : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
         )}
       >
         {item.title}
@@ -54,7 +74,7 @@ function NavItem({ item, currentPath }: { item: DocNavItem; currentPath: string 
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slugParts = params.slug ?? ['getting-started'];
-  const page = getDocPageBySlug(slugParts);
+  const page = getDocPageBySlugAndLang(slugParts, 'en');
   if (!page) return {};
   return {
     title: page.title,
@@ -68,20 +88,45 @@ export async function generateStaticParams() {
 
 export default function DocsPage({ params }: Props) {
   const slugParts = params.slug ?? ['getting-started'];
-  const page = getDocPageBySlug(slugParts);
+
+  const cookieStore = cookies();
+  const lang = cookieStore.get('aivex-lang')?.value === 'en' ? 'en' : 'tr';
+
+  const page = getDocPageBySlugAndLang(slugParts, lang);
   if (!page) notFound();
 
   const currentPath = '/docs/' + slugParts.join('/');
+  const DOC_NAV = lang === 'tr' ? DOC_NAV_TR : DOC_NAV_EN;
 
   return (
     <div className="container mx-auto max-w-6xl px-4 py-10">
-      <div className="flex gap-8">
+      {/* Mobile nav breadcrumb */}
+      <div className="mb-6 flex flex-wrap gap-1 text-sm text-muted-foreground lg:hidden">
+        {DOC_NAV.map((item) => {
+          const isActive = currentPath === item.href;
+          const childActive = item.children?.find((c) => currentPath === c.href);
+          if (!isActive && !childActive) return null;
+          return (
+            <div key={item.href} className="flex items-center gap-1">
+              <Link href={item.href} className="hover:text-foreground">{item.title}</Link>
+              {childActive && (
+                <>
+                  <span>/</span>
+                  <Link href={childActive.href} className="font-medium text-foreground">{childActive.title}</Link>
+                </>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="flex gap-10">
         {/* Sidebar */}
-        <aside className="hidden w-56 shrink-0 lg:block">
+        <aside className="hidden w-52 shrink-0 lg:block">
           <div className="sticky top-20">
-            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Documentation
-            </h2>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              {lang === 'tr' ? 'Belgeler' : 'Documentation'}
+            </p>
             <nav>
               <ul className="space-y-1">
                 {DOC_NAV.map((item) => (
@@ -89,17 +134,44 @@ export default function DocsPage({ params }: Props) {
                 ))}
               </ul>
             </nav>
+
+            <div className="mt-8 border-t border-border pt-4">
+              <p className="mb-2 text-xs text-muted-foreground">
+                {lang === 'tr' ? 'Ayrıca bakın' : 'Also see'}
+              </p>
+              <Link href="/product" className="block text-sm text-muted-foreground hover:text-foreground py-0.5">
+                {lang === 'tr' ? 'Ürüne Genel Bakış' : 'Product Overview'}
+              </Link>
+              <Link href="/methodology" className="block text-sm text-muted-foreground hover:text-foreground py-0.5">
+                {lang === 'tr' ? 'Metodoloji' : 'Methodology'}
+              </Link>
+            </div>
           </div>
         </aside>
 
         {/* Content */}
         <div className="min-w-0 flex-1">
-          <h1 className="mb-2 text-3xl font-bold">{page.title}</h1>
-          {page.description && (
-            <p className="mb-8 text-lg text-muted-foreground">{page.description}</p>
-          )}
+          <div className="mb-8 border-b border-border pb-6">
+            <h1 className="text-3xl font-bold">{page.title}</h1>
+            {page.description && (
+              <p className="mt-2 text-lg text-muted-foreground">{page.description}</p>
+            )}
+          </div>
           <div className="prose">
-            <MDXRemote source={page.content} components={mdxComponents} />
+            <MDXRemote
+              source={page.content}
+              components={mdxComponents}
+              options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+            />
+          </div>
+
+          <div className="mt-12 border-t border-border pt-6">
+            <Link
+              href="/contact"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              {lang === 'tr' ? 'Sorularınız mı var? Ekiple iletişime geçin →' : 'Questions? Contact the team →'}
+            </Link>
           </div>
         </div>
       </div>

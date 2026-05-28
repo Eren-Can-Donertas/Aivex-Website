@@ -1,13 +1,18 @@
+'use client';
+
+import { useLanguage } from '@/contexts/LanguageContext';
+import { locales } from '@/locales';
+
 export function ArchitectureDiagram() {
+  const { lang } = useLanguage();
+  const t = locales[lang].home.architectureDiagram;
+
   return (
     <section className="py-20 bg-muted/30">
       <div className="container mx-auto max-w-6xl px-4">
         <div className="mb-12 text-center">
-          <h2 className="mb-3 text-3xl font-bold">System Architecture</h2>
-          <p className="mx-auto max-w-2xl text-muted-foreground">
-            A parallel, fault-isolated pipeline from raw data to governed research signals.
-            Every output is traceable from source to emission.
-          </p>
+          <h2 className="mb-3 text-3xl font-bold">{t.title}</h2>
+          <p className="mx-auto max-w-2xl text-muted-foreground">{t.subtitle}</p>
         </div>
 
         {/* SVG Architecture Diagram — using hsla() for cross-browser SVG attribute compat */}
@@ -30,11 +35,11 @@ export function ArchitectureDiagram() {
             </defs>
 
             {/* Legend row */}
-            <text x="20"  y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">DATA SOURCES</text>
-            <text x="210" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">ATOMIC SIGNALS</text>
-            <text x="430" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">COMPOSITION</text>
-            <text x="640" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">RISK GATE</text>
-            <text x="835" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">OUTPUT</text>
+            <text x="20"  y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">{t.legend.dataSources}</text>
+            <text x="210" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">{t.legend.atomicSignals}</text>
+            <text x="430" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">{t.legend.composition}</text>
+            <text x="640" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">{t.legend.riskGate}</text>
+            <text x="835" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">{t.legend.output}</text>
 
             {/* Data Sources */}
             <rect x="20" y="105" width="125" height="40" rx="5" fill="hsla(217, 62%, 50%, 0.12)" stroke="hsla(217, 62%, 50%, 0.7)" strokeWidth="1.5" />
@@ -91,12 +96,12 @@ export function ArchitectureDiagram() {
             <line x1="502" y1="242" x2="502" y2="310" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" opacity="0.25" />
             <line x1="502" y1="310" x2="710" y2="310" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" opacity="0.25" />
             <line x1="710" y1="310" x2="710" y2="242" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" opacity="0.25" />
-            <text x="606" y="328" textAnchor="middle" fontSize="10" fill="currentColor" opacity="0.35" fontStyle="italic">trace_id propagation</text>
+            <text x="606" y="328" textAnchor="middle" fontSize="10" fill="currentColor" opacity="0.35" fontStyle="italic">{t.annotation}</text>
 
             {/* Watchdog bar */}
             <rect x="20" y="370" width="882" height="38" rx="5" fill="hsla(220, 14%, 9%, 0.08)" stroke="hsla(215, 16%, 58%, 0.35)" strokeWidth="1" strokeDasharray="6,4" />
             <text x="461" y="394" textAnchor="middle" fontSize="11" fill="currentColor" opacity="0.55" fontWeight="600">
-              Watchdog — 24/7 process supervision · heartbeat monitoring · auto-restart
+              {t.watchdog}
             </text>
           </svg>
         </div>

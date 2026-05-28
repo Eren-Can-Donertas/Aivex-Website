@@ -1,0 +1,96 @@
+---
+title: Atomik Sinyal Modülleri
+description: Haber, Chart ve Metrics sinyal üreticileri — ne yaptıkları ve nasıl yapılandırıldıkları.
+order: 3
+section: Modüller
+---
+
+## Genel Bakış
+
+Atomik sinyal modülleri, AIVEX'in veri alma ve analiz katmanıdır. Her modül:
+
+1. Yapılandırılabilir bir programda dış kaynaklardan veri çeker
+2. Yönlü bir sinyal üretmek için alana özgü analiz uygular
+3. Sinyali bir güven değeriyle puanlar
+4. Çıktıyı Sinyal Motoru'nun tüketmesi için paylaşılan veritabanına yazar
+
+## Haber Sinyal Modülü
+
+**Paket:** `news/`
+**Varsayılan aralık:** 60 saniye
+
+Haber modülü, yapılandırılmış RSS beslemeleri ve API'lerden finansal haberleri toplar, ardından her makaleyi şunları çıkarmak için bir NLP boru hattından geçirir:
+
+- **Duygu analizi**: Makale düzeyinde pozitif / negatif / nötr
+- **Adlandırılmış varlıklar**: Şirket adları, ticker'lar, sektörler
+- **Olay türü**: Kazançlar, birleşme/satın alma, düzenleyici, makro vb.
+- **Aciliyet**: Zaman duyarlılığını gösteren 0–1 skoru
+
+### Yapılandırma
+
+| Değişken | Varsayılan | Açıklama |
+|----------|------------|----------|
+| `NEWS_INTERVAL` | `60` | Döngü aralığı (saniye) |
+| `NEWS_MIN_CONFIDENCE` | `0.3` | Veritabanına yazılacak minimum güven |
+| `NEWS_LOOKBACK_HOURS` | `24` | Makalelerin ne kadar geriye kadar güncel sayılacağı |
+
+## Chart Sinyal Modülü
+
+**Paket:** `chart/`
+**Varsayılan aralık:** 300 saniye
+
+Chart modülü OHLCV verilerini indirir ve teknik göstergeler hesaplar. Şunları analiz eder:
+
+- Trend (hareketli ortalamalar, ADX)
+- Momentum (RSI, MACD, Stokastik)
+- Hacim (OBV, VWAP sapması)
+- Volatilite (Bollinger Bantları, ATR)
+- Kalıp tanıma (destek/direnç, kırılmalar)
+
+### Yapılandırma
+
+| Değişken | Varsayılan | Açıklama |
+|----------|------------|----------|
+| `CHART_INTERVAL` | `300` | Döngü aralığı (saniye) |
+| `CHART_LOOKBACK_DAYS` | `90` | Gösterge hesabı için geçmiş çubuklar |
+| `CHART_TIMEFRAMES` | `1d,4h` | Analiz edilecek zaman dilimleri (virgülle ayrılmış) |
+
+## Metrics Sinyal Modülü
+
+**Paket:** `metrics/`
+**Varsayılan aralık:** 3600 saniye
+
+Metrics modülü temel verileri işler:
+
+- Değerleme oranları (F/K, PD/DD, EV/FAVÖK)
+- Kazanç verileri (HBK, gelir, rehberlik)
+- Analist tahminleri ve revizyonları
+- Sektöre göre göreli sıralamalar
+
+Temel veriler yavaş değiştiğinden, bu modül Haber veya Chart'tan daha uzun bir döngüde çalışır.
+
+### Yapılandırma
+
+| Değişken | Varsayılan | Açıklama |
+|----------|------------|----------|
+| `METRICS_INTERVAL` | `3600` | Döngü aralığı (saniye) |
+| `METRICS_MIN_CONFIDENCE` | `0.4` | Temel sinyaller için daha yüksek eşik |
+
+## Sinyal Çıktı Şeması
+
+Tüm atomik modüller veritabanına aşağıdaki şemayla yazar:
+
+```json
+{
+  "symbol": "AAPL",
+  "module": "news",
+  "direction": "bullish",
+  "confidence": 0.72,
+  "ts": "2024-02-01T14:30:00Z",
+  "context": {
+    "event_type": "earnings",
+    "sentiment_score": 0.65,
+    "article_count": 12
+  }
+}
+```

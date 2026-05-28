@@ -1,0 +1,98 @@
+---
+title: İzleyici
+description: 7/24 süreç denetimi, otomatik yeniden başlatma, çökme döngüsü tespiti ve kalp atışı izleme.
+order: 6
+section: Modüller
+---
+
+## Genel Bakış
+
+**Paket:** `watchdog/`
+
+İzleyici, AIVEX'in denetim katmanıdır. Tüm yapılandırılmış modülleri bağımsız alt süreçler olarak başlatır ve sürekli izler; çöken süreçleri yapılandırılabilir politikalarla yeniden başlatır.
+
+## Temel Özellikler
+
+- **Süreç izolasyonu**: Her modül kendi alt sürecinde çalışır; bir modüldeki çökme diğerlerini etkilemez
+- **Üstel geri çekilme**: Yeniden başlatma gecikmeleri ardışık başarısızlıklarla artar, 300 saniyeye kadar çıkar
+- **Çökme döngüsü tespiti**: Bir modül 300 saniye içinde 5 kez çökerse çökme döngüsünde olduğu kabul edilir ve insan müdahalesi beklenene kadar yeniden başlatmalar askıya alınır
+- **Kalp atışı izleme**: Her alt süreç periyodik olarak bir kalp atışı dosyası yazar; İzleyici eski kalp atışlarını tespit eder ve yanıt vermeyen süreçleri yeniden başlatır
+- **Yapılandırılmış durum satırı**: Canlı durum görüntüsü tüm modül durumlarını, yeniden başlatma sayılarını ve son etkinlik zamanlarını gösterir
+
+## Çalışma Modları
+
+### `continuous` (varsayılan)
+
+Tüm modülleri süresiz çalıştırır. Çökmede yeniden başlatır. Üretim dağıtımları için kullanılır.
+
+```bash
+python Main.py
+```
+
+### `once`
+
+Her modülü tam olarak bir döngü için çalıştırır, ardından çıkar. Test ve zamanlanmış çalıştırmalar için kullanılır.
+
+```bash
+python Main.py --mode once
+```
+
+### `dev`
+
+Sürekli modda çalışır ancak ayrıntılı günlük kaydı ve başlangıç gecikmesi olmadan.
+
+```bash
+python Main.py --mode dev
+```
+
+## Yeniden Başlatma Politikası
+
+| Koşul | Davranış |
+|-------|----------|
+| Modül kod 0 ile çıkar | Yeniden başlatma yok (temiz çıkış) |
+| Modül kod 1 ile çıkar | Geri çekilme sonrası yeniden başlat |
+| Modül kod 2 ile çıkar (`ConfigError`) | Yeniden başlatma yok (yapılandırma sorunu — manuel düzeltme gerekli) |
+| 300 saniyede 5 çökme | Çökme döngüsü tespit edildi; yeniden başlatmalar askıya alındı |
+| `restart_count >= max_restarts` | Daha fazla yeniden başlatma yok |
+
+## Geri Çekilme Formülü
+
+```python
+delay = min(base_backoff × (2 ** consecutive_failures), 300)
+```
+
+`base_backoff=5.0` (varsayılan) ile:
+- 1. başarısızlık: 10s
+- 2. başarısızlık: 20s
+- 3. başarısızlık: 40s
+- 4. başarısızlık: 80s
+- 5.+ başarısızlık: 160s → 300s'ye sınırlandırıldı
+
+## Yapılandırma
+
+| Değişken | Varsayılan | Açıklama |
+|----------|------------|----------|
+| `WATCHDOG_MAX_RESTARTS` | `10` | Oturum başına modül başına maksimum yeniden başlatma |
+| `WATCHDOG_BACKOFF` | `5.0` | Temel geri çekilme çarpanı (saniye) |
+| `WATCHDOG_HEARTBEAT_TTL` | `120` | Eski kalp atışının yeniden başlatmayı tetiklemesine kadar saniye |
+
+## Durum Satırı
+
+İzleyici her 30 saniyede bir standart çıktıya canlı bir durum satırı yazdırır:
+
+```
+[AIVEX] news=RUNNING(0) chart=RUNNING(0) metrics=RUNNING(0) brain=RUNNING(0) eye=RUNNING(0)
+```
+
+Format: `modül=DURUM(yeniden_başlatma_sayısı)`
+
+Durumlar: `RUNNING`, `CRASHED`, `RESTARTING`, `STOPPED`, `LOOP_DETECTED`
+
+## Başlangıç Doğrulaması
+
+Alt süreçleri başlatmadan önce İzleyici `_validate_startup()` çalıştırır:
+
+1. Modül çalıştırıcı komut dosyasının var olduğunu ve boş olmadığını doğrular
+2. Her yapılandırılmış modülün diskte bir paket dizinine sahip olduğunu kontrol eder
+3. Her modülün MODULE_REGISTRY'de göründüğünü kontrol eder
+4. Herhangi bir uyumsuzluk için uyarıları kaydeder (asla yükseltmez — doğrulama başarısızlıkları ölümcül değildir)

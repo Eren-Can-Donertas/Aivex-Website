@@ -1,0 +1,62 @@
+---
+title: Sinyal Motoru
+description: Brain modülünün atomik sinyalleri yönetilen araştırma çıktılarına nasıl dönüştürdüğü.
+order: 4
+section: Modüller
+---
+
+## Genel Bakış
+
+**Paket:** `brain/`
+**Varsayılan aralık:** 30 saniye
+
+Sinyal Motoru (Brain modülü) bileşim katmanıdır. Veritabanından atomik sinyal çıktılarını okur, bunları birleştirir ve Vali'nin değerlendirmesi için bileşik sinyaller üretir.
+
+## Bileşim Boru Hattı
+
+### 1. Sinyal Toplama
+
+Her döngüde Sinyal Motoru, yapılandırılabilir bir geriye bakış penceresi içindeki (varsayılan: 10 dakika) son atomik sinyaller için veritabanını sorgular. Bu pencerenin dışındaki eski sinyaller yoksayılır.
+
+### 2. Güven Normalleştirme
+
+Farklı modüllerden gelen ham güven skorları, modül başına kalibrasyon eğrileri kullanılarak normalleştirilir. Bu, Haber modülünden gelen 0.7 ve Chart modülünden gelen 0.7'nin karşılaştırılabilir kanıt kalitesini temsil etmesini sağlar.
+
+### 3. Çakışma Tespiti
+
+Her sembol için motor, toplanan sinyallerin yön üzerinde hemfikir olup olmadığını kontrol eder. Çakışma cezası formülü:
+
+```
+conflict_penalty = 2 × |proportion_bullish - 0.5|
+composite_confidence = weighted_avg(confidences) × (1 - conflict_penalty)
+```
+
+%100 uyum olan bir sembolde ceza yoktur. 50/50 bölünme maksimum ceza üretir ve bileşik güveni sıfıra yaklaştırır.
+
+### 4. Bekleme Süresi Uygulaması
+
+Bileşik sinyal yayımlandıktan sonra Motor, sembol başına bir bekleme süresi uygular. Bekleme süresi boyunca, yeni bileşik güven eskisini `BRAIN_COOLDOWN_MARGIN` eşiği kadar aşmadıkça yeni sinyaller bastırılır.
+
+### 5. Çıktı
+
+Bileşik sinyaller `signals` tablosuna yazılır ve dahili bir olay kuyruğu aracılığıyla Vali'ye iletilir.
+
+## Yapılandırma
+
+| Değişken | Varsayılan | Açıklama |
+|----------|------------|----------|
+| `BRAIN_INTERVAL` | `30` | Bileşim döngüsü (saniye) |
+| `BRAIN_LOOKBACK_MINUTES` | `10` | Atomik sinyalleri ne kadar geriye kadar değerlendireceği |
+| `BRAIN_MIN_CONFIDENCE` | `0.35` | Yayımlanacak minimum bileşik güven |
+| `BRAIN_COOLDOWN_SECONDS` | `300` | Sembol başına varsayılan bekleme süresi |
+| `BRAIN_COOLDOWN_MARGIN` | `0.15` | Bekleme süresini geçersiz kılmak için güven marjı |
+
+## API
+
+Brain modülü ayrıca varsayılan olarak 8001 portunda bir FastAPI sunucusu sunar:
+
+- `GET /signals` — Son bileşik sinyaller
+- `GET /signals/{symbol}` — Sembole özgü bileşik geçmiş
+- `GET /health` — Son döngü zaman damgasıyla sağlık kontrolü
+
+`API_TOKEN` ayarlanmışsa tüm rotalar bearer token kimlik doğrulaması gerektirir.

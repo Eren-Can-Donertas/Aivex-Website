@@ -1,0 +1,84 @@
+---
+title: Mimari Genel Bakış
+description: AIVEX modüllerinin nasıl etkileşime girdiği — veri akışı, süreç izolasyonu ve denetim.
+order: 2
+---
+
+## Tasarım İlkeleri
+
+AIVEX üç mimari ilke üzerine kurulmuştur:
+
+1. **Modül izolasyonu** — Her sinyal modülü bağımsız bir alt süreç olarak çalışır. Haber modülündeki bir çökme, Chart veya Metrics işlemlerini etkilemez.
+2. **Hata toleransı** — Watchdog denetçisi çökmeleri algılar, üstel geri çekilme yeniden başlatma politikaları uygular ve çökme döngülerini önler.
+3. **Denetlenebilirlik** — Her önemli olay (sinyal yayımı, Vali kararı, istisna) yapılandırılmış bir günlük kaydı oluşturur.
+
+## Veri Akışı
+
+```
+Dış Kaynaklar
+      │
+      ├── Haber API'leri ──────► Haber Modülü
+      │                               │
+      ├── Piyasa Verisi ───► Chart Modülü ──► Sinyal Motoru ──► Vali ──► Eye API
+      │                               │
+      └── Temel Veriler ──► Metrics Modülü
+```
+
+Her atomik modül bağımsız olarak çalışır ve çıktılarını paylaşılan MySQL veritabanına yazar. Sinyal Motoru bu veritabanından okur, bileşim gerçekleştirir ve bileşik sinyalleri Vali'ye iletir.
+
+## Süreç Mimarisi
+
+`python Main.py` çalıştırdığınızda, Watchdog çalışma zamanı düzenleyici modunda başlar:
+
+1. Hangi modüllerin başlatılacağını belirlemek için modül kayıt defterini okur
+2. Her modülü `module_runner.py` aracılığıyla ayrı bir alt süreç olarak başlatır
+3. Her alt süreç, yapılandırılmış aralıkla modülün ana döngüsünü çalıştırır
+4. Watchdog kalp atışlarını izler ve başarısız süreçleri yeniden başlatır
+
+Bu süreç izolasyonu, bir modüldeki Python düzeyindeki çökmenin (bellek hataları ve içe aktarma başarısızlıkları dahil) diğerlerine yayılmamasını sağlar.
+
+## Modül Çalıştırıcısı
+
+Her modül alt süreci `watchdog/runners/module_runner.py` aracılığıyla başlatılır. Bu komut dosyası:
+
+- Modülü ada göre dinamik olarak içe aktarır
+- Başlangıçta gerekli ortam değişkenlerini doğrular
+- Modülün ana işlevini döngüde çalıştırır
+- Tüm istisnaları `utils.error_handling.record_exception()` aracılığıyla kaydeder
+- Ölümcül hatalarda sıfırdan farklı kodla çıkar (Watchdog'un yeniden başlatması için)
+
+## Hata İşleme
+
+AIVEX yapılandırılmış bir istisna hiyerarşisi kullanır:
+
+| İstisna | Davranış |
+|---------|----------|
+| `RecoverableError` | Watchdog geri çekilme sonrası modülü yeniden başlatır |
+| `FatalError` | Modül çıkar; Watchdog politikaya göre yeniden başlatabilir veya başlatmayabilir |
+| `ConfigError(FatalError)` | Modül kod 2 ile hemen çıkar; yanlış yapılandırmayı gösterir |
+| `ExternalServiceError` | Geçici; Watchdog kısa geri çekilmeyle yeniden başlatır |
+| `DataValidationError` | Geçici; kaydedilir ve sonraki döngüde yeniden denenir |
+
+Tüm istisnalar şunları oluşturur:
+- `errors/crashes/` dizininde JSON çökme kaydı
+- `errors/<modül>.log` dosyasında metin satırı
+
+## Veritabanı Şeması
+
+AIVEX aşağıdaki temel tablolarla MySQL kullanır:
+
+- `ohlcv` — `(symbol, ts)` ile indekslenmiş OHLCV piyasa verisi
+- `news_articles` — NLP çıktılarıyla alınan haber makaleleri
+- `signals` — Brain modülünden bileşik sinyal kayıtları
+- `governor_log` — Vali kararları (izin/red) ve bağlam
+
+## Eye API
+
+Eye modülü bir FastAPI REST API sunar:
+
+- `GET /health` — Sağlık kontrolü
+- `GET /signals` — Son sinyaller (yapılandırılmışsa API token gerektirir)
+- `GET /signals/{symbol}` — Sembole özgü sinyaller
+- `POST /signals/feedback` — Araştırma geri bildirim uç noktası (geriye dönük test kalibrasyonu için)
+
+Tüm uç noktalar tam sinyal bağlamıyla yapılandırılmış JSON döndürür.

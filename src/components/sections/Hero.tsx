@@ -1,8 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { locales } from '@/locales';
 
 const SIGNAL_ARTIFACT = `{
   "trace_id":    "research_20260526_a4f2b9c1",
@@ -10,17 +13,24 @@ const SIGNAL_ARTIFACT = `{
   "symbol":      "SAMPLE_SYMBOL",
   "confidence":  0.72,
   "strength":    "moderate",
-  "sources":     ["news", "chart"],
-  "reasons": [
-    "Sentiment consensus across 4 sources (0.81)",
-    "Technical structure confirmed 2 timeframes"
-  ],
-  "governor":    "passed",
-  "advice":      false,
-  "created_at":  "2026-05-26T09:14:22.384Z"
+  "sources":     ["news", "chart", "metrics"],
+  "modules": {
+    "news":    { "sentiment": 0.79, "urgency": 0.81 },
+    "chart":   { "structure": "bullish", "score": 0.67 },
+    "metrics": { "regime": "trending", "quality": 0.74 }
+  },
+  "atomic_count":  3,
+  "has_conflict":  false,
+  "governor":      "passed",
+  "brain":         "pattern_confirmed",
+  "advice":        false,
+  "created_at":    "2026-05-26T09:14:22.384Z"
 }`;
 
 export function Hero() {
+  const { lang } = useLanguage();
+  const t = locales[lang].home.hero;
+
   return (
     <section className="relative overflow-hidden py-20 md:py-28">
       {/* Subtle background gradient */}
@@ -34,41 +44,53 @@ export function Hero() {
 
           {/* Left column — copy */}
           <div className="animate-fade-in">
-            <div className="mb-5 flex items-center gap-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">
-              <span className="h-px w-8 bg-border" />
-              AI Research Infrastructure
+            {/* Brand logo mark */}
+            <div className="mb-8 flex items-center gap-4">
+              <span className="inline-flex h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-white shadow-md">
+                <Image
+                  src="/logo.jpeg"
+                  alt="AIVEX Analytics"
+                  width={64}
+                  height={64}
+                  className="h-16 w-16 object-contain"
+                  priority
+                />
+              </span>
+              <div>
+                <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                  {t.subBadge}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {t.badge}
+                </p>
+              </div>
             </div>
 
             <h1 className="mb-6 text-4xl font-bold leading-[1.1] md:text-5xl lg:text-6xl">
-              Not a Black Box.{' '}
-              <span className="text-primary">A Research Pipeline.</span>
+              {t.titleMain}{' '}
+              <span className="text-primary">{t.titleHighlight}</span>
             </h1>
 
             <p className="mb-10 max-w-xl text-lg text-muted-foreground">
-              AIVEX converts market data, news, and technical signals into governed research outputs
-              with confidence scores, source attribution, trace IDs, and risk-gated evaluation.
+              {t.subtitle}
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row">
               <Link href="/contact">
                 <Button size="lg" className="gap-2">
-                  Request Research Access <ArrowRight className="h-4 w-4" />
+                  {t.ctaPrimary} <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/methodology">
                 <Button variant="outline" size="lg" className="gap-2">
-                  View Methodology <ChevronRight className="h-4 w-4" />
+                  {t.ctaSecondary} <ChevronRight className="h-4 w-4" />
                 </Button>
               </Link>
             </div>
 
             {/* Stats strip */}
             <div className="mt-12 grid grid-cols-3 gap-4 border-t border-border pt-8">
-              {[
-                { label: 'Signal Modules', value: '6' },
-                { label: 'Runtime Supervision', value: '24/7' },
-                { label: 'Output Format', value: 'JSON' },
-              ].map((stat) => (
+              {t.stats.map((stat) => (
                 <div key={stat.label}>
                   <div className="text-2xl font-bold text-primary">{stat.value}</div>
                   <div className="mt-1 text-xs text-muted-foreground">{stat.label}</div>
@@ -92,7 +114,7 @@ export function Hero() {
                 </span>
                 <div className="flex items-center gap-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
-                  <span className="font-mono text-xs text-green-400">live</span>
+                  <span className="font-mono text-xs text-green-400">{t.terminalStatus}</span>
                 </div>
               </div>
 
@@ -105,7 +127,7 @@ export function Hero() {
               <div className="border-t border-border bg-muted/20 px-5 py-3">
                 <p className="font-mono text-xs text-muted-foreground">
                   <span className="mr-2 text-green-400">✓</span>
-                  Governor passed · trace_id links to full pipeline run
+                  {t.terminalAnnotation}
                 </p>
               </div>
             </div>
