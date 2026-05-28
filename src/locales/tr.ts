@@ -5,19 +5,19 @@ export const tr = {
     docs: 'Belgeler',
     blog: 'Blog',
     about: 'Hakkımızda',
-    requestAccess: 'Erişim Talebi',
+    requestAccess: 'Demo Talebi',
   },
 
   contact: {
     badge: 'İletişim',
-    title: 'Araştırma Erişimi Talep Et',
+    title: 'Ürün Demosu Talep Et',
     subtitle: 'Araştırma akışınız ve kullanım amacınız hakkında bize bilgi verin. 2 iş günü içinde size geri döneceğiz.',
     directContactTitle: 'Doğrudan İletişim',
     directContactSubtitle: 'Demo, iş birliği ve yatırım görüşmeleri için bizimle doğrudan iletişime geçebilirsiniz.',
     emailLabel: 'E-posta',
     phoneLabel: 'Telefon',
     responseTitle: 'Yanıt Süresi',
-    responseText: 'Tüm araştırma erişimi ve iş ortaklığı talepleri için genellikle 2 iş günü içinde yanıt veriyoruz.',
+    responseText: 'Tüm demo talepleri ve iş ortaklığı taleplerine genellikle 2 iş günü içinde yanıt veriyoruz.',
     turkishNote: 'Demo, iş birliği ve yatırım görüşmeleri için bizimle doğrudan iletişime geçebilirsiniz.',
     form: {
       name: 'Ad Soyad',
@@ -38,7 +38,7 @@ export const tr = {
       disclaimer: 'Yalnızca araştırma, yatırımcı ve iş ortaklığı talepleri içindir. Finansal tavsiye verilmemektedir.',
     },
     interests: {
-      research_access: 'Araştırma erişimi',
+      research_access: 'Ürün Demosu',
       investor_inquiry: 'Yatırımcı görüşmesi',
       partnership: 'İş ortaklığı',
       technical_eval: 'Teknik değerlendirme',
@@ -60,15 +60,15 @@ export const tr = {
     subtitle: 'AIVEX, ham piyasa verilerini yönetişimli, denetlenebilir sinyal çıktılarına dönüştüren uçtan uca bir yapay zeka araştırma altyapısıdır — karanlık kutu olmadan.',
     howItWorksTitle: 'Nasıl Çalışır?',
     modulesTitle: 'Sistem Modülleri',
-    modulesSubtitle: 'Araştırma hattında farklı roller üstlenen on uzmanlaşmış modül.',
+    modulesSubtitle: 'Analiz hattında farklı roller üstlenen on uzmanlaşmış modül.',
     artifactTitle: 'Örnek Araştırma Çıktısı',
     artifactSubtitle: 'Eye REST API\'sinden örnek çıktı (/eye/signals). trace_id her sinyali tam pipeline çalışmasına bağlar.',
-    artifactDisclaimer: 'Örnek araştırma çıktısı — öneri değildir. advice: false her emisyonda Vali tarafından zorunlu kılınır.',
+    artifactDisclaimer: 'Örnek ürün çıktısı — öneri değildir. advice: false her emisyonda Vali tarafından zorunlu kılınır.',
     differentiators: 'Temel Farklılaştırıcılar',
     roadmapTitle: 'Yol Haritası',
     ctaTitle: 'AIVEX\'i İş Akışınız İçin Değerlendirin',
-    ctaSubtitle: 'İzlenebilir, yönetişimli sinyal çıktılarına ihtiyaç duyan sistematik kantitatif ekipler, kurumsal analistler ve akademik araştırmacılar için araştırma altyapısı.',
-    ctaButton: 'Araştırma Erişimi Talep Et',
+    ctaSubtitle: 'İzlenebilir, yönetişimli sinyal çıktılarına ihtiyaç duyan sistematik kantitatif ekipler, kurumsal analistler ve akademik araştırmacılar için finsans analizi altyapısı.',
+    ctaButton: 'Ürün Demosu Talep Et',
     ctaDocs: 'Belgeleri Oku',
     steps: {
       ingest: {
@@ -95,7 +95,7 @@ export const tr = {
       Companies: 'Şirket temellerini, finansal tabloları ve bilanço verilerini toplar. Değerleme, karlılık, kaldıraç ve likidite değerlendirmesi için oran tabanlı sinyaller üretir.',
       Metrics: 'Volatilite, momentum, likidite, piyasa rejimi ve sinyal kalitesi metriklerini hesaplayan çapraz kaynak kalite katmanı. Bileşimden önce güvenilirlik için her atomik sinyali puanlar.',
       SignalEngine: 'Tüm yukarı akış modüllerinden atomik sinyalleri nihai bileşik sinyalde birleştirir. Tutarlı, yedeksiz çıktı sağlamak için güven ağırlıklandırması, çatışma çözüm kuralları ve bekleme süresi mantığı uygular.',
-      Brain: 'Desen keşfi ve model tabanlı analiz katmanı. İnsan döngülü onay akışlarıyla yapay zeka destekli analiz hatları çalıştırır. Basit kural setlerinin ötesinde bilinçli, denetlenebilir araştırma döngüleri sağlar.',
+      Brain: 'Desen keşfi ve model tabanlı analiz katmanı. İnsan döngülü onay akışlarıyla yapay zeka destekli analiz hatları çalıştırır. Basit kural setlerinin ötesinde bilinçli, denetlenebilir analiz döngüleri sağlar.',
       Governor: 'Risk yönetimi ve geçiş sistemi. Düşüş limitlerini, acil durdurma anahtarlarını, pozisyon boyutlandırma kurallarını ve uyum geçitlerini uygular. Her geçiş kararı denetlenebilirlik için kaydedilir.',
       Eye: 'İzleme panosu ve sağlık API\'si. REST uç noktaları aracılığıyla sistem durumunu, modül sağlığını, sinyal geçmişini ve çalışma süresi metriklerini açığa çıkarır.',
       Watchdog: '7/24 süreç denetim sistemi. Sürekli sağlık yoklamaları yapar, kilitlenme döngülerini tespit eder ve başarısız modülleri üstel geri çekilmeyle otomatik olarak yeniden başlatır.',
@@ -106,7 +106,7 @@ export const tr = {
       confidence: { title: 'Güven Puanlaması', description: 'Her çıktı, kaynak kalitesi ve uyumdan hesaplanan 0–1 güven değeri içerir.' },
       consensus: { title: 'Çok Kaynaklı Uzlaşı', description: 'Sinyaller, bileşim katmanına ulaşmadan önce bağımsız kaynaklar arasında uzlaşı gerektirir.' },
       uptime: { title: '7/24 Gözetim', description: 'Üstel geri çekilmeli yeniden başlatma, kilitlenme döngüsü tespiti ve kalp atışı izleme ile Gözetçi süreci.' },
-      compliance: { title: 'Araştırma Uyumu', description: 'Yerleşik sorumluluk reddi uygulaması. Tüm çıktılar araştırma eserleridir, asla işlem önerisi değildir.' },
+      compliance: { title: 'Çıktı Uyumu', description: 'Yerleşik sorumluluk reddi uygulaması. Tüm çıktılar pipeline eserleridir, asla işlem önerisi değildir.' },
     },
     roadmap: {
       now: { phase: 'Şimdi', items: ['Haber, Grafik, Metrik modülleri', 'Yeni Medya & Şirketler modülleri', 'Sinyal Motoru bileşimi', 'Beyin desen analizi', 'Vali geçişi & acil durdurma', 'Eye REST API\'si', 'Gözetçi 7/24 çalışma'] },
@@ -117,7 +117,7 @@ export const tr = {
 
   about: {
     badge: 'Hakkımızda',
-    title: 'Yapay Zeka Destekli Piyasa Araştırması İçin Altyapı Katmanı İnşa Ediyoruz',
+    title: 'Yapay Zeka Destekli Piyasa Analizi İçin Altyapı Katmanı İnşa Ediyoruz',
     subtitle: 'AIVEX piyasaları tahmin eden bir ürün değildir. Yapay zeka destekli piyasa araştırmasını izlenebilir, yönetişimli ve denetlenebilir kılan bir altyapıdır.',
     missionTitle: 'Misyon',
     missionText: 'Sistematik piyasa araştırması sistematik altyapı gerektirir. Bu alandaki yapay zeka araçlarının çoğu opak, denetlenemeyen ve bireysel yatırımcılara yönelik tasarlanmıştır. AIVEX farklı bir temel sağlamak için var: her hesaplama izlenebilir, her sinyal puanlanmış, her yönetişim kararı kayıt altına alınmış.',
@@ -139,8 +139,8 @@ export const tr = {
       'Araştırma çıktıları bilgilendirme amaçlı eserlerdir — finansal tavsiye değil',
       'Altyapı izlenebilirlik, denetlenebilirlik ve yönetişimli emisyona odaklanmış',
     ],
-    principlesTitle: 'Araştırma İlkeleri',
-    principlesIntro: 'AIVEX üç tartışılmaz araştırma ilkesiyle faaliyet gösterir:',
+    principlesTitle: 'Piyasa Analizi İlkeleri',
+    principlesIntro: 'AIVEX üç tartışılmaz analiz ilkesiyle faaliyet gösterir:',
     principles: [
       { title: 'Yanlışlanabilirlik:', text: 'Gerçeğe karşı değerlendirilemeyen bir sinyal spekülatiftir. Her modül doğrulanabilir çıktılar üretir.' },
       { title: 'İzlenebilirlik:', text: 'Her çıktı, tam pipeline çalışmasına, kaynak sinyallerine ve yönetişim kararına bağlayan bir iz kimliği taşır.' },
@@ -152,13 +152,13 @@ export const tr = {
     ctaTitle: 'Yatırımcı & Ortak Görüşmesi',
     ctaText: 'Araştırmacılar, kantitatif ekipler ve akademik kurumlarla çalışıyoruz. AIVEX\'i sistematik araştırma akışları veya stratejik ortaklıklar için değerlendiriyorsanız sizden haber almak isteriz.',
     ctaButton: 'Yatırımcı & Ortak Görüşmesi',
-    ctaSecondary: 'Araştırma İlkelerini Görüntüle',
+    ctaSecondary: 'Piyasa Analizi İlkelerini Görüntüle',
     ctaDirectContact: 'Ya da doğrudan iletişime geçin:',
   },
 
   footer: {
-    tagline: 'Sistematik sinyal üretimi, yönetişim ve denetlenebilir çıktı için modüler yapay zeka araştırma altyapısı.',
-    disclaimer: 'AIVEX, yalnızca bilgilendirme ve analitik amaçlar için araştırma eserleri üretir. Çıktılar finansal, yatırım veya ticaret tavsiyesi değildir.',
+    tagline: 'Sistematik sinyal üretimi, yönetişim ve denetlenebilir çıktı için modüler yapay zeka analiz altyapısı.',
+    disclaimer: 'AIVEX, yalnızca bilgilendirme ve analitik amaçlar için analiz eserleri üretir. Çıktılar finansal, yatırım veya ticaret tavsiyesi değildir.',
     copyright: 'AIVEX Analytics. Tüm hakları saklıdır.',
     links: {
       Product: { label: 'Ürün', items: [{ label: 'Genel Bakış', href: '/product' }, { label: 'Metodoloji', href: '/methodology' }, { label: 'Belgeler', href: '/docs/getting-started' }] },
@@ -172,9 +172,9 @@ export const tr = {
       subBadge: 'AIVEX Analytics',
       badge: 'Yapay Zeka Destekli Piyasa Zekası Altyapısı',
       titleMain: 'Kara Kutu Değil.',
-      titleHighlight: 'Bir Araştırma Hattı.',
-      subtitle: 'AIVEX, piyasa verilerini, haberleri, sosyal medyayı ve teknik sinyalleri; güven skorları, kaynak atıfı, iz kimlikleri ve risk kapılı değerlendirme ile yönetişimli araştırma çıktılarına dönüştürür.',
-      ctaPrimary: 'Araştırma Erişimi Talep Et',
+      titleHighlight: 'Modüler Bir Finans Analiz Hattı.',
+      subtitle: 'AIVEX CORE, piyasa verilerini, haberleri, sosyal medyayı ve teknik sinyalleri; güven skorları, kaynak atıfı, iz kimlikleri ve risk kapılı değerlendirme ile yönetişimli araştırma çıktılarına dönüştürür.',
+      ctaPrimary: 'Ürün Demosu Talep Et',
       ctaSecondary: 'Metodolojiyi İncele',
       stats: [
         { label: 'Sinyal Modülleri', value: '10' },
@@ -185,19 +185,19 @@ export const tr = {
       terminalAnnotation: 'Vali geçti · Beyin doğruladı · trace_id tam pipeline çalışmasına bağlı',
     },
     trust: {
-      badge: 'Araştırma Standartları',
+      badge: 'Piyasa Analizi Standartları',
       title: 'Üç İlke Üzerine İnşa Edilmiş',
-      subtitle: 'AIVEX, araştırma bütünlüğü ve operasyonel güvenlik için sıfırdan tasarlanmıştır.',
-      disclaimer: 'Araştırma Sorumluluk Reddi: AIVEX bir araştırma ve analiz platformudur. Tüm çıktılar yalnızca bilgilendirme amaçlıdır ve finansal, yatırım veya ticaret tavsiyesi teşkil etmez. Herhangi bir sinyalin geçmiş performansı gelecekteki sonuçları garanti etmez.',
+      subtitle: 'CORE, finans analizi bütünlüğü ve operasyonel güvenlik için sıfırdan tasarlanmıştır.',
+      disclaimer: 'Araştırma Sorumluluk Reddi: AIVEX CORE bir araştırma ve analiz platformudur. Tüm çıktılar yalnızca bilgilendirme amaçlıdır ve finansal, yatırım veya ticaret tavsiyesi teşkil etmez. Herhangi bir sinyalin geçmiş performansı gelecekteki sonuçları garanti etmez.',
       principles: [
         { number: '01', title: 'Ölçülebilir', description: 'Her sinyal bir güven değeriyle puanlanır ve tarihsel verilere göre değerlendirilir. Kara kutu yok — her çıktının deterministik, yeniden üretilebilir sonuçlarla izlenebilir bir hesaplama yolu vardır.' },
         { number: '02', title: 'Denetlenebilir', description: 'Yapılandırılmış JSON kayıtları, döngü başına günlükler ve değişmez denetim izleri. Her çıktı, tam pipeline çalışmasına, kaynak sinyallerine ve yönetişim kararına bağlayan bir trace_id taşır.' },
-        { number: '03', title: 'Sorumlu', description: 'Vali modülü kesin limitleri, bekleme sürelerini ve insan geçersiz kılma politikalarını uygular. Araştırma çıktıları hiçbir zaman finansal tavsiye değildir — uyumluluk dili emisyon katmanına yerleştirilmiştir.' },
+        { number: '03', title: 'Sorumlu', description: 'Vali modülü kesin limitleri, bekleme sürelerini ve insan geçersiz kılma politikalarını uygular. Analiz çıktıları hiçbir zaman finansal tavsiye değildir — uyumluluk dili emisyon katmanına yerleştirilmiştir.' },
       ],
     },
     requestAccess: {
-      title: 'AIVEX\'i İş Akışınız İçin Değerlendirin',
-      subtitle: 'AIVEX, izlenebilir, yönetişimli ve denetlenebilir sinyal araştırma altyapısı gerektiren araştırmacılar, sistematik kantitatif ekipler ve kurumsal iş akışları için tasarlanmıştır.',
+      title: 'AIVEX CORE\'u İş Akışınız İçin Değerlendirin',
+      subtitle: 'CORE, izlenebilir, yönetişimli ve denetlenebilir sinyal araştırma altyapısı gerektiren araştırmacılar, sistematik kantitatif ekipler ve kurumsal iş akışları için tasarlanmıştır.',
       primaryButton: 'Araştırma Erişimi Talep Et',
       secondaryButton: 'Mimariyi Oku',
       disclaimer: 'Yalnızca araştırma ve analiz platformu. Çıktılar finansal, yatırım veya ticaret tavsiyesi değildir.',
@@ -237,7 +237,7 @@ export const tr = {
       watchdog: 'İzleyici — 7/24 süreç denetimi · kalp atışı izleme · otomatik yeniden başlatma',
     },
     systemSnapshot: {
-      title: 'Araştırma Çalışma Zamanı Anlık Görünümü',
+      title: 'Analiz Çalışma Zamanı Anlık Görünümü',
       lastUpdated: 'Son güncelleme',
       demoMode: 'demo modu',
       moduleHeader: 'Modül',
@@ -264,20 +264,20 @@ export const tr = {
       },
       time: { sec: 'sn önce', min: 'dk önce', hr: 'sa önce' },
       cycle: { min: 'dk önce', hr: 'sa önce', none: '—' },
-      disclaimer: 'Yalnızca araştırma çalışma zamanı durumu. Çıktılar bilgilendirici araştırma eserleridir, finansal tavsiye değildir.',
+      disclaimer: 'Yalnızca analiz runtime durumu. Çıktılar bilgilendirici araştırma eserleridir, finansal tavsiye değildir.',
       fallbackNote: 'Canlı durum verisi şu anda bağlı değil; demo değerleri gösteriliyor.',
     },
   },
 
   methodology: {
-    badge: 'Araştırma Çerçevesi',
+    badge: 'Piyasa Analizi Çerçevesi',
     title: 'Metodoloji',
-    subtitle: 'AIVEX\'in sinyal üretimi, değerlendirme ve yönetişime yaklaşımı — ham veriden denetlenebilir araştırma çıktısına.',
+    subtitle: 'CORE\'un sinyal üretimi, değerlendirme ve yönetişime yaklaşımı — ham veriden denetlenebilir araştırma çıktısına.',
     sections: {
       evaluationFirst: {
         number: '01',
         title: 'Değerlendirme Öncelikli Tasarım',
-        p1: 'AIVEX, temel endişe olarak tahmin değil, değerlendirmeyle inşa edilmiştir. Her sinyal modülünün çıktısının yanında bir güven skoru üretmesi zorunludur ve her bileşim adımı aynı girdilerden yeniden üretilebilir olmalıdır.',
+        p1: 'CORE, temel endişe olarak tahmin değil, değerlendirmeyle inşa edilmiştir. Her sinyal modülünün çıktısının yanında bir güven skoru üretmesi zorunludur ve her bileşim adımı aynı girdilerden yeniden üretilebilir olmalıdır.',
         p2: 'Bu, yanlışlanabilirliğe öncelik verdiğimiz anlamına gelir: gerçeğe karşı değerlendirilemeyen bir sinyal, sinyal değil spekülatiftir. Geri test altyapımız, modül çıktılarının zaman içinde iyi kalibre edilmiş kaldığını doğrular.',
       },
       signalLifecycle: {
@@ -320,7 +320,7 @@ export const tr = {
       dataQuality: {
         number: '06',
         title: 'Veri Kalitesi İlkeleri',
-        intro: 'AIVEX alımda sıkı veri kalitesi kontrolleri uygular:',
+        intro: 'CORE alımda sıkı veri kalitesi kontrolleri uygular:',
         items: [
           'Tüm zaman damgaları mikrosaniye hassasiyetiyle UTC\'ye normalize edilir',
           'Fiyat verileri borsa tarafından bildirilen OHLCV sınırlarına karşı doğrulanır',
@@ -331,7 +331,7 @@ export const tr = {
       researchBoundaries: {
         number: '07',
         title: 'Araştırma Sınırları',
-        disclaimer1: 'Önemli: AIVEX tarafından üretilen tüm çıktılar yalnızca araştırma ve bilgilendirme amaçlıdır. Finansal, yatırım, ticaret veya başka herhangi bir profesyonel tavsiye niteliği taşımamaktadır. Geçmiş sinyal performansı gelecekteki sonuçları garanti etmez. AIVEX Analytics kayıtlı bir yatırım danışmanı, broker-dealer veya emtia ticaret danışmanı değildir. Kullanıcılar kendi yatırım kararlarından sorumludur.',
+        disclaimer1: 'Önemli: AIVEX CORE tarafından üretilen tüm çıktılar yalnızca araştırma ve bilgilendirme amaçlıdır. Finansal, yatırım, ticaret veya başka herhangi bir profesyonel tavsiye niteliği taşımamaktadır. Geçmiş sinyal performansı gelecekteki sonuçları garanti etmez. AIVEX Analytics kayıtlı bir yatırım danışmanı, broker-dealer veya emtia ticaret danışmanı değildir. Kullanıcılar kendi yatırım kararlarından sorumludur.',
         disclaimer2: 'Sinyal çıktıları hatalar, eksiklikler veya güncel olmayan bilgiler içerebilir. AIVEX Analytics, herhangi bir araştırma çıktısının doğruluğu, eksiksizliği veya zamanında olması konusunda hiçbir beyan veya garanti vermemektedir.',
       },
     },

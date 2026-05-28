@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { getAllPostSlugs, getAllDocSlugs } from '@/lib/mdx';
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aivex.ai';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aivexanalytics.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: MetadataRoute.Sitemap = [

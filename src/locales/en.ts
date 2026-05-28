@@ -10,14 +10,14 @@ export const en = {
 
   contact: {
     badge: 'Contact',
-    title: 'Request Research Access',
+    title: 'Request Product Demo',
     subtitle: 'Tell us about your research workflow and intended use. We will be in touch within 2 business days.',
     directContactTitle: 'Direct Contact',
     directContactSubtitle: 'For partnership, demo and investment-related inquiries, you can contact us directly.',
     emailLabel: 'Email',
     phoneLabel: 'Phone',
     responseTitle: 'Response Time',
-    responseText: 'We typically respond within 2 business days for all research access and partnership inquiries.',
+    responseText: 'We typically respond within 2 business days for all product demos and partnership inquiries.',
     turkishNote: 'Demo, iş birliği ve yatırım görüşmeleri için bizimle doğrudan iletişime geçebilirsiniz.',
     form: {
       name: 'Name',
@@ -38,7 +38,7 @@ export const en = {
       disclaimer: 'For research, investor, and partnership inquiries only. We do not provide financial advice.',
     },
     interests: {
-      research_access: 'Research access',
+      research_access: 'Product demo',
       investor_inquiry: 'Investor inquiry',
       partnership: 'Partnership',
       technical_eval: 'Technical evaluation',
@@ -57,18 +57,18 @@ export const en = {
   product: {
     badge: 'Platform Overview',
     title: 'What AIVEX Does',
-    subtitle: 'AIVEX is an end-to-end AI research infrastructure that transforms raw market data into governed, auditable signal outputs — without the black box.',
+    subtitle: 'AIVEX is an end-to-end AI analysis infrastructure that transforms raw market data into governed, auditable signal outputs — without the black box.',
     howItWorksTitle: 'How It Works',
     modulesTitle: 'System Modules',
-    modulesSubtitle: 'Ten specialized modules, each with a distinct role in the research pipeline.',
+    modulesSubtitle: 'Ten specialized modules, each with a distinct role in the analysis pipeline.',
     artifactTitle: 'Example Research Artifact',
     artifactSubtitle: 'Sample output from the Eye REST API (/eye/signals). The trace_id links every signal to its exact pipeline run.',
-    artifactDisclaimer: 'Example research artifact — not a recommendation. advice: false is enforced by the Governor on every emission.',
+    artifactDisclaimer: 'Example pipeline artifact — not a recommendation. advice: false is enforced by the Governor on every emission.',
     differentiators: 'Key Differentiators',
     roadmapTitle: 'Roadmap',
     ctaTitle: 'Evaluate AIVEX for Your Workflow',
-    ctaSubtitle: 'Research infrastructure for systematic quant teams, institutional analysts, and academic researchers who need traceable, governed signal outputs.',
-    ctaButton: 'Request Research Access',
+    ctaSubtitle: 'Financial analysis infrastructure for systematic quant teams, institutional analysts, and academic researchers who need traceable, governed signal outputs.',
+    ctaButton: 'Request Product Demo',
     ctaDocs: 'Read Docs',
     steps: {
       ingest: {
@@ -95,7 +95,7 @@ export const en = {
       Companies: 'Aggregates company fundamentals, financial statements, and balance sheet data. Produces ratio-based signals for valuation, profitability, leverage, and liquidity assessment.',
       Metrics: 'Cross-source quality layer that computes volatility, momentum, liquidity, market regime, and signal quality metrics. Scores each atomic signal for reliability before composition.',
       SignalEngine: 'Merges atomic signals from all upstream modules into a final composed signal. Applies confidence weighting, conflict resolution rules, and cooldown logic to ensure consistent, non-redundant output.',
-      Brain: 'Pattern discovery and model-based analysis layer. Runs AI-driven analysis pipelines with human-in-the-loop approval flows. Enables informed, auditable research cycles beyond simple rule sets.',
+      Brain: 'Pattern discovery and model-based analysis layer. Runs AI-driven analysis pipelines with human-in-the-loop approval flows. Enables informed, auditable analysis cycles beyond simple rule sets.',
       Governor: 'Risk management and gating system. Enforces drawdown limits, kill switches, position sizing rules, and compliance gates. Every gating decision is logged for auditability.',
       Eye: 'Monitoring dashboard and health API. Exposes system state, module health, signal history, and runtime metrics via REST endpoints. Provides the operational visibility layer for infrastructure observability.',
       Watchdog: '24/7 process supervision system. Performs continuous health probes, detects crash loops, and automatically restarts failed modules with exponential backoff. Ensures the full pipeline maintains operational continuity.',
@@ -106,7 +106,7 @@ export const en = {
       confidence: { title: 'Confidence scoring', description: 'Every output includes a 0–1 confidence value computed from source quality and agreement.' },
       consensus: { title: 'Multi-source consensus', description: 'Signals require agreement across independent sources before reaching the composition layer.' },
       uptime: { title: '24/7 supervision', description: 'Watchdog process with exponential-backoff restart, crash-loop detection, and heartbeat monitoring.' },
-      compliance: { title: 'Research compliance', description: 'Built-in disclaimer enforcement. All outputs are research artifacts, never trading recommendations.' },
+      compliance: { title: 'Analysis compliance', description: 'Built-in disclaimer enforcement. All outputs are pipeline artifacts, never trading recommendations.' },
     },
     roadmap: {
       now: { phase: 'Now', items: ['News, Chart, Metrics modules', 'New Media & Companies modules', 'Signal Engine composition', 'Brain pattern analysis', 'Governor gating & kill switch', 'Eye REST API', 'Watchdog 24/7 runtime'] },
@@ -117,7 +117,7 @@ export const en = {
 
   about: {
     badge: 'About AIVEX',
-    title: 'Building the Infrastructure Layer for AI-Driven Market Research',
+    title: 'Building the Infrastructure Layer for AI-Driven Market Analysis',
     subtitle: 'AIVEX is not a product that predicts markets. It is infrastructure that makes AI-assisted market research traceable, governed, and auditable.',
     missionTitle: 'Mission',
     missionText: 'Systematic market research requires systematic infrastructure. Most AI-powered tools in this space are opaque, unauditable, and designed for retail audiences. AIVEX exists to provide a different foundation: every computation traceable, every signal scored, every governance decision logged.',
@@ -139,12 +139,12 @@ export const en = {
       'Research outputs are informational artifacts — not financial advice',
       'Infrastructure focused on traceability, auditability, and governed emission',
     ],
-    principlesTitle: 'Research Principles',
-    principlesIntro: 'AIVEX operates on three non-negotiable research principles:',
+    principlesTitle: 'Analysis Principles',
+    principlesIntro: 'AIVEX operates on three non-negotiable analysis principles:',
     principles: [
       { title: 'Falsifiability:', text: 'A signal that cannot be evaluated against ground truth is speculation. Every module produces verifiable outputs.' },
       { title: 'Traceability:', text: 'Every output carries a trace ID linking it to its exact pipeline run, source signals, and governance decision.' },
-      { title: 'Responsibility:', text: 'AI-driven research carries responsibility. The Governor exists to prevent outputs from being misused as financial advice.' },
+      { title: 'Responsibility:', text: 'AI-driven analysis carries responsibility. The Governor exists to prevent outputs from being misused as financial advice.' },
     ],
     teamTitle: 'Team',
     teamSubtitle: 'Three co-founders with complementary backgrounds in engineering and business development.',
@@ -157,8 +157,8 @@ export const en = {
   },
 
   footer: {
-    tagline: 'Modular AI research infrastructure for systematic signal generation, governance, and auditable output.',
-    disclaimer: 'AIVEX produces research artifacts for informational and analytical purposes only. Outputs are not financial, investment, or trading advice.',
+    tagline: 'Modular AI financial analysis infrastructure for systematic signal generation, governance, and auditable output.',
+    disclaimer: 'AIVEX produces analysis artifacts for informational and analytical purposes only. Outputs are not financial, investment, or trading advice.',
     copyright: 'AIVEX Analytics. All rights reserved.',
     links: {
       Product: { label: 'Product', items: [{ label: 'Overview', href: '/product' }, { label: 'Methodology', href: '/methodology' }, { label: 'Docs', href: '/docs/getting-started' }] },
@@ -172,9 +172,9 @@ export const en = {
       subBadge: 'AIVEX Analytics',
       badge: 'AI-Native Market Intelligence Infrastructure',
       titleMain: 'Not a Black Box.',
-      titleHighlight: 'A Research Pipeline.',
-      subtitle: 'AIVEX converts market data, news, social media, and technical signals into governed research outputs with confidence scores, source attribution, trace IDs, and risk-gated evaluation.',
-      ctaPrimary: 'Request Research Access',
+      titleHighlight: 'A Modular Financial Analysis Pipeline.',
+      subtitle: 'AIVEX CORE converts market data, news, social media, and technical signals into governed research outputs with confidence scores, source attribution, trace IDs, and risk-gated evaluation.',
+      ctaPrimary: 'Request Product Demo',
       ctaSecondary: 'View Methodology',
       stats: [
         { label: 'Signal Modules', value: '10' },
@@ -185,19 +185,19 @@ export const en = {
       terminalAnnotation: 'Governor passed · Brain confirmed · trace_id links to full pipeline run',
     },
     trust: {
-      badge: 'Research Standards',
+      badge: 'Market Analysis Standards',
       title: 'Built on Three Principles',
-      subtitle: 'AIVEX was designed from the ground up for research integrity and operational safety.',
-      disclaimer: 'Research Disclaimer: AIVEX is a research and analysis platform. All outputs are for informational purposes only and do not constitute financial, investment, or trading advice. Past performance of any signal does not guarantee future results.',
+      subtitle: 'CORE was designed from the ground up for financial analysis integrity and operational safety.',
+      disclaimer: 'Analysis Disclaimer: AIVEX CORE is a research and analysis platform. All outputs are for informational purposes only and do not constitute financial, investment, or trading advice. Past performance of any signal does not guarantee future results.',
       principles: [
         { number: '01', title: 'Measurable', description: 'Every signal is scored with a confidence value and evaluated against historical data. No black boxes — every output has a traceable computation path with deterministic, reproducible results.' },
         { number: '02', title: 'Auditable', description: 'Structured JSON records, per-cycle logs, and immutable audit trails. Every output carries a trace_id linking it to its exact pipeline run, source signals, and governance decision.' },
-        { number: '03', title: 'Responsible', description: 'The Governor module enforces hard limits, cooldowns, and human override policies. Research outputs are never financial advice — compliance language is built into the emission layer.' },
+        { number: '03', title: 'Responsible', description: 'The Governor module enforces hard limits, cooldowns, and human override policies. Analysis outputs are never financial advice — compliance language is built into the emission layer.' },
       ],
     },
     requestAccess: {
-      title: 'Evaluate AIVEX for Your Workflow',
-      subtitle: 'AIVEX is designed for researchers, systematic quant teams, and institutional workflows that require traceable, governed, and auditable signal research infrastructure.',
+      title: 'Evaluate AIVEX CORE for Your Workflow',
+      subtitle: 'CORE is designed for researchers, systematic quant teams, and institutional workflows that require traceable, governed, and auditable signal research infrastructure.',
       primaryButton: 'Request Research Access',
       secondaryButton: 'Read Architecture',
       disclaimer: 'Research and analysis platform only. Outputs are not financial, investment, or trading advice.',
@@ -237,7 +237,7 @@ export const en = {
       watchdog: 'Watchdog — 24/7 process supervision · heartbeat monitoring · auto-restart',
     },
     systemSnapshot: {
-      title: 'Research Runtime Snapshot',
+      title: 'Analysis Runtime Snapshot',
       lastUpdated: 'Last updated',
       demoMode: 'demo mode',
       moduleHeader: 'Module',
@@ -264,20 +264,20 @@ export const en = {
       },
       time: { sec: 's ago', min: 'm ago', hr: 'h ago' },
       cycle: { min: 'm ago', hr: 'h ago', none: '—' },
-      disclaimer: 'Research runtime status only. Outputs are informational research artifacts, not financial advice.',
+      disclaimer: 'Analysis runtime status only. Outputs are informational research artifacts, not financial advice.',
       fallbackNote: 'Live status data is not currently connected; showing demo values.',
     },
   },
 
   methodology: {
-    badge: 'Research Framework',
+    badge: 'Market Analysis Framework',
     title: 'Methodology',
-    subtitle: 'How AIVEX approaches signal generation, evaluation, and governance — from raw data to auditable research output.',
+    subtitle: 'How CORE approaches signal generation, evaluation, and governance — from raw data to auditable research output.',
     sections: {
       evaluationFirst: {
         number: '01',
         title: 'Evaluation-First Design',
-        p1: 'AIVEX was built with evaluation as the primary concern, not prediction. Every signal module is required to produce a confidence score alongside its output, and every composition step must be reproducible from the same inputs.',
+        p1: 'CORE was built with evaluation as the primary concern, not prediction. Every signal module is required to produce a confidence score alongside its output, and every composition step must be reproducible from the same inputs.',
         p2: 'This means we prioritize falsifiability: a signal that cannot be evaluated against a ground truth is not a signal — it is speculation. Our backtesting harness validates that module outputs remain well-calibrated over time.',
       },
       signalLifecycle: {
@@ -320,7 +320,7 @@ export const en = {
       dataQuality: {
         number: '06',
         title: 'Data Quality Principles',
-        intro: 'AIVEX enforces strict data quality checks at ingestion:',
+        intro: 'CORE enforces strict data quality checks at ingestion:',
         items: [
           'All timestamps normalized to UTC with microsecond precision',
           'Price data validated against exchange-reported OHLCV bounds',
@@ -331,7 +331,7 @@ export const en = {
       researchBoundaries: {
         number: '07',
         title: 'Research Boundaries',
-        disclaimer1: 'Important: All outputs generated by AIVEX are for research and informational purposes only. They do not constitute financial, investment, trading, or any other form of professional advice. Past signal performance does not guarantee future results. AIVEX Analytics is not a registered investment advisor, broker-dealer, or commodity trading advisor. Users are responsible for their own investment decisions.',
+        disclaimer1: 'Important: All outputs generated by AIVEX CORE are for research and informational purposes only. They do not constitute financial, investment, trading, or any other form of professional advice. Past signal performance does not guarantee future results. AIVEX Analytics is not a registered investment advisor, broker-dealer, or commodity trading advisor. Users are responsible for their own investment decisions.',
         disclaimer2: 'Signal outputs may contain errors, omissions, or outdated information. AIVEX Analytics makes no representations or warranties regarding the accuracy, completeness, or timeliness of any research output.',
       },
     },

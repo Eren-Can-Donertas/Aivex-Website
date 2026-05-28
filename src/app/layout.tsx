@@ -20,7 +20,7 @@ const fontMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aivex.ai'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aivexanalytics.com'),
   title: {
     default: 'AIVEX — AI Research Infrastructure for Systematic Signal Intelligence',
     template: '%s | AIVEX',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aivex.ai',
+    url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aivexanalytics.com',
     siteName: 'AIVEX Analytics',
     title: 'AIVEX — AI Research Infrastructure for Systematic Signal Intelligence',
     description:

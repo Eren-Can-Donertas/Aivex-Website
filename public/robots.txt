@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://aivex.ai/sitemap.xml
+Sitemap: https://aivexanalytics.com/sitemap.xml
