@@ -1,17 +1,25 @@
 import { Hero } from '@/components/sections/Hero';
-import { ProductOverview } from '@/components/sections/ProductOverview';
-import { ArchitectureDiagram } from '@/components/sections/ArchitectureDiagram';
-import { TrustSection } from '@/components/sections/TrustSection';
-import { RequestAccessSection } from '@/components/sections/RequestAccessSection';
+import {
+  WhyModular,
+  ProductEcosystem,
+  HomeMethodology,
+  LatestResearch,
+  RoadmapPreview,
+  FoundersStrip,
+  HomeCTA,
+} from '@/components/sections/HomeSections';
 
 export default function HomePage() {
   return (
     <>
       <Hero />
-      <ProductOverview />
-      <ArchitectureDiagram />
-      <TrustSection />
-      <RequestAccessSection />
+      <WhyModular />
+      <ProductEcosystem />
+      <HomeMethodology />
+      <LatestResearch />
+      <RoadmapPreview />
+      <FoundersStrip />
+      <HomeCTA />
     </>
   );
 }

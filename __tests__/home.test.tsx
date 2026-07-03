@@ -7,11 +7,8 @@ vi.mock('next/link', () => ({
   ),
 }));
 
-
 import { Hero } from '@/components/sections/Hero';
-import { ProductOverview } from '@/components/sections/ProductOverview';
-import { TrustSection } from '@/components/sections/TrustSection';
-import { ArchitectureDiagram } from '@/components/sections/ArchitectureDiagram';
+import { WhyModular, ProductEcosystem, HomeMethodology } from '@/components/sections/HomeSections';
 
 // ---------------------------------------------------------------------------
 // Hero
@@ -28,127 +25,91 @@ describe('Hero', () => {
     expect(screen.getByRole('heading', { level: 1 })).toBeDefined();
   });
 
-  it('headline contains "Financial Analysis Pipeline"', () => {
+  it('headline communicates the anti-single-signal positioning', () => {
     render(<Hero />);
-    expect(screen.getByText(/Financial Analysis Pipeline/i)).toBeDefined();
+    expect(screen.getByText(/single signal/i)).toBeDefined();
   });
 
-  it('renders the primary Request Product Demo CTA', () => {
+  it('renders the primary Explore products CTA to /products', () => {
     render(<Hero />);
-    const link = screen.getByRole('link', { name: /Request Product Demo/i });
+    const link = screen.getByRole('link', { name: /Explore products/i });
     expect(link).toBeDefined();
-    expect(link.getAttribute('href')).toBe('/contact');
+    expect(link.getAttribute('href')).toBe('/products');
   });
 
-  it('renders the secondary View Methodology CTA', () => {
+  it('renders the secondary Read the research CTA to /research', () => {
     render(<Hero />);
-    const link = screen.getByRole('link', { name: /View Methodology/i });
+    const link = screen.getByRole('link', { name: /Read the research/i });
     expect(link).toBeDefined();
-    expect(link.getAttribute('href')).toBe('/methodology');
+    expect(link.getAttribute('href')).toBe('/research');
   });
 
-  it('renders the stats strip with Signal Modules and Runtime Supervision', () => {
+  it('renders the four analytical lenses in the research panel', () => {
     render(<Hero />);
-    expect(screen.getByText('Signal Modules')).toBeDefined();
-    expect(screen.getByText('Runtime Supervision')).toBeDefined();
-  });
-
-  it('does not render a defensive badge before the headline', () => {
-    render(<Hero />);
-    expect(screen.queryByText(/Research Preview/i)).toBeNull();
+    expect(screen.getByText('News')).toBeDefined();
+    expect(screen.getByText('Chart')).toBeDefined();
+    expect(screen.getByText('Company')).toBeDefined();
+    expect(screen.getByText('Metrics')).toBeDefined();
   });
 });
 
 // ---------------------------------------------------------------------------
-// ProductOverview
+// WhyModular
 // ---------------------------------------------------------------------------
 
-describe('ProductOverview', () => {
+describe('WhyModular', () => {
   it('renders without crashing', () => {
-    const { container } = render(<ProductOverview />);
+    const { container } = render(<WhyModular />);
     expect(container.firstChild).not.toBeNull();
   });
 
-  it('renders the section heading', () => {
-    render(<ProductOverview />);
-    expect(screen.getByText('Modular Signal Architecture')).toBeDefined();
-  });
-
-  it('renders all six module cards', () => {
-    render(<ProductOverview />);
-    expect(screen.getByText('News Signal')).toBeDefined();
-    expect(screen.getByText('Chart Signal')).toBeDefined();
-    expect(screen.getByText('Metrics Signal')).toBeDefined();
-    expect(screen.getByText('Signal Engine')).toBeDefined();
-    expect(screen.getByText('Governor')).toBeDefined();
-    expect(screen.getByText('Eye API')).toBeDefined();
-  });
-
-  it('renders professional status labels (no "prototype" badges)', () => {
-    render(<ProductOverview />);
-    expect(screen.queryByText('prototype')).toBeNull();
-    const internalRuntimeBadges = screen.getAllByText('Internal Runtime');
-    expect(internalRuntimeBadges.length).toBeGreaterThan(0);
-    expect(screen.getByText('Risk Gate Active')).toBeDefined();
-  });
-
-  it('renders output descriptions for each module', () => {
-    render(<ProductOverview />);
-    const outputLabels = screen.getAllByText(/Output:/i);
-    expect(outputLabels.length).toBeGreaterThan(0);
+  it('renders a heading about markets being noisy / multi-causal', () => {
+    render(<WhyModular />);
+    expect(screen.getByText(/multi-causal/i)).toBeDefined();
   });
 });
 
 // ---------------------------------------------------------------------------
-// TrustSection
+// ProductEcosystem
 // ---------------------------------------------------------------------------
 
-describe('TrustSection', () => {
+describe('ProductEcosystem', () => {
   it('renders without crashing', () => {
-    const { container } = render(<TrustSection />);
+    const { container } = render(<ProductEcosystem />);
     expect(container.firstChild).not.toBeNull();
   });
 
-  it('renders the section heading', () => {
-    render(<TrustSection />);
-    expect(screen.getByText('Built on Three Principles')).toBeDefined();
+  it('renders the five product names', () => {
+    render(<ProductEcosystem />);
+    expect(screen.getByText('News Intelligence')).toBeDefined();
+    expect(screen.getByText('Chart Intelligence')).toBeDefined();
+    expect(screen.getByText('Company Intelligence')).toBeDefined();
+    expect(screen.getByText('Metrics & Validation')).toBeDefined();
+    expect(screen.getByText('Model Horizon Lab')).toBeDefined();
   });
 
-  it('renders all three principle titles', () => {
-    render(<TrustSection />);
-    expect(screen.getByText('Measurable')).toBeDefined();
-    expect(screen.getByText('Auditable')).toBeDefined();
-    expect(screen.getByText('Responsible')).toBeDefined();
-  });
-
-  it('renders the research disclaimer', () => {
-    render(<TrustSection />);
-    expect(screen.getByText(/research and analysis platform/i)).toBeDefined();
+  it('renders honest product status labels', () => {
+    render(<ProductEcosystem />);
+    expect(screen.getAllByText('Research').length).toBeGreaterThan(0);
+    expect(screen.getByText('In Development')).toBeDefined();
+    expect(screen.getByText('Experimental')).toBeDefined();
   });
 });
 
 // ---------------------------------------------------------------------------
-// ArchitectureDiagram
+// HomeMethodology
 // ---------------------------------------------------------------------------
 
-describe('ArchitectureDiagram', () => {
+describe('HomeMethodology', () => {
   it('renders without crashing', () => {
-    const { container } = render(<ArchitectureDiagram />);
+    const { container } = render(<HomeMethodology />);
     expect(container.firstChild).not.toBeNull();
   });
 
-  it('renders the section heading', () => {
-    render(<ArchitectureDiagram />);
-    expect(screen.getByText('System Architecture')).toBeDefined();
-  });
-
-  it('renders the SVG diagram element', () => {
-    const { container } = render(<ArchitectureDiagram />);
-    expect(container.querySelector('svg')).not.toBeNull();
-  });
-
-  it('renders the Watchdog label in the diagram', () => {
-    render(<ArchitectureDiagram />);
-    expect(screen.getByText(/Watchdog/i)).toBeDefined();
+  it('renders the observe / interpret / validate steps', () => {
+    render(<HomeMethodology />);
+    expect(screen.getByText('Observe')).toBeDefined();
+    expect(screen.getByText('Interpret')).toBeDefined();
+    expect(screen.getByText('Validate')).toBeDefined();
   });
 });

@@ -16,6 +16,10 @@ const nextConfig = {
         destination: '/docs/:lang/getting-started',
         permanent: false,
       },
+      // Legacy routes from the previous site structure.
+      { source: '/product', destination: '/products', permanent: true },
+      { source: '/about', destination: '/founders', permanent: true },
+      { source: '/methodology', destination: '/research', permanent: true },
     ];
   },
   images: {

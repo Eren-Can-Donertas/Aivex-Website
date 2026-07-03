@@ -1,0 +1,34 @@
+---
+title: "Data Quality Is Part of the Product"
+date: "2026-06-18"
+excerpt: "Every analytical output is only as trustworthy as the data underneath it. So we treat data quality as a product surface, not a preprocessing step."
+author: "Aivex Team"
+tags: ["engineering", "data-quality", "validation"]
+category: "engineering"
+---
+
+## The invisible dependency
+
+Every score, regime label, and sentiment reading rests on data you usually never see. If that data is stale, incomplete, or silently substituted, the output is confidently wrong — and nothing on the surface tells you.
+
+That is why data quality is not a preprocessing chore at Aivex. It is a product concern with its own outputs.
+
+## Quarantine over silent substitution
+
+The single most important rule: stale data is quarantined, not silently used. Above a configurable freshness threshold, a field is flagged rather than quietly filled in with the last value we happened to have. A visible gap is far safer than an invisible guess.
+
+## Routing, fallback, and provenance
+
+When a provider is unavailable, routing and fallback let the system degrade gracefully — but it records which provider actually served each field. Provenance is not a nicety; it is what lets you trust, or distrust, a reading later.
+
+Values are normalized before anything compares them: units aligned, timestamps to UTC, identifiers reconciled. Comparisons are only meaningful when they are like-for-like.
+
+## Reproducible reports
+
+The output of this work is a data-quality report that is reproducible: given the same inputs, you get the same report. That reproducibility is what makes the rest of the research defensible — a result you cannot reproduce is a story, not a finding.
+
+## Where it connects
+
+This is the job of **Metrics & Validation**: score the reliability of every other lens before anyone trusts it. Data quality is the foundation that scoring stands on, and it is a first-class part of the product — not a step we hide.
+
+*This article is for research and informational purposes only. It is not investment advice.*

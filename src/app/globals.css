@@ -4,34 +4,52 @@
 
 @layer base {
   :root {
-    /* Light mode — institutional palette */
-    --background: 0 0% 100%;
-    --foreground: 222 47% 8%;
-    --primary: 217 65% 44%;
+    /* Light mode — muted paper research surface */
+    --background: 210 30% 98%;
+    --foreground: 222 40% 11%;
+    --primary: 205 90% 40%;
     --primary-foreground: 0 0% 100%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --border: 215 20% 88%;
-    --accent: 213 50% 46%;
+    --accent: 255 62% 55%;
     --accent-foreground: 0 0% 100%;
+    --accent-2: 255 62% 55%;
+    --muted: 214 28% 94%;
+    --muted-foreground: 216 14% 42%;
+    --border: 215 22% 86%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 8%;
-    --radius: 0.5rem;
+    --card-foreground: 222 40% 11%;
+    --surface: 214 32% 96%;
+    --ring: 205 90% 45%;
+    --radius: 0.625rem;
+
+    --signal-grid: 215 25% 80%;
+    --status-available: 158 64% 38%;
+    --status-research: 205 85% 48%;
+    --status-experimental: 38 92% 46%;
+    --status-development: 216 12% 52%;
   }
 
   .dark {
-    /* Dark mode — deep graphite, institutional blue */
-    --background: 222 18% 7%;
-    --foreground: 220 20% 92%;
-    --primary: 217 62% 52%;
-    --primary-foreground: 0 0% 100%;
-    --muted: 222 14% 13%;
-    --muted-foreground: 215 14% 55%;
-    --border: 222 12% 16%;
-    --accent: 213 50% 54%;
-    --accent-foreground: 0 0% 100%;
-    --card: 222 16% 10%;
-    --card-foreground: 220 20% 92%;
+    /* Dark mode — deep charcoal / graphite, electric blue with violet undertone */
+    --background: 222 24% 6%;
+    --foreground: 210 22% 92%;
+    --primary: 199 89% 56%;
+    --primary-foreground: 222 47% 8%;
+    --accent: 256 78% 72%;
+    --accent-foreground: 222 47% 8%;
+    --accent-2: 256 78% 72%;
+    --muted: 222 18% 12%;
+    --muted-foreground: 216 14% 60%;
+    --border: 220 16% 18%;
+    --card: 222 22% 9%;
+    --card-foreground: 210 22% 92%;
+    --surface: 221 20% 11%;
+    --ring: 199 89% 56%;
+
+    --signal-grid: 216 20% 28%;
+    --status-available: 158 64% 52%;
+    --status-research: 199 89% 60%;
+    --status-experimental: 38 92% 58%;
+    --status-development: 216 12% 62%;
   }
 
   * {
@@ -40,103 +58,126 @@
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
+    font-feature-settings: 'rlig' 1, 'calt' 1, 'ss01' 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold;
+    @apply font-semibold tracking-tight;
+  }
+
+  ::selection {
+    @apply bg-primary/25;
+  }
+
+  /* Consistent, always-visible keyboard focus */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 
   /* Prose styles for MDX content */
   .prose {
-    @apply max-w-none;
+    @apply max-w-none text-[0.975rem] leading-7 text-foreground/90;
+  }
+  .prose h1 { @apply mb-4 mt-8 text-3xl font-bold; }
+  .prose h2 { @apply mb-3 mt-10 border-b border-border pb-2 text-2xl font-semibold; }
+  .prose h3 { @apply mb-2 mt-6 text-xl font-semibold; }
+  .prose p { @apply mb-4 leading-7; }
+  .prose ul { @apply mb-4 ml-6 list-disc; }
+  .prose ol { @apply mb-4 ml-6 list-decimal; }
+  .prose li { @apply mb-1.5; }
+  .prose code { @apply rounded bg-muted px-1.5 py-0.5 font-mono text-sm; }
+  .prose pre { @apply mb-4 overflow-x-auto rounded-lg border border-border bg-muted p-4; }
+  .prose pre code { @apply bg-transparent p-0; }
+  .prose blockquote { @apply mb-4 border-l-2 border-primary pl-4 italic text-muted-foreground; }
+  .prose a { @apply text-primary underline underline-offset-4 hover:opacity-80; }
+  .prose strong { @apply font-semibold text-foreground; }
+}
+
+@layer components {
+  /* Standard section shell */
+  .container-page {
+    @apply container mx-auto max-w-6xl px-4 sm:px-6;
   }
 
-  .prose h1 {
-    @apply text-3xl font-bold mb-4 mt-8;
+  /* Small uppercase eyebrow label used across sections */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground;
   }
 
-  .prose h2 {
-    @apply text-2xl font-semibold mb-3 mt-8 border-b border-border pb-2;
+  /* Research metadata monospace row */
+  .meta-row {
+    @apply font-mono text-xs text-muted-foreground;
   }
 
-  .prose h3 {
-    @apply text-xl font-semibold mb-2 mt-6;
+  /* Elevated research card with hover lift */
+  .research-card {
+    @apply relative rounded-xl border border-border bg-card transition-all duration-200
+      hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5;
   }
 
-  .prose p {
-    @apply mb-4 leading-7;
+  /* Terminal / output panel */
+  .panel-terminal {
+    @apply overflow-hidden rounded-xl border border-border bg-card shadow-xl shadow-black/5;
   }
-
-  .prose ul {
-    @apply mb-4 ml-6 list-disc;
-  }
-
-  .prose ol {
-    @apply mb-4 ml-6 list-decimal;
-  }
-
-  .prose li {
-    @apply mb-1;
-  }
-
-  .prose code {
-    @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
-  }
-
-  .prose pre {
-    @apply bg-muted p-4 rounded-lg overflow-x-auto mb-4;
-  }
-
-  .prose pre code {
-    @apply bg-transparent p-0;
-  }
-
-  .prose blockquote {
-    @apply border-l-4 border-primary pl-4 italic text-muted-foreground mb-4;
-  }
-
-  .prose a {
-    @apply text-primary underline underline-offset-4 hover:opacity-80;
-  }
-
-  /* Tables are fully handled by MDXComponents */
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent;
   }
 
-  /* Institutional dashboard panel style */
-  .panel-terminal {
-    @apply rounded-xl border border-border bg-card font-mono text-sm shadow-lg;
+  /* Faint blueprint grid used as section texture */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, hsl(var(--signal-grid) / 0.25) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--signal-grid) / 0.25) 1px, transparent 1px);
+    background-size: 44px 44px;
   }
 
-  /* Elevated surface — slightly lighter than card, for nested panels */
-  .panel-elevated {
-    @apply rounded-xl border border-border/60 bg-muted/50 backdrop-blur-sm;
+  /* Radial fade mask so grids/fields dissolve toward edges */
+  .mask-fade {
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 40%, transparent 100%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 40%, transparent 100%);
   }
 
-  /* Section divider with faint label */
-  .section-label {
-    @apply text-xs font-medium uppercase tracking-widest text-muted-foreground;
+  .dot-field {
+    background-image: radial-gradient(hsl(var(--signal-grid) / 0.5) 1px, transparent 1px);
+    background-size: 22px 22px;
   }
 
-  .glass {
-    @apply bg-white/10 backdrop-blur-sm border border-white/20;
+  /* Animated signal line motif */
+  @keyframes signal-dash {
+    to { stroke-dashoffset: -200; }
+  }
+  .animate-signal {
+    stroke-dasharray: 6 8;
+    animation: signal-dash 6s linear infinite;
   }
 
-  /* Subtle fade-in animation */
   @keyframes fade-in {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .animate-fade-in {
-    animation: fade-in 0.5s ease-out both;
+  .animate-fade-in { animation: fade-in 0.5s ease-out both; }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+  .animate-pulse-soft { animation: pulse-soft 2.4s ease-in-out infinite; }
+}
+
+/* Respect reduced-motion globally */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -8,37 +8,40 @@ vi.mock('next/link', () => ({
 }));
 
 import { Hero } from '@/components/sections/Hero';
+import { HomeCTA } from '@/components/sections/HomeSections';
 
 // ---------------------------------------------------------------------------
 // Hero CTAs
 // ---------------------------------------------------------------------------
 
 describe('Hero CTAs', () => {
-  it('renders the primary Request Research Access button', () => {
+  it('primary CTA routes to /products', () => {
     renderWithProviders(<Hero />);
-    expect(screen.getByRole('link', { name: /Request Product Demo/i })).toBeDefined();
+    const link = screen.getByRole('link', { name: /Explore products/i });
+    expect(link.getAttribute('href')).toBe('/products');
   });
 
-  it('Request Research Access routes to /contact', () => {
+  it('secondary CTA routes to /research', () => {
     renderWithProviders(<Hero />);
-    const link = screen.getByRole('link', { name: /Request Product Demo/i });
+    const link = screen.getByRole('link', { name: /Read the research/i });
+    expect(link.getAttribute('href')).toBe('/research');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Closing CTA — the demo request is an explicit, user-initiated action
+// ---------------------------------------------------------------------------
+
+describe('Home closing CTA', () => {
+  it('renders a demo request link to /contact', () => {
+    renderWithProviders(<HomeCTA />);
+    const link = screen.getByRole('link', { name: /Request a demo/i });
+    expect(link).toBeDefined();
     expect(link.getAttribute('href')).toBe('/contact');
   });
 
-  it('renders the secondary View Methodology button', () => {
-    renderWithProviders(<Hero />);
-    expect(screen.getByRole('link', { name: /View Methodology/i })).toBeDefined();
-  });
-
-  it('View Methodology routes to /methodology', () => {
-    renderWithProviders(<Hero />);
-    const link = screen.getByRole('link', { name: /View Methodology/i });
-    expect(link.getAttribute('href')).toBe('/methodology');
-  });
-
-  it('renders both CTAs in the same section', () => {
-    renderWithProviders(<Hero />);
-    expect(screen.getByRole('link', { name: /Request Product Demo/i })).toBeDefined();
-    expect(screen.getByRole('link', { name: /View Methodology/i })).toBeDefined();
+  it('renders a not-investment-advice disclaimer', () => {
+    renderWithProviders(<HomeCTA />);
+    expect(screen.getByText(/not financial, investment/i)).toBeDefined();
   });
 });
