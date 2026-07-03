@@ -17,15 +17,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const stored = localStorage.getItem('aivex-lang') as Lang | null;
-    if (stored === 'en' || stored === 'tr') {
-      setLangState(stored);
-      document.cookie = `aivex-lang=${stored}; path=/; max-age=31536000; SameSite=Lax`;
-    }
+    const next = stored === 'en' || stored === 'tr' ? stored : 'tr';
+    setLangState(next);
+    document.documentElement.lang = next;
+    document.cookie = `aivex-lang=${next}; path=/; max-age=31536000; SameSite=Lax`;
   }, []);
 
   function setLang(l: Lang) {
     setLangState(l);
     localStorage.setItem('aivex-lang', l);
+    document.documentElement.lang = l;
     document.cookie = `aivex-lang=${l}; path=/; max-age=31536000; SameSite=Lax`;
   }
 

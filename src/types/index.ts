@@ -7,6 +7,13 @@ export interface BlogPost {
   tags?: string[];
   content: string;
   readingTime?: number;
+  /** Content category used for filtering: research | engineering | product | company. */
+  category?: string;
+  /** Turkish overlay metadata (from a sibling `.tr.mdx` file), when present. */
+  titleTr?: string;
+  excerptTr?: string;
+  /** True when a Turkish overlay exists for this post. */
+  hasTr?: boolean;
 }
 
 export interface DocPage {

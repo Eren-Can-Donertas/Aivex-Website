@@ -21,45 +21,45 @@ const fontMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aivexanalytics.com'),
   title: {
-    default: 'AIVEX — AI Research Infrastructure for Systematic Signal Intelligence',
+    default: 'AIVEX — Explainable Market-Research Products',
     template: '%s | AIVEX',
   },
   description:
-    'AIVEX Analytics is an AI-first research infrastructure platform for generating, evaluating, and governing systematic market signals with traceability and auditability.',
+    'Aivex builds explainable market-research products that examine news flow, price behavior, company data, and performance evidence through distinct analytical lenses.',
   keywords: [
-    'AI signal governance',
-    'auditable market research',
-    'systematic signal research',
-    'financial research infrastructure',
-    'AI research pipeline',
-    'market intelligence platform',
-    'traceable research signals',
-    'signal composition',
-    'quantitative research infrastructure',
+    'explainable market research',
+    'market intelligence',
+    'news intelligence',
+    'chart intelligence',
+    'company fundamentals research',
+    'signal validation',
+    'model evaluation',
+    'research tooling',
+    'modular market analysis',
   ],
-  authors: [{ name: 'AIVEX Analytics' }],
+  authors: [{ name: 'Aivex' }],
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aivexanalytics.com',
-    siteName: 'AIVEX Analytics',
-    title: 'AIVEX — AI Research Infrastructure for Systematic Signal Intelligence',
+    siteName: 'Aivex',
+    title: 'AIVEX — Explainable Market-Research Products',
     description:
-      'Modular AI signal generation, composition, and governance for systematic research. Traceable, auditable, and governed outputs.',
+      'A portfolio of specialized, explainable market-research products. News, chart, company, and validation lenses — kept separate, with confidence and evidence attached.',
     images: [
       {
         url: '/og-default.png',
         width: 1200,
         height: 630,
-        alt: 'AIVEX Analytics — AI Research Infrastructure',
+        alt: 'Aivex — Explainable Market-Research Products',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AIVEX — AI Research Infrastructure',
+    title: 'AIVEX — Explainable Market-Research Products',
     description:
-      'Traceable, governed, auditable AI signal research infrastructure for systematic workflows.',
+      'Explainable market research through separate, specialized analytical lenses — not one opaque signal.',
     images: ['/og-default.png'],
   },
   icons: {
@@ -76,12 +76,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang="en"
+      lang="tr"
       suppressHydrationWarning
       className={`${fontSans.variable} ${fontMono.variable}`}
     >
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <LanguageProvider>
             <div className="flex min-h-screen flex-col">
               <Header />

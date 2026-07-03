@@ -1,0 +1,34 @@
+---
+title: "Veri Kalitesi Ürünün Bir Parçasıdır"
+date: "2026-06-18"
+excerpt: "Her analitik çıktı, altındaki veri kadar güvenilirdir. Bu yüzden veri kalitesini bir ön işleme adımı değil, bir ürün yüzeyi olarak ele alıyoruz."
+author: "Aivex Ekibi"
+tags: ["mühendislik", "veri-kalitesi", "doğrulama"]
+category: "engineering"
+---
+
+## Görünmez bağımlılık
+
+Her skor, rejim etiketi ve duygu okuması, genellikle hiç görmediğiniz verilere dayanır. Bu veri bayat, eksik ya da sessizce değiştirilmişse, çıktı kendinden emin bir şekilde yanlıştır — ve yüzeyde bunu size söyleyen hiçbir şey yoktur.
+
+Bu yüzden veri kalitesi Aivex’te bir ön işleme angaryası değildir. Kendi çıktıları olan bir ürün meselesidir.
+
+## Sessiz değiştirme yerine karantina
+
+En önemli tek kural: bayat veriler sessizce kullanılmaz, karantinaya alınır. Yapılandırılabilir bir tazelik eşiğinin üzerinde bir alan, elimizdeki son değerle sessizce doldurulmak yerine işaretlenir. Görünür bir boşluk, görünmez bir tahminden çok daha güvenlidir.
+
+## Yönlendirme, yedekleme ve köken
+
+Bir sağlayıcı kullanılamadığında, yönlendirme ve yedekleme sistemin zarifçe bozulmasına olanak tanır — ama her alana gerçekte hangi sağlayıcının hizmet verdiğini kaydeder. Köken bir incelik değildir; bir okumaya daha sonra güvenmenizi veya güvenmemenizi sağlayan şeydir.
+
+Değerler, herhangi bir şey onları karşılaştırmadan önce normalize edilir: birimler hizalanır, zaman damgaları UTC’ye çevrilir, tanımlayıcılar uzlaştırılır. Karşılaştırmalar yalnızca benzer temelde olduğunda anlamlıdır.
+
+## Yeniden üretilebilir raporlar
+
+Bu çalışmanın çıktısı, yeniden üretilebilir bir veri-kalitesi raporudur: aynı girdiler verildiğinde aynı raporu alırsınız. Araştırmanın geri kalanını savunulabilir kılan şey bu yeniden üretilebilirliktir — yeniden üretemediğiniz bir sonuç bir bulgu değil, bir hikâyedir.
+
+## Nereye bağlanır
+
+Bu, **Metrikler ve Doğrulama**’nın işidir: herhangi biri güvenmeden önce diğer her bakış açısının güvenilirliğini puanlamak. Veri kalitesi, puanlamanın üzerinde durduğu temeldir ve ürünün birinci sınıf bir parçasıdır — gizlediğimiz bir adım değil.
+
+*Bu makale yalnızca araştırma ve bilgilendirme amaçlıdır. Yatırım tavsiyesi değildir.*

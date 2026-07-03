@@ -15,13 +15,27 @@ const DOCS_DIR = path.join(CONTENT_ROOT, 'docs');
 export function getAllPosts(): BlogPost[] {
   if (!fs.existsSync(BLOG_DIR)) return [];
 
-  const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith('.mdx'));
+  // Base posts are English `.mdx`. A sibling `.tr.mdx` is a Turkish overlay
+  // that provides translated title/excerpt (and body for the detail page).
+  const files = fs
+    .readdirSync(BLOG_DIR)
+    .filter((f) => f.endsWith('.mdx') && !f.endsWith('.tr.mdx'));
 
   const posts = files.map((filename) => {
     const slug = filename.replace(/\.mdx$/, '');
     const filePath = path.join(BLOG_DIR, filename);
     const raw = fs.readFileSync(filePath, 'utf-8');
     const { data, content } = matter(raw);
+
+    const trPath = path.join(BLOG_DIR, `${slug}.tr.mdx`);
+    const hasTr = fs.existsSync(trPath);
+    let titleTr: string | undefined;
+    let excerptTr: string | undefined;
+    if (hasTr) {
+      const trData = matter(fs.readFileSync(trPath, 'utf-8')).data;
+      titleTr = trData.title;
+      excerptTr = trData.excerpt;
+    }
 
     return {
       slug,
@@ -30,30 +44,38 @@ export function getAllPosts(): BlogPost[] {
       excerpt: data.excerpt ?? '',
       author: data.author,
       tags: data.tags ?? [],
+      category: data.category,
       content,
       readingTime: estimateReadingTime(content),
+      titleTr,
+      excerptTr,
+      hasTr,
     } satisfies BlogPost;
   });
 
   return posts.sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
-export function getPostBySlug(slug: string): BlogPost | null {
-  const filePath = path.join(BLOG_DIR, `${slug}.mdx`);
-  if (!fs.existsSync(filePath)) return null;
+export function getPostBySlug(slug: string, lang: string = 'en'): BlogPost | null {
+  const basePath = path.join(BLOG_DIR, `${slug}.mdx`);
+  if (!fs.existsSync(basePath)) return null;
 
-  const raw = fs.readFileSync(filePath, 'utf-8');
-  const { data, content } = matter(raw);
+  const base = matter(fs.readFileSync(basePath, 'utf-8'));
+  const trPath = path.join(BLOG_DIR, `${slug}.tr.mdx`);
+  const useTr = lang === 'tr' && fs.existsSync(trPath);
+  const active = useTr ? matter(fs.readFileSync(trPath, 'utf-8')) : base;
 
   return {
     slug,
-    title: data.title ?? slug,
-    date: data.date ?? '',
-    excerpt: data.excerpt ?? '',
-    author: data.author,
-    tags: data.tags ?? [],
-    content,
-    readingTime: estimateReadingTime(content),
+    title: active.data.title ?? base.data.title ?? slug,
+    date: base.data.date ?? '',
+    excerpt: active.data.excerpt ?? base.data.excerpt ?? '',
+    author: base.data.author,
+    tags: base.data.tags ?? [],
+    category: base.data.category,
+    content: active.content,
+    readingTime: estimateReadingTime(active.content),
+    hasTr: fs.existsSync(trPath),
   };
 }
 
@@ -61,7 +83,7 @@ export function getAllPostSlugs(): string[] {
   if (!fs.existsSync(BLOG_DIR)) return [];
   return fs
     .readdirSync(BLOG_DIR)
-    .filter((f) => f.endsWith('.mdx'))
+    .filter((f) => f.endsWith('.mdx') && !f.endsWith('.tr.mdx'))
     .map((f) => f.replace(/\.mdx$/, ''));
 }
 

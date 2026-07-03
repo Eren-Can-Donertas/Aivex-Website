@@ -7,8 +7,12 @@ vi.mock('next/link', () => ({
   ),
 }));
 
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/',
+}));
+
 vi.mock('next-themes', () => ({
-  useTheme: () => ({ theme: 'light', setTheme: vi.fn() }),
+  useTheme: () => ({ theme: 'dark', setTheme: vi.fn() }),
 }));
 
 import { Header } from '@/components/layout/Header';
@@ -29,48 +33,34 @@ describe('Header', () => {
     expect(screen.getByText('AIVEX')).toBeDefined();
   });
 
-  it('renders all five main navigation links', () => {
+  it('renders all five primary navigation links', () => {
     renderWithProviders(<Header />);
-    expect(screen.getByRole('link', { name: 'Product' })).toBeDefined();
-    expect(screen.getByRole('link', { name: 'Methodology' })).toBeDefined();
-    expect(screen.getByRole('link', { name: 'Docs' })).toBeDefined();
+    expect(screen.getByRole('link', { name: 'Products' })).toBeDefined();
+    expect(screen.getByRole('link', { name: 'Research' })).toBeDefined();
+    expect(screen.getByRole('link', { name: 'Roadmap' })).toBeDefined();
     expect(screen.getByRole('link', { name: 'Blog' })).toBeDefined();
-    expect(screen.getByRole('link', { name: 'About' })).toBeDefined();
+    expect(screen.getByRole('link', { name: 'Founders' })).toBeDefined();
   });
 
   it('nav links point to correct hrefs', () => {
     renderWithProviders(<Header />);
-    expect(screen.getByRole('link', { name: 'Product' }).getAttribute('href')).toBe('/product');
-    expect(screen.getByRole('link', { name: 'Methodology' }).getAttribute('href')).toBe('/methodology');
+    expect(screen.getByRole('link', { name: 'Products' }).getAttribute('href')).toBe('/products');
+    expect(screen.getByRole('link', { name: 'Research' }).getAttribute('href')).toBe('/research');
+    expect(screen.getByRole('link', { name: 'Roadmap' }).getAttribute('href')).toBe('/roadmap');
     expect(screen.getByRole('link', { name: 'Blog' }).getAttribute('href')).toBe('/blog');
-    expect(screen.getByRole('link', { name: 'About' }).getAttribute('href')).toBe('/about');
+    expect(screen.getByRole('link', { name: 'Founders' }).getAttribute('href')).toBe('/founders');
   });
 
-  it('Docs nav link points to the EN getting-started route', () => {
-    renderWithProviders(<Header />, { lang: 'en' });
-    expect(
-      screen.getByRole('link', { name: 'Docs' }).getAttribute('href')
-    ).toBe('/docs/en/getting-started');
-  });
-
-  it('Docs nav link uses the TR getting-started route when language is TR', () => {
-    renderWithProviders(<Header />, { lang: 'tr' });
-    expect(
-      screen.getByRole('link', { name: /Belgeler|Docs/i }).getAttribute('href')
-    ).toBe('/docs/tr/getting-started');
-  });
-
-  it('renders the Request Access CTA', () => {
+  it('renders the Request Demo CTA pointing to /contact', () => {
     renderWithProviders(<Header />);
-    const cta = screen.getByRole('link', { name: 'Request Access' });
+    const cta = screen.getByRole('link', { name: 'Request Demo' });
     expect(cta).toBeDefined();
     expect(cta.getAttribute('href')).toBe('/contact');
   });
 
   it('renders a theme toggle button', () => {
     renderWithProviders(<Header />);
-    const toggle = screen.getByRole('button', { name: /Toggle theme/i });
-    expect(toggle).toBeDefined();
+    expect(screen.getByRole('button', { name: /Toggle theme/i })).toBeDefined();
   });
 });
 
@@ -95,26 +85,26 @@ describe('Footer', () => {
 
   it('renders footer section headings', () => {
     renderWithProviders(<Footer />);
-    expect(screen.getByText('Product')).toBeDefined();
+    expect(screen.getByText('Products')).toBeDefined();
     expect(screen.getByText('Company')).toBeDefined();
-    expect(screen.getByText('Legal')).toBeDefined();
+    expect(screen.getByText('Resources')).toBeDefined();
   });
 
   it('renders footer links with correct hrefs', () => {
     renderWithProviders(<Footer />);
-    expect(screen.getByRole('link', { name: 'Overview' }).getAttribute('href')).toBe('/product');
-    expect(screen.getByRole('link', { name: 'About' }).getAttribute('href')).toBe('/about');
+    expect(screen.getByRole('link', { name: 'All products' }).getAttribute('href')).toBe('/products');
+    expect(screen.getByRole('link', { name: 'Founders' }).getAttribute('href')).toBe('/founders');
     expect(screen.getByRole('link', { name: 'Contact' }).getAttribute('href')).toBe('/contact');
+    expect(screen.getByRole('link', { name: 'Privacy Policy' }).getAttribute('href')).toBe('/legal/privacy');
   });
 
-  it('renders the disclaimer text', () => {
+  it('renders the not-financial-advice disclaimer', () => {
     renderWithProviders(<Footer />);
     expect(screen.getByText(/not financial.*advice/i)).toBeDefined();
   });
 
   it('renders the copyright notice', () => {
     renderWithProviders(<Footer />);
-    expect(screen.getByText(/AIVEX Analytics/i)).toBeDefined();
     expect(screen.getByText(/All rights reserved/i)).toBeDefined();
   });
 });

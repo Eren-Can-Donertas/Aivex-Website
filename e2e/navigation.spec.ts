@@ -1,138 +1,95 @@
 import { test, expect } from '@playwright/test';
 
+// Default language is Turkish, so header/footer labels are the TR strings.
+
 test.describe('Header navigation — link clicks', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
 
-  test('clicking Product navigates to /product', async ({ page }) => {
-    await page.getByRole('link', { name: 'Product' }).click();
-    await expect(page).toHaveURL(/\/product/);
+  test('Products navigates to /products', async ({ page }) => {
+    await page.getByRole('link', { name: 'Ürünler' }).first().click();
+    await expect(page).toHaveURL(/\/products/);
     await expect(page.locator('h1')).toBeVisible();
   });
 
-  test('clicking Methodology navigates to /methodology', async ({ page }) => {
-    await page.getByRole('link', { name: 'Methodology' }).click();
-    await expect(page).toHaveURL(/\/methodology/);
-    await expect(page.locator('h1')).toContainText('Methodology');
-  });
-
-  test('clicking Blog navigates to /blog', async ({ page }) => {
-    await page.getByRole('link', { name: 'Blog' }).click();
-    await expect(page).toHaveURL(/\/blog/);
+  test('Research navigates to /research', async ({ page }) => {
+    await page.getByRole('link', { name: 'Araştırma' }).first().click();
+    await expect(page).toHaveURL(/\/research/);
     await expect(page.locator('h1')).toBeVisible();
   });
 
-  test('clicking About navigates to /about', async ({ page }) => {
-    await page.getByRole('link', { name: 'About' }).click();
-    await expect(page).toHaveURL(/\/about/);
-    await expect(page.locator('h1')).toContainText('Mission');
+  test('Roadmap navigates to /roadmap', async ({ page }) => {
+    await page.getByRole('link', { name: 'Yol Haritası' }).first().click();
+    await expect(page).toHaveURL(/\/roadmap/);
   });
 
-  test('clicking Request Demo CTA navigates to /contact', async ({ page }) => {
-    await page.getByRole('link', { name: 'Request Demo' }).first().click();
+  test('Founders navigates to /founders', async ({ page }) => {
+    await page.getByRole('link', { name: 'Kurucular' }).first().click();
+    await expect(page).toHaveURL(/\/founders/);
+  });
+
+  test('Request Demo CTA navigates to /contact', async ({ page }) => {
+    await page.getByRole('link', { name: 'Demo Talep Et' }).first().click();
     await expect(page).toHaveURL(/\/contact/);
     await expect(page.locator('h1')).toBeVisible();
   });
 
-  test('clicking the AIVEX logo from About returns to homepage', async ({ page }) => {
-    await page.goto('/about');
-    // Logo link — first anchor whose text matches AIVEX
-    await page.getByRole('link', { name: /^AIVEX$/i }).first().click();
+  test('clicking the AIVEX logo returns to homepage', async ({ page }) => {
+    await page.goto('/research');
+    await page.getByRole('link', { name: /Aivex — home/i }).first().click();
     await expect(page).toHaveURL('/');
-    await expect(page.locator('h1')).toBeVisible();
   });
 });
 
-test.describe('Footer navigation — link hrefs', () => {
+test.describe('Hero CTAs', () => {
+  test('primary hero CTA navigates to /products', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('link', { name: /Ürünleri keşfet/i }).first().click();
+    await expect(page).toHaveURL(/\/products/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Mobile menu — the hamburger opens a nav drawer and NEVER a demo modal.
+// ---------------------------------------------------------------------------
+
+test.describe('Mobile navigation drawer', () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test('hamburger opens a nav drawer, not a demo request', async ({ page }) => {
+    await page.goto('/');
+    // Contact form should not appear just because we opened the menu.
+    await page.getByRole('button', { name: /Menü|Menu/i }).click();
+    await expect(page.getByRole('link', { name: 'Ürünler' })).toBeVisible();
+    // No form field visible — the demo request was not triggered.
+    expect(await page.getByRole('textbox').count()).toBe(0);
+  });
+
+  test('demo request is an explicit action inside the drawer', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: /Menü|Menu/i }).click();
+    await page.getByRole('link', { name: 'Demo Talep Et' }).click();
+    await expect(page).toHaveURL(/\/contact/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Footer navigation
+// ---------------------------------------------------------------------------
+
+test.describe('Footer navigation', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-  });
-
-  test('footer Overview link navigates to /product', async ({ page }) => {
-    await page.getByRole('link', { name: 'Overview' }).click();
-    await expect(page).toHaveURL(/\/product/);
-  });
-
-  test('footer About link navigates to /about', async ({ page }) => {
-    // Footer About is distinct from header About — use last() to get footer
-    await page.getByRole('link', { name: 'About' }).last().click();
-    await expect(page).toHaveURL(/\/about/);
   });
 
   test('footer Contact link navigates to /contact', async ({ page }) => {
-    await page.getByRole('link', { name: 'Contact' }).click();
+    await page.getByRole('link', { name: 'İletişim' }).click();
     await expect(page).toHaveURL(/\/contact/);
   });
 
-  test('footer Methodology link navigates to /methodology', async ({ page }) => {
-    // "Methodology" appears in both header nav and footer
-    const footerMethodology = page.getByRole('link', { name: 'Methodology' }).last();
-    await footerMethodology.click();
-    await expect(page).toHaveURL(/\/methodology/);
-  });
-});
-
-test.describe('In-page hero CTAs', () => {
-  test('View Docs in hero navigates to /docs/getting-started', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('link', { name: /View Docs/i }).click();
-    await expect(page).toHaveURL(/\/docs\/tr\/getting-started/);
-    await expect(page.locator('h1')).toBeVisible();
-  });
-
-  test('Request Demo in hero section navigates to /contact', async ({ page }) => {
-    await page.goto('/');
-    // The hero CTA is the first Request Demo link on the page
-    await page.getByRole('link', { name: /Request Demo/i }).first().click();
-    await expect(page).toHaveURL(/\/contact/);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Missing header nav flows
-// ---------------------------------------------------------------------------
-
-test.describe('Header navigation — Docs link', () => {
-  test('clicking Docs navigates to /docs/getting-started', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('link', { name: 'Docs' }).click();
-    await expect(page).toHaveURL(/\/docs\/tr\/getting-started/);
-    await expect(page.locator('h1')).toContainText(/Getting Started/i);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// About page CTA click-throughs
-// Smoke tests verify the CTAs are visible; these verify they navigate correctly.
-// ---------------------------------------------------------------------------
-
-test.describe('About page — CTA navigation', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/about');
-  });
-
-  test('Contact Us button navigates to /contact', async ({ page }) => {
-    await page.getByRole('link', { name: /Contact Us/i }).click();
-    await expect(page).toHaveURL(/\/contact/);
-    await expect(page.locator('h1')).toContainText(/Demo/i);
-  });
-
-  test('Read the Docs button navigates to /docs/getting-started', async ({ page }) => {
-    await page.getByRole('link', { name: /Read the Docs/i }).click();
-    await expect(page).toHaveURL(/\/docs\/tr\/getting-started/);
-    await expect(page.locator('h1')).toBeVisible();
-  });
-});
-
-// ---------------------------------------------------------------------------
-// Footer navigation — Docs link (not previously covered)
-// ---------------------------------------------------------------------------
-
-test.describe('Footer navigation — Docs link', () => {
-  test('footer Docs link navigates to /docs/getting-started', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('link', { name: 'Docs' }).last().click();
-    await expect(page).toHaveURL(/\/docs\/tr\/getting-started/);
+  test('footer Privacy link navigates to /legal/privacy', async ({ page }) => {
+    await page.getByRole('link', { name: 'Gizlilik Politikası' }).click();
+    await expect(page).toHaveURL(/\/legal\/privacy/);
   });
 });

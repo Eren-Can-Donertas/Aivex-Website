@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
@@ -24,12 +25,13 @@ export async function generateStaticParams() {
 }
 
 export default function BlogPostPage({ params }: Props) {
-  const post = getPostBySlug(params.slug);
+  const lang = cookies().get('aivex-lang')?.value === 'tr' ? 'tr' : 'en';
+  const post = getPostBySlug(params.slug, lang);
   if (!post) notFound();
 
   return (
-    <div className="py-16">
-      <div className="container mx-auto max-w-3xl px-4">
+    <div className="py-14">
+      <div className="container-page max-w-3xl">
         <BlogPostMeta
           date={post.date}
           readingTime={post.readingTime}

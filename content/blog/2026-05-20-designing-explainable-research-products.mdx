@@ -1,0 +1,37 @@
+---
+title: "Designing Explainable Market-Research Products"
+date: "2026-05-20"
+excerpt: "Explainability is not a feature you add at the end. It is a design constraint that decides how a product is built from the first line."
+author: "Aivex Team"
+tags: ["product", "explainability", "design"]
+category: "product"
+---
+
+## Explainability as a constraint, not a feature
+
+It is tempting to build an analytical product first and add "explanations" later. In practice that produces a confident output with a plausible story bolted on — which is worse than no explanation at all, because it looks trustworthy.
+
+We treat explainability as a design constraint. Every Aivex product must be able to show its work: what it observed, what it inferred, how confident it is, and whether that inference has been validated.
+
+## Four layers, kept apart
+
+The core design decision is to keep four things separate:
+
+1. **Observation** — what the data actually says.
+2. **Interpretation** — what we think it might mean.
+3. **Confidence and risk** — how sure we are.
+4. **Validation** — the evidence that the interpretation has held up.
+
+Most tools collapse these into one score. When they are kept apart, a user can accept the observation while disagreeing with the interpretation, or trust a reading while noting its confidence is low.
+
+## What this looks like in the product
+
+On a product detail page you will see the reading, the interpretation layered on top, and the confidence and validation attached. Example outputs are always labelled illustrative, and research-only views are marked as such. There are no buy/sell affordances — only readings, scores, and the evidence behind them.
+
+## Why it is worth the cost
+
+Designing this way is more work. It is easier to ship a single number. But a single number cannot be questioned, and anything about markets that cannot be questioned should not be trusted.
+
+Explainable products are slower to build and far easier to defend. For research, that trade is the right one.
+
+*This article is for research and informational purposes only. It is not investment advice.*
