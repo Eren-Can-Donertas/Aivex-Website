@@ -11,7 +11,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Docs — architecture overview content depth', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/docs/architecture-overview');
+    await page.goto('/docs/tr/architecture-overview');
   });
 
   test('page title includes Architecture', async ({ page }) => {
@@ -37,7 +37,7 @@ test.describe('Docs — architecture overview content depth', () => {
 
 test.describe('Docs — getting started content depth', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/docs/getting-started');
+    await page.goto('/docs/tr/getting-started');
   });
 
   test('page title includes Getting Started', async ({ page }) => {
@@ -62,10 +62,10 @@ test.describe('Docs — getting started content depth', () => {
 
 test.describe('Docs — module pages load correctly', () => {
   const MODULE_PAGES: { url: string; expectedContent: RegExp }[] = [
-    { url: '/docs/modules/signal-engine',  expectedContent: /Signal Engine/i },
-    { url: '/docs/modules/atomic-signals', expectedContent: /Atomic/i },
-    { url: '/docs/modules/governor',       expectedContent: /Governor/i },
-    { url: '/docs/modules/watchdog',       expectedContent: /Watchdog/i },
+    { url: '/docs/tr/modules/signal-engine',  expectedContent: /Signal Engine/i },
+    { url: '/docs/tr/modules/atomic-signals', expectedContent: /Atomic/i },
+    { url: '/docs/tr/modules/governor',       expectedContent: /Governor/i },
+    { url: '/docs/tr/modules/watchdog',       expectedContent: /Watchdog/i },
   ];
 
   for (const { url, expectedContent } of MODULE_PAGES) {

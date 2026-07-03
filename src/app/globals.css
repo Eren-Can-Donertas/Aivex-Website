@@ -4,34 +4,34 @@
 
 @layer base {
   :root {
-    /* Light mode */
+    /* Light mode — institutional palette */
     --background: 0 0% 100%;
     --foreground: 222 47% 8%;
-    --primary: 221 83% 48%;
+    --primary: 217 65% 44%;
     --primary-foreground: 0 0% 100%;
     --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%;
-    --border: 214 32% 91%;
-    --accent: 188 95% 43%;
-    --accent-foreground: 222 47% 8%;
+    --border: 215 20% 88%;
+    --accent: 213 50% 46%;
+    --accent-foreground: 0 0% 100%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 8%;
     --radius: 0.5rem;
   }
 
   .dark {
-    /* Dark mode */
-    --background: 222 47% 8%;
-    --foreground: 220 60% 95%;
-    --primary: 221 83% 53%;
+    /* Dark mode — deep graphite, institutional blue */
+    --background: 222 18% 7%;
+    --foreground: 220 20% 92%;
+    --primary: 217 62% 52%;
     --primary-foreground: 0 0% 100%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --border: 217 33% 17%;
-    --accent: 188 95% 43%;
+    --muted: 222 14% 13%;
+    --muted-foreground: 215 14% 55%;
+    --border: 222 12% 16%;
+    --accent: 213 50% 54%;
     --accent-foreground: 0 0% 100%;
-    --card: 222 47% 11%;
-    --card-foreground: 220 60% 95%;
+    --card: 222 16% 10%;
+    --card-foreground: 220 20% 92%;
   }
 
   * {
@@ -44,7 +44,7 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
+    @apply font-semibold;
   }
 
   /* Prose styles for MDX content */
@@ -100,17 +100,7 @@
     @apply text-primary underline underline-offset-4 hover:opacity-80;
   }
 
-  .prose table {
-    @apply w-full border-collapse mb-4;
-  }
-
-  .prose th {
-    @apply border border-border px-4 py-2 bg-muted font-semibold text-left;
-  }
-
-  .prose td {
-    @apply border border-border px-4 py-2;
-  }
+  /* Tables are fully handled by MDXComponents */
 }
 
 @layer utilities {
@@ -122,7 +112,31 @@
     @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
   }
 
+  /* Institutional dashboard panel style */
+  .panel-terminal {
+    @apply rounded-xl border border-border bg-card font-mono text-sm shadow-lg;
+  }
+
+  /* Elevated surface — slightly lighter than card, for nested panels */
+  .panel-elevated {
+    @apply rounded-xl border border-border/60 bg-muted/50 backdrop-blur-sm;
+  }
+
+  /* Section divider with faint label */
+  .section-label {
+    @apply text-xs font-medium uppercase tracking-widest text-muted-foreground;
+  }
+
   .glass {
     @apply bg-white/10 backdrop-blur-sm border border-white/20;
+  }
+
+  /* Subtle fade-in animation */
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out both;
   }
 }

@@ -4,6 +4,16 @@ description: Prerequisites, installation, and running your first AIVEX research 
 order: 1
 ---
 
+## What You Are About to Run
+
+AIVEX is a modular AI research runtime. It ingests market data, news, and technical signals,
+composes them through a governed pipeline, and emits auditable research outputs via the Eye REST API.
+Each output carries a `trace_id`, confidence score, and source attribution.
+
+> **Private Repository Notice:** AIVEX is currently a private, internal runtime.
+> Public repository access is not available.
+> To request access to the AIVEX codebase or runtime, [contact the team](/contact).
+
 ## Prerequisites
 
 - Python 3.11 or 3.13
@@ -12,10 +22,10 @@ order: 1
 
 ## Installation
 
-Clone the repository and install dependencies:
+After receiving repository access, clone and install dependencies:
 
 ```bash
-git clone https://github.com/aivex/aivex.git
+git clone <repository-url-provided-by-team>
 cd aivex
 pip install -r requirements.txt
 ```
@@ -47,7 +57,7 @@ Optional variables:
 
 ## Running the System
 
-**Start everything (24/7 mode):**
+**Start everything (24/7 supervised mode):**
 ```bash
 python Main.py
 ```
@@ -59,25 +69,26 @@ python -m watchdog.runners.module_runner news --mode once
 
 **Start only the Eye API:**
 ```bash
-python -m uvicorn eye.main:create_app --factory --port 8000
+python -m uvicorn eye.main:create_app --factory --port 8001
 ```
 
 ## Verifying the Setup
 
-After starting the system, check the Eye API:
+After starting the system, check the Eye API health endpoint:
 
 ```bash
-curl http://localhost:8000/health
+curl http://localhost:8001/health
 ```
 
 Expected response:
 ```json
-{"status": "ok", "version": "2.0.0"}
+{ "status": "ok", "version": "<current-version>" }
 ```
 
 ## Database Setup
 
-AIVEX automatically creates required tables on first run. For the OHLCV data, run the ingestion script once to populate historical data:
+AIVEX automatically creates required tables on first run. For the OHLCV data, run the ingestion
+script once to populate historical data:
 
 ```bash
 python Ingest_ohlcv.py

@@ -28,10 +28,6 @@ export function trackPageView(path: string): void {
   trackEvent('pageview', { path });
 }
 
-export function trackWaitlistSignup(email: string): void {
-  trackEvent('waitlist_signup', { email_domain: email.split('@')[1] ?? 'unknown' });
-}
-
 export function trackCTAClick(cta: string, location: string): void {
   trackEvent('cta_click', { cta, location });
 }

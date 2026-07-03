@@ -1,94 +1,108 @@
+'use client';
+
+import { useLanguage } from '@/contexts/LanguageContext';
+import { locales } from '@/locales';
+
 export function ArchitectureDiagram() {
+  const { lang } = useLanguage();
+  const t = locales[lang].home.architectureDiagram;
+
   return (
     <section className="py-20 bg-muted/30">
       <div className="container mx-auto max-w-6xl px-4">
         <div className="mb-12 text-center">
-          <h2 className="mb-3 text-3xl font-bold">System Architecture</h2>
-          <p className="mx-auto max-w-2xl text-muted-foreground">
-            A parallel, fault-isolated pipeline from raw data to governed research signals.
-          </p>
+          <h2 className="mb-3 text-3xl font-bold">{t.title}</h2>
+          <p className="mx-auto max-w-2xl text-muted-foreground">{t.subtitle}</p>
         </div>
 
-        {/* SVG Architecture Diagram */}
+        {/* SVG Architecture Diagram — using hsla() for cross-browser SVG attribute compat */}
         <div className="overflow-x-auto rounded-xl border border-border bg-card p-6 shadow-sm">
           <svg
-            viewBox="0 0 900 420"
+            viewBox="0 0 920 440"
             className="mx-auto w-full max-w-4xl"
-            aria-label="AIVEX system architecture diagram"
+            aria-label="AIVEX system architecture diagram showing data flow from sources through signal modules to governed API output"
           >
-            {/* Data Sources */}
-            <g>
-              <rect x="20" y="170" width="120" height="40" rx="6" fill="hsl(221 83% 48% / 0.15)" stroke="hsl(221 83% 48%)" strokeWidth="1.5" />
-              <text x="80" y="195" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">News APIs</text>
-
-              <rect x="20" y="230" width="120" height="40" rx="6" fill="hsl(221 83% 48% / 0.15)" stroke="hsl(221 83% 48%)" strokeWidth="1.5" />
-              <text x="80" y="255" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">Market Data</text>
-
-              <rect x="20" y="110" width="120" height="40" rx="6" fill="hsl(221 83% 48% / 0.15)" stroke="hsl(221 83% 48%)" strokeWidth="1.5" />
-              <text x="80" y="135" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">Fundamentals</text>
-            </g>
-
-            {/* Arrows to modules */}
-            <line x1="140" y1="130" x2="200" y2="150" stroke="hsl(221 83% 48%)" strokeWidth="1.5" strokeDasharray="4,2" />
-            <line x1="140" y1="190" x2="200" y2="210" stroke="hsl(221 83% 48%)" strokeWidth="1.5" strokeDasharray="4,2" />
-            <line x1="140" y1="250" x2="200" y2="270" stroke="hsl(221 83% 48%)" strokeWidth="1.5" strokeDasharray="4,2" />
-
-            {/* Signal Modules */}
-            <rect x="200" y="130" width="140" height="45" rx="6" fill="hsl(188 95% 43% / 0.15)" stroke="hsl(188 95% 43%)" strokeWidth="1.5" />
-            <text x="270" y="158" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">News Signal</text>
-
-            <rect x="200" y="190" width="140" height="45" rx="6" fill="hsl(188 95% 43% / 0.15)" stroke="hsl(188 95% 43%)" strokeWidth="1.5" />
-            <text x="270" y="218" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">Chart Signal</text>
-
-            <rect x="200" y="250" width="140" height="45" rx="6" fill="hsl(188 95% 43% / 0.15)" stroke="hsl(188 95% 43%)" strokeWidth="1.5" />
-            <text x="270" y="278" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">Metrics Signal</text>
-
-            {/* Arrows to Signal Engine */}
-            <line x1="340" y1="153" x2="420" y2="200" stroke="hsl(188 95% 43%)" strokeWidth="2" />
-            <line x1="340" y1="213" x2="420" y2="210" stroke="hsl(188 95% 43%)" strokeWidth="2" />
-            <line x1="340" y1="273" x2="420" y2="220" stroke="hsl(188 95% 43%)" strokeWidth="2" />
-
-            {/* Signal Engine */}
-            <rect x="420" y="175" width="140" height="60" rx="6" fill="hsl(221 83% 48% / 0.25)" stroke="hsl(221 83% 48%)" strokeWidth="2" />
-            <text x="490" y="200" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="700">Signal Engine</text>
-            <text x="490" y="220" textAnchor="middle" fontSize="10" fill="currentColor" opacity="0.7">(Brain)</text>
-
-            {/* Arrow to Governor */}
-            <line x1="560" y1="205" x2="630" y2="205" stroke="hsl(221 83% 48%)" strokeWidth="2" markerEnd="url(#arrowhead)" />
-
-            {/* Governor */}
-            <rect x="630" y="175" width="130" height="60" rx="6" fill="hsl(0 72% 51% / 0.1)" stroke="hsl(0 72% 51%)" strokeWidth="1.5" />
-            <text x="695" y="200" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="700">Governor</text>
-            <text x="695" y="218" textAnchor="middle" fontSize="10" fill="currentColor" opacity="0.7">Risk Gating</text>
-
-            {/* Arrow to API */}
-            <line x1="760" y1="205" x2="820" y2="205" stroke="currentColor" strokeWidth="2" opacity="0.5" markerEnd="url(#arrowhead2)" />
-
-            {/* API output */}
-            <rect x="820" y="175" width="60" height="60" rx="6" fill="hsl(221 83% 48% / 0.1)" stroke="hsl(221 83% 48%)" strokeWidth="1.5" />
-            <text x="850" y="200" textAnchor="middle" fontSize="11" fill="currentColor" fontWeight="600">Eye</text>
-            <text x="850" y="218" textAnchor="middle" fontSize="10" fill="currentColor" opacity="0.7">API</text>
-
-            {/* Watchdog bar at bottom */}
-            <rect x="20" y="360" width="860" height="36" rx="6" fill="hsl(222 47% 8% / 0.1)" stroke="hsl(215 20% 65%)" strokeWidth="1" strokeDasharray="6,3" />
-            <text x="450" y="383" textAnchor="middle" fontSize="12" fill="currentColor" opacity="0.7" fontWeight="600">Watchdog — 24/7 process supervision, auto-restart, heartbeat monitoring</text>
-
-            {/* Arrowhead markers */}
             <defs>
-              <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-                <polygon points="0 0, 8 3, 0 6" fill="hsl(221 83% 48%)" />
+              <marker id="arrow-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="hsla(217, 62%, 50%, 0.9)" />
               </marker>
-              <marker id="arrowhead2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-                <polygon points="0 0, 8 3, 0 6" fill="currentColor" opacity="0.5" />
+              <marker id="arrow-steel" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="hsla(213, 50%, 54%, 0.9)" />
+              </marker>
+              <marker id="arrow-muted" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="currentColor" opacity="0.4" />
               </marker>
             </defs>
 
-            {/* Legend */}
-            <text x="20" y="40" fontSize="11" fill="currentColor" opacity="0.5" fontWeight="500">DATA SOURCES</text>
-            <text x="200" y="40" fontSize="11" fill="currentColor" opacity="0.5" fontWeight="500">ATOMIC SIGNALS</text>
-            <text x="420" y="40" fontSize="11" fill="currentColor" opacity="0.5" fontWeight="500">COMPOSITION</text>
-            <text x="630" y="40" fontSize="11" fill="currentColor" opacity="0.5" fontWeight="500">RISK GATE</text>
-            <text x="820" y="40" fontSize="11" fill="currentColor" opacity="0.5" fontWeight="500">OUTPUT</text>
+            {/* Legend row */}
+            <text x="20"  y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">{t.legend.dataSources}</text>
+            <text x="210" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">{t.legend.atomicSignals}</text>
+            <text x="430" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">{t.legend.composition}</text>
+            <text x="640" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">{t.legend.riskGate}</text>
+            <text x="835" y="38" fontSize="10" fill="currentColor" opacity="0.45" fontWeight="600" letterSpacing="1">{t.legend.output}</text>
+
+            {/* Data Sources */}
+            <rect x="20" y="105" width="125" height="40" rx="5" fill="hsla(217, 62%, 50%, 0.12)" stroke="hsla(217, 62%, 50%, 0.7)" strokeWidth="1.5" />
+            <text x="83" y="130" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">Fundamentals</text>
+
+            <rect x="20" y="165" width="125" height="40" rx="5" fill="hsla(217, 62%, 50%, 0.12)" stroke="hsla(217, 62%, 50%, 0.7)" strokeWidth="1.5" />
+            <text x="83" y="190" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">News APIs</text>
+
+            <rect x="20" y="225" width="125" height="40" rx="5" fill="hsla(217, 62%, 50%, 0.12)" stroke="hsla(217, 62%, 50%, 0.7)" strokeWidth="1.5" />
+            <text x="83" y="250" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">Market Data</text>
+
+            {/* Source → Module arrows */}
+            <line x1="145" y1="125" x2="210" y2="152" stroke="hsla(217, 62%, 50%, 0.5)" strokeWidth="1.5" strokeDasharray="4,3" markerEnd="url(#arrow-blue)" />
+            <line x1="145" y1="185" x2="210" y2="212" stroke="hsla(217, 62%, 50%, 0.5)" strokeWidth="1.5" strokeDasharray="4,3" markerEnd="url(#arrow-blue)" />
+            <line x1="145" y1="245" x2="210" y2="272" stroke="hsla(217, 62%, 50%, 0.5)" strokeWidth="1.5" strokeDasharray="4,3" markerEnd="url(#arrow-blue)" />
+
+            {/* Atomic Signal modules */}
+            <rect x="210" y="132" width="148" height="44" rx="5" fill="hsla(213, 50%, 54%, 0.12)" stroke="hsla(213, 50%, 54%, 0.8)" strokeWidth="1.5" />
+            <text x="284" y="159" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">Metrics Signal</text>
+
+            <rect x="210" y="192" width="148" height="44" rx="5" fill="hsla(213, 50%, 54%, 0.12)" stroke="hsla(213, 50%, 54%, 0.8)" strokeWidth="1.5" />
+            <text x="284" y="219" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">News Signal</text>
+
+            <rect x="210" y="252" width="148" height="44" rx="5" fill="hsla(213, 50%, 54%, 0.12)" stroke="hsla(213, 50%, 54%, 0.8)" strokeWidth="1.5" />
+            <text x="284" y="279" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="600">Chart Signal</text>
+
+            {/* Module → Signal Engine arrows */}
+            <line x1="358" y1="154" x2="428" y2="198" stroke="hsla(213, 50%, 54%, 0.7)" strokeWidth="2" markerEnd="url(#arrow-steel)" />
+            <line x1="358" y1="214" x2="428" y2="212" stroke="hsla(213, 50%, 54%, 0.7)" strokeWidth="2" markerEnd="url(#arrow-steel)" />
+            <line x1="358" y1="274" x2="428" y2="226" stroke="hsla(213, 50%, 54%, 0.7)" strokeWidth="2" markerEnd="url(#arrow-steel)" />
+
+            {/* Signal Engine */}
+            <rect x="428" y="178" width="148" height="64" rx="6" fill="hsla(217, 62%, 50%, 0.18)" stroke="hsla(217, 62%, 50%, 0.9)" strokeWidth="2" />
+            <text x="502" y="205" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="700">Signal Engine</text>
+            <text x="502" y="225" textAnchor="middle" fontSize="10" fill="currentColor" opacity="0.6">Confidence · Trace ID</text>
+
+            {/* Signal Engine → Governor */}
+            <line x1="576" y1="210" x2="640" y2="210" stroke="hsla(217, 62%, 50%, 0.8)" strokeWidth="2" markerEnd="url(#arrow-blue)" />
+
+            {/* Governor */}
+            <rect x="640" y="178" width="140" height="64" rx="6" fill="hsla(0, 62%, 50%, 0.08)" stroke="hsla(0, 62%, 50%, 0.6)" strokeWidth="1.5" />
+            <text x="710" y="205" textAnchor="middle" fontSize="12" fill="currentColor" fontWeight="700">Governor</text>
+            <text x="710" y="222" textAnchor="middle" fontSize="10" fill="currentColor" opacity="0.6">Risk Gate · Audit Log</text>
+
+            {/* Governor → Eye API */}
+            <line x1="780" y1="210" x2="838" y2="210" stroke="currentColor" strokeWidth="2" opacity="0.4" markerEnd="url(#arrow-muted)" />
+
+            {/* Eye API */}
+            <rect x="838" y="178" width="64" height="64" rx="6" fill="hsla(217, 62%, 50%, 0.1)" stroke="hsla(217, 62%, 50%, 0.7)" strokeWidth="1.5" />
+            <text x="870" y="205" textAnchor="middle" fontSize="11" fill="currentColor" fontWeight="600">Eye</text>
+            <text x="870" y="222" textAnchor="middle" fontSize="10" fill="currentColor" opacity="0.6">API</text>
+
+            {/* Trace ID / audit path annotation */}
+            <line x1="502" y1="242" x2="502" y2="310" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" opacity="0.25" />
+            <line x1="502" y1="310" x2="710" y2="310" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" opacity="0.25" />
+            <line x1="710" y1="310" x2="710" y2="242" stroke="currentColor" strokeWidth="1" strokeDasharray="3,3" opacity="0.25" />
+            <text x="606" y="328" textAnchor="middle" fontSize="10" fill="currentColor" opacity="0.35" fontStyle="italic">{t.annotation}</text>
+
+            {/* Watchdog bar */}
+            <rect x="20" y="370" width="882" height="38" rx="5" fill="hsla(220, 14%, 9%, 0.08)" stroke="hsla(215, 16%, 58%, 0.35)" strokeWidth="1" strokeDasharray="6,4" />
+            <text x="461" y="394" textAnchor="middle" fontSize="11" fill="currentColor" opacity="0.55" fontWeight="600">
+              {t.watchdog}
+            </text>
           </svg>
         </div>
       </div>

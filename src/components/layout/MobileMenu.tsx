@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { locales } from '@/locales';
 import type { NavItem } from '@/types';
 
 interface MobileMenuProps {
@@ -12,6 +14,8 @@ interface MobileMenuProps {
 
 export function MobileMenu({ items }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
+  const { lang } = useLanguage();
+  const t = locales[lang].nav;
 
   return (
     <div className="md:hidden">
@@ -42,6 +46,11 @@ export function MobileMenu({ items }: MobileMenuProps) {
               </Link>
             ))}
           </nav>
+          <div className="mt-4 border-t border-border pt-4">
+            <Link href="/contact" onClick={() => setOpen(false)}>
+              <Button className="w-full">{t.requestAccess}</Button>
+            </Link>
+          </div>
         </div>
       )}
     </div>

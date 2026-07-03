@@ -1,0 +1,74 @@
+---
+title: Vali
+description: Sinyal yayım kontrolü için risk geçişi, acil durdurma ve insan müdahalesi politikaları.
+order: 5
+section: Modüller
+---
+
+## Genel Bakış
+
+Vali, herhangi bir bileşik sinyalin Eye API'ye ulaşmadan önceki son kontrol noktasıdır. Yapılandırılabilir bir dizi kontrol uygular ve bunları geçemeyen sinyalleri engeller.
+
+Vali hiçbir zaman sessizce çökmez — her izin ve red kararı tam bağlamıyla `errors/governor.log` dosyasına kaydedilir.
+
+## Kontroller (sırayla)
+
+### 1. Acil Durdurma
+
+Ortamda `GOVERNOR_KILL_SWITCH=1` ayarlanmışsa tüm sinyaller hemen engellenir. Başka hiçbir kontrol değerlendirilmez.
+
+Acil durdurma, ortam güncellenerek ve sürece SIGHUP gönderilerek sistem yeniden başlatılmadan değiştirilebilir.
+
+### 2. Minimum Güven
+
+`GOVERNOR_MIN_CONFIDENCE` (varsayılan: `0.40`) değerinin altındaki sinyaller engellenir.
+
+### 3. Sembol Engel Listesi
+
+`GOVERNOR_BLOCKED_SYMBOLS` içindeki semboller (virgülle ayrılmış) güvenden bağımsız olarak her zaman engellenir.
+
+### 4. Sektör Yoğunlaşması
+
+Son N sinyalin `GOVERNOR_MAX_SECTOR_CONCENTRATION` (varsayılan: `0.40`) değerinden fazlası aynı sektöre işaret ederse, o sektördeki yeni sinyaller kısıtlanır.
+
+### 5. Bekleme Süresi
+
+Aynı sembol için yakın zamanda bir sinyal yayımlandıysa, yeni sinyalin geçmesi için önceki güveni `GOVERNOR_COOLDOWN_MARGIN` değeri kadar aşması gerekir.
+
+## İnsan Müdahalesi
+
+### Engelleme Müdahalesi
+
+```bash
+# Bir sembolü 24 saat engelle
+python -m brain.governor block AAPL --hours 24 --reason "inceleme altında"
+```
+
+### İzin Müdahalesi
+
+```bash
+# Normalde engellenen bir sembolü geçici olarak izin ver
+python -m brain.governor allow TSLA --hours 1 --reason "araştırma döngüsü için onaylandı"
+```
+
+Tüm müdahaleler istek sahibinin makine adı ve PID'i ile kaydedilir.
+
+## Denetim Günlüğü Formatı
+
+Her Vali kararı `errors/governor.log` dosyasına bir satır ekler:
+
+```
+[2024-02-20T14:30:00.123456] [ALLOW] [abc12345] AAPL → bullish (conf=0.72) | no_block
+[2024-02-20T14:30:01.456789] [DENY]  [abc12346] NVDA → bullish (conf=0.38) | below_min_confidence
+```
+
+## Yapılandırma
+
+| Değişken | Varsayılan | Açıklama |
+|----------|------------|----------|
+| `GOVERNOR_KILL_SWITCH` | `` | Tüm yayımları engellemek için `1` olarak ayarlayın |
+| `GOVERNOR_MIN_CONFIDENCE` | `0.40` | İzin verilecek minimum güven |
+| `GOVERNOR_BLOCKED_SYMBOLS` | `` | Virgülle ayrılmış engel listesi |
+| `GOVERNOR_MAX_SECTOR_CONCENTRATION` | `0.40` | Sektör başına maksimum sinyal oranı |
+| `GOVERNOR_COOLDOWN_SECONDS` | `600` | Sembol yayımından sonra bekleme süresi |
+| `GOVERNOR_COOLDOWN_MARGIN` | `0.10` | Bekleme süresini geçersiz kılmak için güven deltası |
