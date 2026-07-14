@@ -1,7 +1,6 @@
 'use client';
 
-import { Newspaper, BarChart2, TrendingUp, Brain, Shield, Eye } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { locales } from '@/locales';
 
@@ -13,15 +12,6 @@ type ModuleStatus =
   | 'beta'
   | 'risk-gate-active';
 
-const MODULE_ICONS: Record<string, React.ElementType> = {
-  news: Newspaper,
-  chart: BarChart2,
-  metrics: TrendingUp,
-  brain: Brain,
-  governor: Shield,
-  eye: Eye,
-};
-
 const MODULE_STATUSES: Record<string, ModuleStatus> = {
   news: 'internal-runtime',
   chart: 'in-validation',
@@ -31,13 +21,14 @@ const MODULE_STATUSES: Record<string, ModuleStatus> = {
   eye: 'beta',
 };
 
-const STATUS_VARIANTS: Record<ModuleStatus, 'default' | 'outline' | 'accent' | 'success' | 'warning'> = {
-  'internal-runtime': 'default',
-  'data-connected':   'default',
-  'in-validation':    'outline',
-  'api-ready':        'success',
-  'beta':             'accent',
-  'risk-gate-active': 'success',
+/* Short dial codes shown on each spec card, instrument-panel style */
+const STATUS_DIALS: Record<ModuleStatus, string> = {
+  'internal-runtime': 'RT',
+  'data-connected':   'DATA',
+  'in-validation':    'VAL',
+  'api-ready':        'API',
+  'beta':             'BETA',
+  'risk-gate-active': 'GATE',
 };
 
 export function ProductOverview() {
@@ -45,37 +36,34 @@ export function ProductOverview() {
   const t = locales[lang].home.productOverview;
 
   return (
-    <section className="py-20">
+    <section className="py-16 md:py-20">
       <div className="container mx-auto max-w-6xl px-4">
-        <div className="mb-12 text-center">
-          <h2 className="mb-3 text-3xl font-bold">{t.title}</h2>
-          <p className="mx-auto max-w-2xl text-muted-foreground">{t.subtitle}</p>
-        </div>
+        <SectionHeading idx="01" title={t.title} subtitle={t.subtitle} />
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {t.modules.map((mod) => {
-            const Icon = MODULE_ICONS[mod.id] ?? Newspaper;
             const status = MODULE_STATUSES[mod.id] ?? 'internal-runtime';
             const statusLabel = t.statusLabels[status];
-            const statusVariant = STATUS_VARIANTS[status];
             return (
               <div
                 key={mod.id}
-                className="rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/30"
+                className="rounded-md border border-border bg-card p-5 transition-colors hover:border-primary/50"
               >
-                <div className="mb-4 flex items-start justify-between gap-2">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                    <Icon className="h-4 w-4 text-primary" />
-                  </div>
-                  <Badge variant={statusVariant}>{statusLabel}</Badge>
+                <div className="mb-1 flex items-start justify-between gap-3">
+                  <h3 className="font-bold">{mod.name}</h3>
+                  <span
+                    title={statusLabel}
+                    className="shrink-0 rounded-sm border border-border px-2 py-1 font-mono text-[0.62rem] text-muted-foreground"
+                  >
+                    {STATUS_DIALS[status]}
+                  </span>
                 </div>
-                <h3 className="mb-0.5 font-semibold">{mod.name}</h3>
-                <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground/60">
+                <p className="mb-2 text-[0.64rem] font-bold uppercase tracking-[0.16em] text-primary">
                   {mod.role}
                 </p>
                 <p className="mb-3 text-sm text-muted-foreground">{mod.description}</p>
-                <div className="rounded-md bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
-                  <span className="font-medium text-foreground/70">{t.outputLabel}: </span>
+                <div className="border-t border-dashed border-border pt-2.5 font-mono text-[0.68rem]">
+                  <span className="text-muted-foreground">{t.outputLabel} — </span>
                   {mod.output}
                 </div>
               </div>

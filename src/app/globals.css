@@ -4,34 +4,34 @@
 
 @layer base {
   :root {
-    /* Light mode — institutional palette */
-    --background: 0 0% 100%;
-    --foreground: 222 47% 8%;
-    --primary: 217 65% 44%;
+    /* Light mode — Instrument palette: shell #F3F5F4 · ink #1B2321 · teal #137065 · panel #FBFCFB */
+    --background: 150 9% 96%;
+    --foreground: 165 13% 12%;
+    --primary: 173 71% 26%;
     --primary-foreground: 0 0% 100%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --border: 215 20% 88%;
-    --accent: 213 50% 46%;
+    --muted: 154 10% 91%;
+    --muted-foreground: 163 7% 39%;
+    --border: 154 9% 84%;
+    --accent: 173 71% 26%;
     --accent-foreground: 0 0% 100%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 8%;
-    --radius: 0.5rem;
+    --card: 120 11% 99%;
+    --card-foreground: 165 13% 12%;
+    --radius: 0.375rem;
   }
 
   .dark {
-    /* Dark mode — deep graphite, institutional blue */
-    --background: 222 18% 7%;
-    --foreground: 220 20% 92%;
-    --primary: 217 62% 52%;
-    --primary-foreground: 0 0% 100%;
-    --muted: 222 14% 13%;
-    --muted-foreground: 215 14% 55%;
-    --border: 222 12% 16%;
-    --accent: 213 50% 54%;
-    --accent-foreground: 0 0% 100%;
-    --card: 222 16% 10%;
-    --card-foreground: 220 20% 92%;
+    /* Dark mode — Instrument at night: deep ink shell, brighter teal */
+    --background: 165 13% 8%;
+    --foreground: 150 9% 92%;
+    --primary: 172 55% 45%;
+    --primary-foreground: 165 13% 8%;
+    --muted: 165 10% 13%;
+    --muted-foreground: 160 7% 62%;
+    --border: 165 8% 19%;
+    --accent: 172 55% 45%;
+    --accent-foreground: 165 13% 8%;
+    --card: 165 11% 10%;
+    --card-foreground: 150 9% 92%;
   }
 
   * {
@@ -108,18 +108,19 @@
     text-wrap: balance;
   }
 
+  /* Brand accent text — flat teal (Instrument style, no gradients) */
   .gradient-text {
-    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+    @apply text-primary;
   }
 
-  /* Institutional dashboard panel style */
+  /* Instrument readout panel — hard ink border, panel surface */
   .panel-terminal {
-    @apply rounded-xl border border-border bg-card font-mono text-sm shadow-lg;
+    @apply rounded-md border-[1.5px] border-foreground bg-card font-mono text-sm;
   }
 
   /* Elevated surface — slightly lighter than card, for nested panels */
   .panel-elevated {
-    @apply rounded-xl border border-border/60 bg-muted/50 backdrop-blur-sm;
+    @apply rounded-md border border-border bg-muted/50;
   }
 
   /* Section divider with faint label */
@@ -129,6 +130,26 @@
 
   .glass {
     @apply bg-white/10 backdrop-blur-sm border border-white/20;
+  }
+
+  /* Instrument ruler — measurement tick strip under the header */
+  .ruler {
+    height: 0.9rem;
+    border-bottom: 1px solid hsl(var(--foreground));
+    background: repeating-linear-gradient(90deg, hsl(var(--foreground)) 0 1px, transparent 1px 0.6rem);
+    background-size: 100% 0.45rem;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    opacity: 0.55;
+  }
+
+  /* Fine tick scale used inside readout panels */
+  .scale-ticks {
+    background: repeating-linear-gradient(90deg, hsl(var(--border)) 0 1px, transparent 1px 5%);
+    background-size: 100% 0.7rem;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    border-bottom: 1px solid hsl(var(--foreground));
   }
 
   /* Subtle fade-in animation */

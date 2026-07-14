@@ -171,8 +171,8 @@ export const tr = {
     hero: {
       subBadge: 'AIVEX Analytics',
       badge: 'Yapay Zeka Destekli Piyasa Zekası Altyapısı',
-      titleMain: 'Kara Kutu Değil.',
-      titleHighlight: 'Modüler Bir Finans Analiz Hattı.',
+      titleMain: 'Kara kutu değil.',
+      titleHighlight: 'Piyasalar için bir ölçüm aleti.',
       subtitle: 'AIVEX CORE, piyasa verilerini, haberleri, sosyal medyayı ve teknik sinyalleri; güven skorları, kaynak atıfı, iz kimlikleri ve risk kapılı değerlendirme ile yönetişimli araştırma çıktılarına dönüştürür.',
       ctaPrimary: 'Ürün Demosu Talep Et',
       ctaSecondary: 'Metodolojiyi İncele',

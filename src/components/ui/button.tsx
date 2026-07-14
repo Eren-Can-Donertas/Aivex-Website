@@ -9,18 +9,18 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<NonNullable<ButtonProps['variant']>, string> = {
   default:
-    'bg-primary text-primary-foreground hover:bg-primary/90 shadow',
+    'bg-foreground text-background hover:bg-primary hover:text-primary-foreground font-bold',
   outline:
-    'border border-border bg-transparent hover:bg-muted text-foreground',
+    'border-[1.5px] border-foreground bg-transparent text-foreground hover:border-primary hover:text-primary font-bold',
   ghost: 'hover:bg-muted text-foreground',
   link: 'text-primary underline-offset-4 hover:underline p-0 h-auto',
-  accent: 'bg-accent text-accent-foreground hover:bg-accent/90 shadow',
+  accent: 'bg-primary text-primary-foreground hover:bg-foreground hover:text-background font-bold',
 };
 
 const sizeClasses: Record<NonNullable<ButtonProps['size']>, string> = {
-  sm: 'h-8 px-3 text-sm',
-  md: 'h-10 px-4 py-2',
-  lg: 'h-12 px-6 text-lg',
+  sm: 'h-8 px-3 text-xs tracking-[0.04em]',
+  md: 'h-10 px-4 py-2 text-sm tracking-[0.04em]',
+  lg: 'h-12 px-7 text-sm tracking-[0.06em]',
 };
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -29,7 +29,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={cn(
-          'inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors',
+          'inline-flex items-center justify-center gap-2 rounded-sm font-medium transition-colors',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
           'disabled:pointer-events-none disabled:opacity-50',
           variantClasses[variant],

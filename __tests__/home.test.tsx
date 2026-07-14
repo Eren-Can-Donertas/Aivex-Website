@@ -28,9 +28,9 @@ describe('Hero', () => {
     expect(screen.getByRole('heading', { level: 1 })).toBeDefined();
   });
 
-  it('headline contains "Financial Analysis Pipeline"', () => {
+  it('headline contains "measuring instrument"', () => {
     render(<Hero />);
-    expect(screen.getByText(/Financial Analysis Pipeline/i)).toBeDefined();
+    expect(screen.getByText(/measuring instrument/i)).toBeDefined();
   });
 
   it('renders the primary Request Product Demo CTA', () => {
@@ -84,17 +84,19 @@ describe('ProductOverview', () => {
     expect(screen.getByText('Eye API')).toBeDefined();
   });
 
-  it('renders professional status labels (no "prototype" badges)', () => {
+  it('renders professional status dials (no "prototype" badges)', () => {
     render(<ProductOverview />);
     expect(screen.queryByText('prototype')).toBeNull();
-    const internalRuntimeBadges = screen.getAllByText('Internal Runtime');
-    expect(internalRuntimeBadges.length).toBeGreaterThan(0);
-    expect(screen.getByText('Risk Gate Active')).toBeDefined();
+    // Dial chips show short codes; the full status label lives in the title attribute
+    const internalRuntimeDials = screen.getAllByTitle('Internal Runtime');
+    expect(internalRuntimeDials.length).toBeGreaterThan(0);
+    expect(screen.getByTitle('Risk Gate Active')).toBeDefined();
+    expect(screen.getByText('GATE')).toBeDefined();
   });
 
   it('renders output descriptions for each module', () => {
     render(<ProductOverview />);
-    const outputLabels = screen.getAllByText(/Output:/i);
+    const outputLabels = screen.getAllByText(/Output —/i);
     expect(outputLabels.length).toBeGreaterThan(0);
   });
 });

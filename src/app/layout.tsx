@@ -81,7 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${fontSans.variable} ${fontMono.variable}`}
     >
       <body className="min-h-screen bg-background font-sans antialiased">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
           <LanguageProvider>
             <div className="flex min-h-screen flex-col">
               <Header />

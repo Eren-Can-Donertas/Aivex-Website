@@ -34,9 +34,11 @@ const config: Config = {
         mono: ['var(--font-geist-mono)', 'monospace'],
       },
       borderRadius: {
-        lg: '0.5rem',
-        md: '0.375rem',
-        sm: '0.25rem',
+        // Instrument style — tight radii (lab-equipment corners), site-wide
+        xl: '0.375rem',
+        lg: '0.375rem',
+        md: '0.25rem',
+        sm: '3px',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

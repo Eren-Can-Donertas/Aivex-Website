@@ -171,8 +171,8 @@ export const en = {
     hero: {
       subBadge: 'AIVEX Analytics',
       badge: 'AI-Native Market Intelligence Infrastructure',
-      titleMain: 'Not a Black Box.',
-      titleHighlight: 'A Modular Financial Analysis Pipeline.',
+      titleMain: 'Not a black box.',
+      titleHighlight: 'A measuring instrument for markets.',
       subtitle: 'AIVEX CORE converts market data, news, social media, and technical signals into governed research outputs with confidence scores, source attribution, trace IDs, and risk-gated evaluation.',
       ctaPrimary: 'Request Product Demo',
       ctaSecondary: 'View Methodology',
