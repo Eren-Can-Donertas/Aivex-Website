@@ -42,7 +42,7 @@ export function Hero() {
                   {t.ctaPrimary} <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/methodology">
+              <Link href="/products">
                 <Button variant="outline" size="lg" className="gap-2">
                   {t.ctaSecondary} <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -107,7 +107,7 @@ export function Hero() {
 
             {/* Panel footer */}
             <div className="border-t-[1.5px] border-foreground px-4 py-2.5 font-mono text-[0.62rem] text-muted-foreground">
-              <span className="font-bold text-primary">✓ governor passed</span> · brain pattern_confirmed · advice: false
+              <span className="font-bold text-primary">✓ deterministic</span> · reproducible arithmetic · advice: false
             </div>
           </div>
 

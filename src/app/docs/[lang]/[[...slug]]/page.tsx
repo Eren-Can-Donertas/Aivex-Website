@@ -156,11 +156,11 @@ export default function DocsPage({ params }: Props) {
               <p className="mb-2 text-xs text-muted-foreground">
                 {lang === 'tr' ? 'Ayrıca bakın' : 'Also see'}
               </p>
-              <Link href="/product" className="block text-sm text-muted-foreground hover:text-foreground py-0.5">
-                {lang === 'tr' ? 'Ürüne Genel Bakış' : 'Product Overview'}
+              <Link href="/products" className="block text-sm text-muted-foreground hover:text-foreground py-0.5">
+                {lang === 'tr' ? 'Ürünler' : 'Products'}
               </Link>
-              <Link href="/methodology" className="block text-sm text-muted-foreground hover:text-foreground py-0.5">
-                {lang === 'tr' ? 'Metodoloji' : 'Methodology'}
+              <Link href="/products/feed" className="block text-sm text-muted-foreground hover:text-foreground py-0.5">
+                AIVEX Feed
               </Link>
             </div>
           </div>

@@ -25,20 +25,20 @@ describe('Hero CTAs', () => {
     expect(link.getAttribute('href')).toBe('/contact');
   });
 
-  it('renders the secondary View Methodology button', () => {
+  it('renders the secondary Explore Products button', () => {
     renderWithProviders(<Hero />);
-    expect(screen.getByRole('link', { name: /View Methodology/i })).toBeDefined();
+    expect(screen.getByRole('link', { name: /Explore Products/i })).toBeDefined();
   });
 
-  it('View Methodology routes to /methodology', () => {
+  it('Explore Products routes to /products', () => {
     renderWithProviders(<Hero />);
-    const link = screen.getByRole('link', { name: /View Methodology/i });
-    expect(link.getAttribute('href')).toBe('/methodology');
+    const link = screen.getByRole('link', { name: /Explore Products/i });
+    expect(link.getAttribute('href')).toBe('/products');
   });
 
   it('renders both CTAs in the same section', () => {
     renderWithProviders(<Hero />);
     expect(screen.getByRole('link', { name: /Request Product Demo/i })).toBeDefined();
-    expect(screen.getByRole('link', { name: /View Methodology/i })).toBeDefined();
+    expect(screen.getByRole('link', { name: /Explore Products/i })).toBeDefined();
   });
 });

@@ -26,7 +26,7 @@ export function RequestAccessSection() {
               {t.primaryButton} <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
-              href="/product"
+              href="/products"
               className="inline-flex items-center whitespace-nowrap rounded-sm border-[1.5px] border-background/40 px-7 py-3.5 text-sm font-bold tracking-[0.04em] text-background transition-colors hover:border-background hover:bg-background/10"
             >
               {t.secondaryButton}

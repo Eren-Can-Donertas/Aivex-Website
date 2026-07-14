@@ -29,10 +29,9 @@ describe('Header', () => {
     expect(screen.getByText('AIVEX')).toBeDefined();
   });
 
-  it('renders all five main navigation links', () => {
+  it('renders all four main navigation links', () => {
     renderWithProviders(<Header />);
-    expect(screen.getByRole('link', { name: 'Product' })).toBeDefined();
-    expect(screen.getByRole('link', { name: 'Methodology' })).toBeDefined();
+    expect(screen.getByRole('link', { name: 'Products' })).toBeDefined();
     expect(screen.getByRole('link', { name: 'Docs' })).toBeDefined();
     expect(screen.getByRole('link', { name: 'Blog' })).toBeDefined();
     expect(screen.getByRole('link', { name: 'About' })).toBeDefined();
@@ -40,8 +39,7 @@ describe('Header', () => {
 
   it('nav links point to correct hrefs', () => {
     renderWithProviders(<Header />);
-    expect(screen.getByRole('link', { name: 'Product' }).getAttribute('href')).toBe('/product');
-    expect(screen.getByRole('link', { name: 'Methodology' }).getAttribute('href')).toBe('/methodology');
+    expect(screen.getByRole('link', { name: 'Products' }).getAttribute('href')).toBe('/products');
     expect(screen.getByRole('link', { name: 'Blog' }).getAttribute('href')).toBe('/blog');
     expect(screen.getByRole('link', { name: 'About' }).getAttribute('href')).toBe('/about');
   });
@@ -95,14 +93,15 @@ describe('Footer', () => {
 
   it('renders footer section headings', () => {
     renderWithProviders(<Footer />);
-    expect(screen.getByText('Product')).toBeDefined();
+    expect(screen.getByText('Products')).toBeDefined();
     expect(screen.getByText('Company')).toBeDefined();
     expect(screen.getByText('Legal')).toBeDefined();
   });
 
   it('renders footer links with correct hrefs', () => {
     renderWithProviders(<Footer />);
-    expect(screen.getByRole('link', { name: 'Overview' }).getAttribute('href')).toBe('/product');
+    expect(screen.getByRole('link', { name: 'All Products' }).getAttribute('href')).toBe('/products');
+    expect(screen.getByRole('link', { name: 'AIVEX Feed' }).getAttribute('href')).toBe('/products/feed');
     expect(screen.getByRole('link', { name: 'About' }).getAttribute('href')).toBe('/about');
     expect(screen.getByRole('link', { name: 'Contact' }).getAttribute('href')).toBe('/contact');
   });

@@ -14,8 +14,7 @@ export function Header() {
   const t = locales[lang].nav;
 
   const NAV_ITEMS: NavItem[] = [
-    { label: t.product, href: '/product' },
-    { label: t.methodology, href: '/methodology' },
+    { label: t.products, href: '/products' },
     { label: t.docs, href: `/docs/${lang}/getting-started` },
     { label: t.blog, href: '/blog' },
     { label: t.about, href: '/about' },

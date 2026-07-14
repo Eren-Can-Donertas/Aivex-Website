@@ -1,6 +1,5 @@
 import { Hero } from '@/components/sections/Hero';
-import { ProductOverview } from '@/components/sections/ProductOverview';
-import { ArchitectureDiagram } from '@/components/sections/ArchitectureDiagram';
+import { ProductsSection } from '@/components/sections/ProductsSection';
 import { TrustSection } from '@/components/sections/TrustSection';
 import { RequestAccessSection } from '@/components/sections/RequestAccessSection';
 
@@ -8,8 +7,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <ProductOverview />
-      <ArchitectureDiagram />
+      <ProductsSection />
       <TrustSection />
       <RequestAccessSection />
     </>

@@ -10,6 +10,7 @@ vi.mock('next/link', () => ({
 
 import { Hero } from '@/components/sections/Hero';
 import { ProductOverview } from '@/components/sections/ProductOverview';
+import { ProductsSection } from '@/components/sections/ProductsSection';
 import { TrustSection } from '@/components/sections/TrustSection';
 import { ArchitectureDiagram } from '@/components/sections/ArchitectureDiagram';
 
@@ -40,17 +41,17 @@ describe('Hero', () => {
     expect(link.getAttribute('href')).toBe('/contact');
   });
 
-  it('renders the secondary View Methodology CTA', () => {
+  it('renders the secondary Explore Products CTA', () => {
     render(<Hero />);
-    const link = screen.getByRole('link', { name: /View Methodology/i });
+    const link = screen.getByRole('link', { name: /Explore Products/i });
     expect(link).toBeDefined();
-    expect(link.getAttribute('href')).toBe('/methodology');
+    expect(link.getAttribute('href')).toBe('/products');
   });
 
-  it('renders the stats strip with Signal Modules and Runtime Supervision', () => {
+  it('renders the stats strip with Products and Languages Covered', () => {
     render(<Hero />);
-    expect(screen.getByText('Signal Modules')).toBeDefined();
-    expect(screen.getByText('Runtime Supervision')).toBeDefined();
+    expect(screen.getByText('Products')).toBeDefined();
+    expect(screen.getByText('Languages Covered')).toBeDefined();
   });
 
   it('does not render a defensive badge before the headline', () => {
@@ -98,6 +99,35 @@ describe('ProductOverview', () => {
     render(<ProductOverview />);
     const outputLabels = screen.getAllByText(/Output —/i);
     expect(outputLabels.length).toBeGreaterThan(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// ProductsSection (homepage products grid)
+// ---------------------------------------------------------------------------
+
+describe('ProductsSection', () => {
+  it('renders without crashing', () => {
+    const { container } = render(<ProductsSection />);
+    expect(container.firstChild).not.toBeNull();
+  });
+
+  it('renders both product cards', () => {
+    render(<ProductsSection />);
+    expect(screen.getByText('AIVEX Feed')).toBeDefined();
+    expect(screen.getByText('AIVEX Charts')).toBeDefined();
+  });
+
+  it('links AIVEX Feed to its product page', () => {
+    render(<ProductsSection />);
+    const link = screen.getByRole('link', { name: /View product/i });
+    expect(link.getAttribute('href')).toBe('/products/feed');
+  });
+
+  it('marks AIVEX Charts as coming soon with no link', () => {
+    render(<ProductsSection />);
+    expect(screen.getByText(/Coming soon/i)).toBeDefined();
+    expect(screen.getAllByRole('link', { name: /View product/i })).toHaveLength(1);
   });
 });
 

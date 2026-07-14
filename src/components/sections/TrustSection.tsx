@@ -11,7 +11,7 @@ export function TrustSection() {
   return (
     <section className="py-16 md:py-20">
       <div className="container mx-auto max-w-6xl px-4">
-        <SectionHeading idx="03" title={t.title} subtitle={t.subtitle} />
+        <SectionHeading idx="02" title={t.title} subtitle={t.subtitle} />
 
         {/* Calibration principles — ink-ruled columns */}
         <div className="grid gap-6 md:grid-cols-3">

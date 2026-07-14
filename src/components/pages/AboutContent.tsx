@@ -214,7 +214,7 @@ export function AboutContent() {
             <Link href="/contact">
               <Button size="lg">{t.ctaButton}</Button>
             </Link>
-            <Link href="/methodology">
+            <Link href="/products">
               <Button variant="outline" size="lg">{t.ctaSecondary}</Button>
             </Link>
           </div>
