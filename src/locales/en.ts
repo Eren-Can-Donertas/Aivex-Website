@@ -337,7 +337,7 @@ export const en = {
     disclaimer: 'AIVEX produces analysis artifacts for informational and analytical purposes only. Outputs are not financial, investment, or trading advice.',
     copyright: 'AIVEX Analytics. All rights reserved.',
     links: {
-      Product: { label: 'Products', items: [{ label: 'All Products', href: '/products' }, { label: 'AIVEX Feed', href: '/products/feed' }, { label: 'Docs', href: '/docs/en/getting-started' }] },
+      Product: { label: 'Products', items: [{ label: 'All Products', href: '/products' }, { label: 'AIVEX Feed', href: '/products/feed' }, { label: 'Docs', href: '/docs/en/aivex-feed/getting-started' }] },
       Company: { label: 'Company', items: [{ label: 'About', href: '/about' }, { label: 'Blog', href: '/blog' }, { label: 'Contact', href: '/contact' }] },
       Legal: { label: 'Legal', items: [{ label: 'Privacy Policy', href: '/legal/privacy' }, { label: 'Terms of Service', href: '/legal/terms' }] },
     },

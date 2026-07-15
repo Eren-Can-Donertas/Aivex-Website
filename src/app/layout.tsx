@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
-import { LanguageProvider } from '@/contexts/LanguageContext';
+import { LanguageProvider, type Lang } from '@/contexts/LanguageContext';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import './globals.css';
@@ -74,15 +75,19 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Resolve language server-side from the cookie set by the language toggle, so
+  // the first paint is already in the right language (no post-hydration flip).
+  const lang: Lang = cookies().get('aivex-lang')?.value === 'en' ? 'en' : 'tr';
+
   return (
     <html
-      lang="en"
+      lang={lang}
       suppressHydrationWarning
       className={`${fontSans.variable} ${fontMono.variable}`}
     >
       <body className="min-h-screen bg-background font-sans antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" disableTransitionOnChange>
-          <LanguageProvider>
+          <LanguageProvider initialLang={lang}>
             <div className="flex min-h-screen flex-col">
               <Header />
               <main className="flex-1">{children}</main>

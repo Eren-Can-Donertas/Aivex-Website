@@ -59,6 +59,7 @@ export interface ModuleCard {
 
 export interface DocNavItem {
   title: string;
-  href: string;
+  /** Absent on folder items that only group children. */
+  href?: string;
   children?: DocNavItem[];
 }

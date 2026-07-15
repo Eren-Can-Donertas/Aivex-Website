@@ -8,12 +8,18 @@ const nextConfig = {
     return [
       {
         source: '/docs',
-        destination: '/docs/tr/getting-started',
+        destination: '/docs/tr/aivex-feed/getting-started',
         permanent: false,
       },
       {
         source: '/docs/:lang(en|tr)',
-        destination: '/docs/:lang/getting-started',
+        destination: '/docs/:lang/aivex-feed/getting-started',
+        permanent: false,
+      },
+      // Old flat doc URLs, before pages moved under the aivex-feed folder.
+      {
+        source: '/docs/:lang(en|tr)/:page(getting-started|outputs|pipeline|turkish-path|integration)',
+        destination: '/docs/:lang/aivex-feed/:page',
         permanent: false,
       },
     ];

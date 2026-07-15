@@ -30,13 +30,18 @@ function buildNav(lang: DocLang): DocNavItem[] {
         turkishPath:    'Turkish Path',
         integration:    'Integration',
       };
-  const base = `/docs/${lang}`;
+  const feed = `/docs/${lang}/aivex-feed`;
   return [
-    { title: labels.gettingStarted, href: `${base}/getting-started` },
-    { title: labels.outputs,        href: `${base}/outputs` },
-    { title: labels.pipeline,       href: `${base}/pipeline` },
-    { title: labels.turkishPath,    href: `${base}/turkish-path` },
-    { title: labels.integration,    href: `${base}/integration` },
+    {
+      title: 'AIVEX Feed',
+      children: [
+        { title: labels.gettingStarted, href: `${feed}/getting-started` },
+        { title: labels.outputs,        href: `${feed}/outputs` },
+        { title: labels.pipeline,       href: `${feed}/pipeline` },
+        { title: labels.turkishPath,    href: `${feed}/turkish-path` },
+        { title: labels.integration,    href: `${feed}/integration` },
+      ],
+    },
   ];
 }
 
@@ -45,19 +50,30 @@ function NavItem({ item, currentPath }: { item: DocNavItem; currentPath: string 
   const isParentOfActive = item.children?.some((c) => currentPath === c.href);
   return (
     <li>
-      <Link
-        href={item.href}
-        className={cn(
-          'block rounded-md px-3 py-1.5 text-sm transition-colors',
-          isActive
-            ? 'bg-primary/10 font-medium text-primary'
-            : isParentOfActive
-            ? 'font-medium text-foreground'
-            : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
-        )}
-      >
-        {item.title}
-      </Link>
+      {item.href ? (
+        <Link
+          href={item.href}
+          className={cn(
+            'block rounded-md px-3 py-1.5 text-sm transition-colors',
+            isActive
+              ? 'bg-primary/10 font-medium text-primary'
+              : isParentOfActive
+              ? 'font-medium text-foreground'
+              : 'text-muted-foreground hover:text-foreground hover:bg-muted/40'
+          )}
+        >
+          {item.title}
+        </Link>
+      ) : (
+        <span
+          className={cn(
+            'block px-3 py-1.5 text-sm font-medium',
+            isParentOfActive ? 'text-foreground' : 'text-muted-foreground'
+          )}
+        >
+          {item.title}
+        </span>
+      )}
       {item.children && (
         <ul className="ml-3 mt-1 space-y-0.5 border-l border-border pl-3">
           {item.children.map((child) => (
@@ -71,7 +87,7 @@ function NavItem({ item, currentPath }: { item: DocNavItem; currentPath: string 
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (params.lang !== 'en' && params.lang !== 'tr') return {};
-  const slugParts = params.slug ?? ['getting-started'];
+  const slugParts = params.slug ?? ['aivex-feed', 'getting-started'];
   const page = getDocPageBySlugAndLang(slugParts, params.lang);
   if (!page) return {};
   return {
@@ -97,7 +113,7 @@ export default function DocsPage({ params }: Props) {
   if (params.lang !== 'en' && params.lang !== 'tr') notFound();
   const lang = params.lang as DocLang;
 
-  const slugParts = params.slug ?? ['getting-started'];
+  const slugParts = params.slug ?? ['aivex-feed', 'getting-started'];
   const page = getDocPageBySlugAndLang(slugParts, lang);
   if (!page) notFound();
 
@@ -113,9 +129,13 @@ export default function DocsPage({ params }: Props) {
           const childActive = item.children?.find((c) => currentPath === c.href);
           if (!isActive && !childActive) return null;
           return (
-            <div key={item.href} className="flex items-center gap-1">
-              <Link href={item.href} className="hover:text-foreground">{item.title}</Link>
-              {childActive && (
+            <div key={item.href ?? item.title} className="flex items-center gap-1">
+              {item.href ? (
+                <Link href={item.href} className="hover:text-foreground">{item.title}</Link>
+              ) : (
+                <span>{item.title}</span>
+              )}
+              {childActive && childActive.href && (
                 <>
                   <span>/</span>
                   <Link href={childActive.href} className="font-medium text-foreground">{childActive.title}</Link>

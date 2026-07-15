@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Loader2, AlertCircle, Mail, Phone } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { locales } from '@/locales';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 type State = 'idle' | 'loading' | 'success' | 'error';
 
@@ -30,6 +29,10 @@ export default function ContactPage() {
     e.preventDefault();
     setState('loading');
     setErrorMessage('');
+
+    // Load the Supabase client on demand so its ~50 kB stays out of the
+    // initial page bundle — it's only needed when someone actually submits.
+    const { supabase, isSupabaseConfigured } = await import('@/lib/supabase');
 
     if (!isSupabaseConfigured) {
       setErrorMessage(t.error.generic);

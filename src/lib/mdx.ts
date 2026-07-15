@@ -70,9 +70,14 @@ export function getAllPostSlugs(): string[] {
 // ---------------------------------------------------------------------------
 
 function walkDocsDir(dir: string, baseSlug: string[] = []): DocPage[] {
-  if (!fs.existsSync(dir)) return [];
-
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  // try/catch instead of fs.existsSync(dir): Turbopack's file tracer flags
+  // existsSync on a computed path (TP1004), and the missing-dir case is rare.
+  let entries: fs.Dirent[];
+  try {
+    entries = fs.readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return [];
+  }
   const pages: DocPage[] = [];
 
   for (const entry of entries) {

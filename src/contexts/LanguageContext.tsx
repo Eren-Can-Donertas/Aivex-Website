@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 
 export type Lang = 'en' | 'tr';
 
@@ -12,16 +12,16 @@ interface LanguageContextValue {
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>('tr');
-
-  useEffect(() => {
-    const stored = localStorage.getItem('aivex-lang') as Lang | null;
-    if (stored === 'en' || stored === 'tr') {
-      setLangState(stored);
-      document.cookie = `aivex-lang=${stored}; path=/; max-age=31536000; SameSite=Lax`;
-    }
-  }, []);
+export function LanguageProvider({
+  children,
+  initialLang = 'tr',
+}: {
+  children: ReactNode;
+  /** Resolved server-side from the `aivex-lang` cookie so the very first paint
+   *  is in the correct language — no post-hydration flip / flash. */
+  initialLang?: Lang;
+}) {
+  const [lang, setLangState] = useState<Lang>(initialLang);
 
   function setLang(l: Lang) {
     setLangState(l);

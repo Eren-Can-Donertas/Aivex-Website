@@ -208,7 +208,7 @@ export function ProductContent() {
                 {t.ctaButton} <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <Link href={`/docs/${lang}/getting-started`}>
+            <Link href={`/docs/${lang}/aivex-feed/getting-started`}>
               <Button variant="outline" size="lg">{t.ctaDocs}</Button>
             </Link>
           </div>
