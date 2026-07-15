@@ -1,101 +1,57 @@
 ---
 title: Başlarken
-description: Ön koşullar, kurulum ve ilk AIVEX araştırma döngüsünü çalıştırma.
+description: Ön koşullar, kurulum ve AIVEX Feed'in ilk kez çalıştırılması.
 order: 1
 ---
 
-## Ne Çalıştırmak Üzeresiniz
+## Neyi Çalıştırmak Üzeresiniz
 
-AIVEX modüler bir yapay zeka araştırma çalışma zamanıdır. Piyasa verilerini, haberleri ve teknik sinyalleri alır,
-yönetilen bir boru hattından geçirir ve Eye REST API aracılığıyla denetlenebilir araştırma çıktıları üretir.
-Her çıktı `trace_id`, güven skoru ve kaynak atıfı taşır.
+AIVEX Feed, finansal haber zekası için kendi kendine yeten bir Python hattıdır. Birden
+fazla Türkçe ve İngilizce kaynaktan haber toplar, makale içeriklerini indirir, dili tespit
+eder, Türkçe makaleleri İngilizceye çevirir, finansal bir dil modeliyle duygu puanlar,
+makaleleri takip edilen şirketlerle eşler ve sonucu bir veritabanı tablosuna ve bir olay
+akışına yazar.
 
-> **Özel Depo Bildirimi:** AIVEX şu anda özel, dahili bir çalışma zamanıdır.
-> Genel depo erişimi mevcut değildir.
-> AIVEX kod tabanına veya çalışma zamanına erişim talep etmek için [ekiple iletişime geçin](/contact).
+Üç şekilde çalışır:
+
+- **Zamanlanmış görev** — kendi zamanlayıcınız tarafından programlı olarak çağrılır
+- **Kütüphane çağrısı** — hattın tamamı tek bir `run(db, …)` fonksiyon çağrısıdır
+- **Masaüstü uygulaması** — koşuları zamanlayan ve kaynak sağlığını raporlayan bir Windows
+  tepsi uygulaması
+
+> **Özel Depo Bildirimi:** AIVEX Feed şu anda özeldir ve dağıtım için paketlenmemiştir.
+> Erişim veya demo talebi için [ekiple iletişime geçin](/contact).
 
 ## Ön Koşullar
 
-- Python 3.11 veya 3.13
-- MySQL 8.0+ (yerel veya uzak)
-- Gerekli ortam değişkenlerini içeren bir `.env` dosyası (aşağıya bakın)
+- Python 3.10 veya üzeri
+- MySQL (yerel veya uzak)
+- Redis
+- Gerekli ortam değişkenlerini içeren bir `.env` dosyası
 
-## Kurulum
+İsteğe bağlı:
 
-Depo erişimi aldıktan sonra klonlayın ve bağımlılıkları yükleyin:
+- **Ollama** — günlük anlatı metnini üretir. O olmadan anlatı alanları boş kalır ve her
+  sayı tam olarak aynı şekilde hesaplanır.
+- **Reddit kimlik bilgileri** — olmadan Reddit kaynağı atlanır ve koşu devam eder.
 
-```bash
-git clone <ekip-tarafından-sağlanan-depo-url>
-cd aivex
-pip install -r requirements.txt
-```
+## İlk Koşu
 
-## Ortam Yapılandırması
+İlk koşu üç model indirir: finansal duygu modeli, Türkçe→İngilizce çeviri modeli ve dil
+tespit modeli. Yavaş olması beklenir; sonraki koşular önbelleğe alınmış modelleri kullanır.
 
-Örnek ortam dosyasını kopyalayın:
+## Yapılandırma
 
-```bash
-cp .env.example .env
-```
-
-Zorunlu değişkenler:
-
-| Değişken | Açıklama |
-|----------|----------|
-| `DB_HOST` | MySQL sunucusu (varsayılan: `localhost`) |
-| `DB_PORT` | MySQL portu (varsayılan: `3306`) |
-| `DB_NAME` | Veritabanı adı |
-| `DB_USER` | Veritabanı kullanıcısı |
-| `DB_PASSWORD` | Veritabanı şifresi |
-
-İsteğe bağlı değişkenler:
-
-| Değişken | Açıklama |
-|----------|----------|
-| `API_TOKEN` | Eye API için Bearer token (tanımsız = kimlik doğrulama devre dışı) |
-| `GOVERNOR_KILL_SWITCH` | Sinyal yayımını devre dışı bırakmak için `1` olarak ayarlayın |
-
-## Sistemi Çalıştırma
-
-**Her şeyi başlatın (7/24 denetimli mod):**
-```bash
-python Main.py
-```
-
-**Tek bir modülü bir kez çalıştırın (test için):**
-```bash
-python -m watchdog.runners.module_runner news --mode once
-```
-
-**Yalnızca Eye API'yi başlatın:**
-```bash
-python -m uvicorn eye.main:create_app --factory --port 8001
-```
-
-## Kurulumu Doğrulama
-
-Sistemi başlattıktan sonra Eye API sağlık uç noktasını kontrol edin:
-
-```bash
-curl http://localhost:8001/health
-```
-
-Beklenen yanıt:
-```json
-{ "status": "ok", "version": "<mevcut-sürüm>" }
-```
-
-## Veritabanı Kurulumu
-
-AIVEX ilk çalıştırmada gerekli tabloları otomatik olarak oluşturur. OHLCV verileri için geçmiş verileri
-doldurmak üzere alma komut dosyasını bir kez çalıştırın:
-
-```bash
-python Ingest_ohlcv.py
-```
+Hat, ortam değişkenlerinden yapılandırılır; puanlamayı koruyan üç güven eşiği de buna
+dahildir: duygu güveni, başlık güveni ve dil güveni. Veritabanı arka ucu dışarıdan verilir —
+sözleşme için [Entegrasyon](/docs/tr/integration) sayfasına bakın.
 
 ## Sonraki Adımlar
 
-- Modüllerin nasıl etkileşime girdiğini anlamak için [Mimari Genel Bakış](/docs/architecture-overview) sayfasını okuyun
-- Bireysel [Modüller](/docs/modules/atomic-signals) belgelerini inceleyin
-- Sinyal yönetimi ayrıntıları için [Metodoloji](/methodology) sayfasını kontrol edin
+- [Çıktılar](/docs/tr/outputs) — her şeyin okunduğu iki yüzey
+- [Hat](/docs/tr/pipeline) — her koşunun yürüttüğü altı aşama
+- [Türkçe Yol](/docs/tr/turkish-path) — Türkçe haberin güvenle nasıl puanlandığı
+- [Entegrasyon](/docs/tr/integration) — Feed'i mevcut sisteminize bağlamak
+
+> AIVEX Feed yalnızca bilgilendirme amaçlı araştırma çıktıları üretir. Çıktıları finansal,
+> yatırım veya ticaret tavsiyesi değildir.

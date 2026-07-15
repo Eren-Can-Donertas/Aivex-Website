@@ -1,0 +1,47 @@
+---
+title: Entegrasyon
+description: AIVEX Feed'i mevcut bir sisteme bağlamak — enjekte edilen veritabanı sözleşmesi, ana sistem bağları ve özel kaynaklar.
+order: 5
+---
+
+## Veritabanı Dışarıdan Verilir
+
+Hattın tamamı tek bir `run(db, …)` çağrısıyla başlatılır ve hattın gövdesinde tek bir somut
+veritabanı sınıfının adı geçmez. Küçük ve açık bir ports dosyası, bir arka ucun uygulaması
+gereken veritabanı yüzeyini bildirir. Bu metotları uygulayın, hattı tek bir ortam
+değişkeniyle kendi uygulamanıza yönlendirin; hat farkı anlamaz.
+
+Bunun anlamı:
+
+- **Dayatılan depolama yok** — Feed, zaten çalıştırdığınız MySQL'e veya kendi veritabanı
+  yönetici sınıfınıza bağlanır.
+- **Tasarım gereği düşük geçiş maliyeti** — benimseme, bir avuç metot ve tek bir fonksiyon
+  çağrısıdır.
+
+## Ana Sistem Bağları
+
+Log ve metrikler, mevcut olduğunda ana sisteme, olmadığında standart kütüphane
+alternatiflerine tek bir uyumluluk modülü üzerinden bağlanır. İki kip, tek kod tabanı,
+kaynak düzenlemesi yok.
+
+## Bileşen Matrisi
+
+| Bileşen | Ne sağlar | Vermezseniz |
+|---------|-----------|-------------|
+| Veritabanı | MySQL, ya da fabrika kancasıyla kendi sınıfınız | Zorunlu |
+| Redis | Akışlar ve anlık uyarılar | Uyarı loglanır, koşu sürer |
+| Yerel model | Günlük anlatı metni | Anlatı boş kalır, sayılar durur |
+| Reddit kimlik bilgileri | Reddit kaynağı | O kaynak atlanır |
+
+## Kod Yazmadan Özel Kaynak
+
+Bir JSON veya RSS ucu, masaüstü uygulamasının ayarlar ekranından bildirimsel olarak
+eklenir — URL, alan eşlemesi ve ada göre bir ortam değişkenine başvuran isteğe bağlı kimlik
+doğrulama. Bir **test** düğmesi, kaydetmeden önce ucu çağırır ve kaç makale döndüğünü
+söyler. Gizli değerler kaynak tanımına asla yazılmaz.
+
+## Masaüstü Uygulaması
+
+Windows tepsi uygulaması hattı ayrı bir süreçte zamanlar, koşu geçmişini ve günlük/haftalık
+özetleri gösterir ve kaynak sağlığını hata tipiyle raporlar — böylece bozulan bir kaynak,
+nedeniyle birlikte anında görünür.

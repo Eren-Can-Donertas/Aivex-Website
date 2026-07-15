@@ -18,36 +18,25 @@ function buildNav(lang: DocLang): DocNavItem[] {
   const labels = lang === 'tr'
     ? {
         gettingStarted: 'Başlarken',
-        architecture:   'Mimari Genel Bakış',
-        modules:        'Modüller',
-        atomicSignals:  'Atomik Sinyaller',
-        signalEngine:   'Sinyal Motoru',
-        governor:       'Vali',
-        watchdog:       'İzleyici',
+        outputs:        'Çıktılar',
+        pipeline:       'Hat',
+        turkishPath:    'Türkçe Yol',
+        integration:    'Entegrasyon',
       }
     : {
         gettingStarted: 'Getting Started',
-        architecture:   'Architecture Overview',
-        modules:        'Modules',
-        atomicSignals:  'Atomic Signals',
-        signalEngine:   'Signal Engine',
-        governor:       'Governor',
-        watchdog:       'Watchdog',
+        outputs:        'Outputs',
+        pipeline:       'Pipeline',
+        turkishPath:    'Turkish Path',
+        integration:    'Integration',
       };
   const base = `/docs/${lang}`;
   return [
     { title: labels.gettingStarted, href: `${base}/getting-started` },
-    { title: labels.architecture,   href: `${base}/architecture-overview` },
-    {
-      title: labels.modules,
-      href: `${base}/modules`,
-      children: [
-        { title: labels.atomicSignals, href: `${base}/modules/atomic-signals` },
-        { title: labels.signalEngine,  href: `${base}/modules/signal-engine` },
-        { title: labels.governor,      href: `${base}/modules/governor` },
-        { title: labels.watchdog,      href: `${base}/modules/watchdog` },
-      ],
-    },
+    { title: labels.outputs,        href: `${base}/outputs` },
+    { title: labels.pipeline,       href: `${base}/pipeline` },
+    { title: labels.turkishPath,    href: `${base}/turkish-path` },
+    { title: labels.integration,    href: `${base}/integration` },
   ];
 }
 

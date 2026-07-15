@@ -1,0 +1,34 @@
+---
+title: Türkçe Yol
+description: AIVEX Feed'in Türkçe finansal haberi İngilizce bir finans modeliyle — güvenle — nasıl puanladığı.
+order: 4
+---
+
+## Sorun
+
+Finansal duygu modelleri İngilizce metinle eğitilmiştir. Doğrudan Türkçe piyasa haberine
+uygulandıklarında gürültü üretirler: makaleler ya yanlış puanlanır ya da tamamen atlanır.
+
+## Mekanizma
+
+AIVEX Feed, Türkçe haberi üç geçitli adımda puanlar:
+
+1. **Dil tespiti** — bir dil tanımlayıcı makalenin dilini tespit eder. Dil güveni eşiğinin
+   altında makale işaretlenir ve puanlamaya hiç girmez.
+2. **Çeviri** — Türkçe makaleler makine çevirisiyle İngilizceye çevrilir. Çeviri başarısız
+   olursa makale atlanır — tahmin edilmez.
+3. **Duygu puanlaması** — finansal İngilizce bir model önce yalnız başlığı puanlar; başlık
+   güveni eşiğin altındaysa başlık ve içerik birlikte yeniden puanlanır.
+
+## Yanlış Puanlamaktansa Puanlamamak
+
+Dili belirsiz veya çevirisi tutmamış bir makale **nötr** işaretlenir ve geçilir. Sayıları
+asla kirletmez. Sistemin hata kipi sessizliktir, uydurma değil.
+
+## Üç Geçit, Hepsi Ayarlanabilir
+
+Hattı üç güven eşiği korur — duygu güveni, başlık güveni ve dil güveni. Her biri bir ortam
+değişkeninden ayarlanır; geçit koda dokunmadan sıkılaştırılabilir veya gevşetilebilir.
+
+> Türkçe yol için duygu doğruluk rakamları henüz yayımlanmamıştır; etiketli bir
+> değerlendirme setine karşı ölçülene kadar hiçbir doğruluk iddiasında bulunulmaz.

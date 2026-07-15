@@ -1,0 +1,52 @@
+---
+title: Outputs
+description: The two machine-readable surfaces AIVEX Feed produces — a daily context row and a per-article stream.
+order: 2
+---
+
+## Two Outputs, One Entry Point
+
+Everything the pipeline produces is read from these surfaces. There is no third interface
+to learn.
+
+### `world_context` — MySQL table
+
+One row per day, carrying:
+
+- **Net sentiment** — the day's aggregate directional score
+- **Per-theme breakdown** — sentiment split across themes
+- **Regime indicators** — arithmetic descriptors of the day's news regime
+- **Anomalies** — deviations detected against the day's baseline
+- **Optional narrative** — prose written by the local language model, when one is available
+
+Read it with plain SQL. Later runs compare themselves against this row, which is what makes
+deviation detectable.
+
+### `news:articles` — Redis stream
+
+Every enriched article is published as one message:
+
+| Field | Description |
+|-------|-------------|
+| `sentiment` | Positive, neutral, or negative label |
+| `confidence` | Confidence score for the sentiment label |
+| `theme` | Assigned theme |
+| `companies` | Matched tracked-company IDs |
+| `relevance` | Relevance score used for ranking |
+
+A consumer group is ready out of the box.
+
+### `news:hot_signals` — Redis stream
+
+Anomaly alerts, published the moment a batch diverges from the day's baseline — sentiment
+deviation, category shift, or volume spike. These alerts are produced by pure arithmetic;
+no model call is involved.
+
+## The `outlook` Rule
+
+The `outlook` field is always computed from `net_sentiment` by an arithmetic function. The
+language model writes prose only — it never sets direction. If the model is offline, the
+narrative stays empty and every number is identical.
+
+> Outputs are research artifacts for informational purposes only — not financial,
+> investment, or trading advice, and not trading signals.

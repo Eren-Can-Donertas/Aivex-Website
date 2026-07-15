@@ -1,0 +1,47 @@
+---
+title: Integration
+description: Attaching AIVEX Feed to an existing stack — the injected database contract, host bindings, and custom sources.
+order: 5
+---
+
+## The Database Is Injected
+
+The entire pipeline is invoked through a single `run(db, …)` call, and the pipeline body
+names no concrete database class. A small, explicit ports file declares the database
+surface a backend must implement. Implement those methods, point the pipeline at your
+implementation with one environment variable, and it cannot tell the difference.
+
+This means:
+
+- **No imposed storage** — Feed attaches to the MySQL you already run, or to your own
+  database manager class.
+- **Low switching costs, by design** — adoption is a handful of methods and one function
+  call.
+
+## Host Bindings
+
+Logging and metrics resolve to the host system when one is present, and to standard-library
+fallbacks otherwise, through a single compatibility module. Two modes, one codebase, no
+source edits.
+
+## Component Matrix
+
+| Component | What it provides | Without it |
+|-----------|------------------|------------|
+| Database | MySQL, or your own class via a factory hook | Required |
+| Redis | Streams and real-time alerts | Alert logged, run continues |
+| Local model | Daily narrative text | Narrative empty, numbers stand |
+| Reddit credentials | The Reddit source | That source is skipped |
+
+## Custom Sources Without Code
+
+A JSON or RSS endpoint can be added declaratively from the desktop application's settings
+dialog — URL, field mapping, and optional authentication that references an environment
+variable by name. A **test** button calls the endpoint before saving and reports how many
+articles came back. Secret values are never written into the source descriptor.
+
+## Desktop Application
+
+The Windows tray application schedules the pipeline in a separate process, shows run
+history and daily/weekly summaries, and reports per-source health with error types — so a
+broken source is visible immediately, with its failure reason.

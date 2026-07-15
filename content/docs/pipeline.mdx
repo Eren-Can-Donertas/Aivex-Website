@@ -1,0 +1,44 @@
+---
+title: Pipeline
+description: The six stages every AIVEX Feed run executes, and the two-speed analysis design.
+order: 3
+---
+
+## Six Steps Per Run
+
+Every run executes the same six stages, in order:
+
+1. **Collect** — sources are fetched in parallel. Duplicate URLs and near-copies are
+   dropped. Article bodies are extracted with multiple fallback methods.
+2. **Filter** — articles without a title or with fewer than 50 characters of content are
+   discarded.
+3. **Analyze** — sentiment and theme run in parallel, followed by company matching.
+4. **Accumulate** — the batch is added to the day's running totals. Deviations from the
+   baseline raise alerts.
+5. **Publish** — enriched articles are written to the Redis stream.
+6. **Persist** — articles are written to MySQL with their company links.
+
+## Fault Isolation
+
+A failure in analysis or persistence stops the run, deliberately. A failure in
+accumulation, publishing, or summarization is logged and the run continues — articles that
+were already collected are never lost.
+
+Each source is fetched in its own thread and returns an outcome record. A failed source is
+isolated, categorized by error type, and reported; the run continues without it.
+
+## Two Speeds
+
+**Fast path — every batch, no model.** Each incoming batch's sentiment profile is compared
+against the day's baseline. If sentiment deviation, category shift, or a volume spike
+crosses a threshold, an alert lands on `news:hot_signals`. This path is pure arithmetic:
+the same input always produces the same output.
+
+**Slow path — daily, weekly, monthly.** A locally hosted language model writes the day's
+narrative summary, explains regime changes, and lists notable events. It runs outside the
+hot path — nothing waits for it, and no number depends on it.
+
+## Adaptive Source Tours
+
+When a run's fresh-article count falls short, the pipeline escalates to additional English
+feeds automatically. The expensive body-extraction step still runs exactly once.

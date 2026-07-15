@@ -347,8 +347,8 @@ export const tr = {
     hero: {
       subBadge: 'AIVEX Analytics',
       badge: 'Yapay Zeka Destekli Piyasa Zekası Altyapısı',
-      titleMain: 'Kara kutu değil.',
-      titleHighlight: 'Piyasalar için bir ölçüm aleti.',
+      titleMain: 'Kara kutulara son.',
+      titleHighlight: 'Piyasalar için modüler ölçüm aletleri üretiyoruz.',
       subtitle: 'AIVEX, piyasa haberlerini ve teknik verileri; güven skorları, kaynak atıfı ve yeniden üretilebilir, denetlenebilir sayılarla yönetişimli araştırma çıktılarına dönüştüren odaklanmış ölçüm ürünleri geliştirir.',
       ctaPrimary: 'Ürün Demosu Talep Et',
       ctaSecondary: 'Ürünleri Keşfet',

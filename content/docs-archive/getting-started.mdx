@@ -1,0 +1,101 @@
+---
+title: Getting Started
+description: Prerequisites, installation, and running your first AIVEX research cycle.
+order: 1
+---
+
+## What You Are About to Run
+
+AIVEX is a modular AI research runtime. It ingests market data, news, and technical signals,
+composes them through a governed pipeline, and emits auditable research outputs via the Eye REST API.
+Each output carries a `trace_id`, confidence score, and source attribution.
+
+> **Private Repository Notice:** AIVEX is currently a private, internal runtime.
+> Public repository access is not available.
+> To request access to the AIVEX codebase or runtime, [contact the team](/contact).
+
+## Prerequisites
+
+- Python 3.11 or 3.13
+- MySQL 8.0+ (local or remote)
+- A `.env` file with the required environment variables (see below)
+
+## Installation
+
+After receiving repository access, clone and install dependencies:
+
+```bash
+git clone <repository-url-provided-by-team>
+cd aivex
+pip install -r requirements.txt
+```
+
+## Environment Configuration
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+Required variables:
+
+| Variable | Description |
+|----------|-------------|
+| `DB_HOST` | MySQL host (default: `localhost`) |
+| `DB_PORT` | MySQL port (default: `3306`) |
+| `DB_NAME` | Database name |
+| `DB_USER` | Database user |
+| `DB_PASSWORD` | Database password |
+
+Optional variables:
+
+| Variable | Description |
+|----------|-------------|
+| `API_TOKEN` | Bearer token for the Eye API (unset = auth disabled) |
+| `GOVERNOR_KILL_SWITCH` | Set to `1` to disable signal emission |
+
+## Running the System
+
+**Start everything (24/7 supervised mode):**
+```bash
+python Main.py
+```
+
+**Run a single module once (for testing):**
+```bash
+python -m watchdog.runners.module_runner news --mode once
+```
+
+**Start only the Eye API:**
+```bash
+python -m uvicorn eye.main:create_app --factory --port 8001
+```
+
+## Verifying the Setup
+
+After starting the system, check the Eye API health endpoint:
+
+```bash
+curl http://localhost:8001/health
+```
+
+Expected response:
+```json
+{ "status": "ok", "version": "<current-version>" }
+```
+
+## Database Setup
+
+AIVEX automatically creates required tables on first run. For the OHLCV data, run the ingestion
+script once to populate historical data:
+
+```bash
+python Ingest_ohlcv.py
+```
+
+## Next Steps
+
+- Read the [Architecture Overview](/docs/architecture-overview) to understand how modules interact
+- Explore individual [Modules](/docs/modules/atomic-signals) documentation
+- Check the [Methodology](/methodology) page for signal governance details

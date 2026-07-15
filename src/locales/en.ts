@@ -347,8 +347,8 @@ export const en = {
     hero: {
       subBadge: 'AIVEX Analytics',
       badge: 'AI-Native Market Intelligence Infrastructure',
-      titleMain: 'Not a black box.',
-      titleHighlight: 'A measuring instrument for markets.',
+      titleMain: 'No more black boxes.',
+      titleHighlight: 'We build modular measuring instruments for markets.',
       subtitle: 'AIVEX builds focused measurement products that convert market news and technical data into governed research outputs with confidence scores, source attribution, and reproducible, auditable numbers.',
       ctaPrimary: 'Request Product Demo',
       ctaSecondary: 'Explore Products',

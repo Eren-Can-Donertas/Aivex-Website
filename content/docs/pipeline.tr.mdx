@@ -1,0 +1,42 @@
+---
+title: Hat
+description: Her AIVEX Feed koşusunun yürüttüğü altı aşama ve iki hızlı analiz tasarımı.
+order: 3
+---
+
+## Her Koşuda Altı Adım
+
+Her koşu aynı altı aşamayı sırayla yürütür:
+
+1. **Topla** — kaynaklar paralel çekilir. Aynı URL'ler ve yakın kopyalar atılır. Makale
+   içerikleri birden fazla yedek yöntemle indirilir.
+2. **Ele** — başlığı olmayan veya içeriği 50 karakterden kısa makaleler düşer.
+3. **Analiz et** — duygu ve tema paralel çalışır; ardından şirket eşleşmesi gelir.
+4. **Biriktir** — batch günün toplamına eklenir. Taban çizgisinden sapmalar uyarı üretir.
+5. **Yayınla** — zenginleştirilmiş makaleler Redis akışına yazılır.
+6. **Kaydet** — makaleler şirket bağlantılarıyla MySQL'e yazılır.
+
+## Hata Yalıtımı
+
+Analiz veya kayıt aşamasındaki bir hata koşuyu bilinçli olarak durdurur. Biriktirme, yayın
+veya özet aşamasındaki bir hata loglanır ve koşu devam eder — toplanmış makaleler asla
+kaybolmaz.
+
+Her kaynak kendi iş parçacığında çekilir ve bir sonuç kaydı döndürür. Başarısız bir kaynak
+yalıtılır, hata tipine göre sınıflandırılır ve raporlanır; koşu onsuz devam eder.
+
+## İki Hız
+
+**Hızlı yol — her batch, model yok.** Yeni gelen her batch'in duygu profili günün taban
+çizgisiyle karşılaştırılır. Duygu sapması, kategori kayması veya hacim sıçraması eşiği
+aşarsa `news:hot_signals` akışına uyarı düşer. Bu yol baştan sona aritmetiktir: aynı girdi
+hep aynı çıktıyı verir.
+
+**Yavaş yol — günlük, haftalık, aylık.** Yerelde barındırılan bir dil modeli günün özetini
+yazar, rejim değişimlerini açıklar ve önemli olayları listeler. Sıcak yolun dışında çalışır —
+kimse onu beklemez ve hiçbir sayı ona bağlı değildir.
+
+## Uyarlanabilir Kaynak Turları
+
+Bir koşunun taze makale sayısı yetersiz kaldığında, hat otomatik olarak ek İngilizce
+beslemelere uğrar. Maliyetli içerik indirme adımı yine tam olarak bir kez çalışır.

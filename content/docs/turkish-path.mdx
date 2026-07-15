@@ -1,0 +1,35 @@
+---
+title: Turkish Path
+description: How AIVEX Feed scores Turkish financial news with an English financial model — safely.
+order: 4
+---
+
+## The Problem
+
+Financial sentiment models are trained on English text. Applied directly to Turkish market
+news, they produce noise: articles are scored incorrectly or skipped entirely.
+
+## The Mechanism
+
+AIVEX Feed scores Turkish news in three gated steps:
+
+1. **Language detection** — a language identifier detects the article's language. Below
+   the language-confidence gate, the article is flagged and never enters scoring.
+2. **Translation** — Turkish articles are machine-translated to English. If translation
+   fails, the article is skipped — not guessed at.
+3. **Sentiment scoring** — a financial-English model scores the title first; below the
+   title-confidence gate, it is re-scored against the title and body together.
+
+## Skip Rather Than Guess
+
+An article with uncertain language or a failed translation is marked **neutral** and passed
+over. It never pollutes the numbers. The system's failure mode is silence, not invention.
+
+## Three Gates, All Configurable
+
+Three confidence thresholds gate the pipeline — sentiment confidence, title confidence,
+and language confidence. Each is set from an environment variable, so the gate can be
+tightened or loosened without touching code.
+
+> Sentiment accuracy figures for the Turkish path have not yet been published; no accuracy
+> claim is made until they are measured against a labelled evaluation set.

@@ -1,0 +1,51 @@
+---
+title: Çıktılar
+description: AIVEX Feed'in ürettiği iki makine tarafından okunabilir yüzey — günlük bağlam satırı ve makale başına akış.
+order: 2
+---
+
+## İki Çıktı, Tek Giriş Noktası
+
+Hattın ürettiği her şey bu yüzeylerden okunur. Öğrenilmesi gereken üçüncü bir arayüz yoktur.
+
+### `world_context` — MySQL tablosu
+
+Günde bir satır; şunları taşır:
+
+- **Net duygu** — günün toplam yönlü skoru
+- **Tema kırılımı** — duygunun temalara göre dağılımı
+- **Rejim göstergeleri** — günün haber rejimini tanımlayan aritmetik göstergeler
+- **Anomaliler** — günün taban çizgisine göre tespit edilen sapmalar
+- **İsteğe bağlı anlatı** — yerel dil modeli mevcut olduğunda yazılan metin
+
+Düz SQL ile okunur. Sonraki koşular kendilerini bu satırla karşılaştırır; sapmayı tespit
+edilebilir kılan da budur.
+
+### `news:articles` — Redis akışı
+
+Zenginleştirilmiş her makale tek mesaj olarak yayımlanır:
+
+| Alan | Açıklama |
+|------|----------|
+| `sentiment` | Pozitif, nötr veya negatif etiket |
+| `confidence` | Duygu etiketinin güven skoru |
+| `theme` | Atanan tema |
+| `companies` | Eşleşen takip edilen şirket kimlikleri |
+| `relevance` | Sıralamada kullanılan ilgi skoru |
+
+Tüketici grubu hazır gelir.
+
+### `news:hot_signals` — Redis akışı
+
+Bir batch günün taban çizgisinden saptığı anda yayımlanan anomali uyarıları — duygu
+sapması, kategori kayması veya hacim sıçraması. Bu uyarılar saf aritmetikle üretilir; hiçbir
+model çağrısı içermez.
+
+## `outlook` Kuralı
+
+`outlook` alanı her zaman `net_sentiment` değerinden aritmetik bir fonksiyonla hesaplanır.
+Dil modeli yalnızca metin yazar — asla yön belirlemez. Model kapalıysa anlatı boş kalır ve
+her sayı aynı kalır.
+
+> Çıktılar yalnızca bilgilendirme amaçlı araştırma eserleridir — finansal, yatırım veya
+> ticaret tavsiyesi değildir ve işlem sinyali değildir.
